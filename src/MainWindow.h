@@ -1,8 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui/QMainWindow>
 #include <QLabel>
+#include <QSplitter>
+#include <QtGui/QMainWindow>
+#include <QTabWidget>
+#include <QTreeView>
+#include <QVTKWidget.h>
 #include "ui_MainWindow.h"
 
 class MainWindow : public QMainWindow
@@ -12,16 +16,30 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
     ~MainWindow();
+    void displayCube();
 
 private:
-    void initStatusBar();
     int loadLocalConfig();
     int loadNetwork();
+    void initMembers();
+    
+    void destoryMembers();
+    void initStatusBarMembers();
+    void initMainAreaMembers();
+    void destoryStatusBarMembers();
+    void destoryMainAreaMembers();
 
+    
 private:
     Ui::MainWindowClass ui;
-    QLabel* tipLabel;
-    QLabel* secondLabel;
+    QLabel* statusBartipLabel;
+    QLabel* statusBartipLabel2;
+    QSplitter* splitterMain;
+    QTabWidget* leftTab;
+    QTreeView* treeTab1;
+    QTreeView* treeTab2;
+    QVTKWidget* qvtkWidget;
+    
 };
 
 #endif // MAINWINDOW_H

@@ -1,10 +1,23 @@
 #include <QMessageBox>
 #include <QSplashScreen>
 #include <QTextCodec>
+#include <QTextEdit>
+#include <QVBoxLayout>
 #include <stdio.h>
 #include <stdlib.h>
+#include <vtkSmartPointer.h>
+#include <vtkActor.h>
+#include <vtkCubeSource.h>
+#include <vtkInteractorStyleTrackballCamera.h>
+#include <vtkPolyData.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkRenderWindow.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkRenderer.h>
 #include <Windows.h>
 #include "MainWindow.h"
+
+//#define GVS_SHOW_SPLISH
 
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)
@@ -15,50 +28,37 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     splash->setPixmap(QPixmap(":/Resources/startup.jpg"));
     splash->show();
 
-    //show some sentence when load widget, config and network.
     Qt::Alignment topRight = Qt::AlignRight | Qt::AlignTop;
-    splash->showMessage(QObject::tr("加载窗口控件"), topRight, Qt::red);
-    ui.setupUi(this);
-    initStatusBar();
+#ifdef GVS_SHOW_SPLISH
+    splash->showMessage(QObject::tr("对象初始化"), topRight,Qt::red);
+    Sleep(1000);
+#endif
+    initMembers();
+#ifdef GVS_SHOW_SPLISH
     splash->showMessage(QObject::tr("加载本地配置"), topRight, Qt::red);
-    if (loadLocalConfig() != 0) {
-        std::printf("本地配置加载失败");
-        abort();
-    }
-
+    Sleep(1000);
+#endif
+    loadLocalConfig();
+#ifdef GVS_SHOW_SPLISH
     splash->showMessage(QObject::tr("设置网络"), topRight, Qt::red);
-    if (loadNetwork() != 0) {
-        QMessageBox::information(this, "网络初始化错误", NULL, QMessageBox::Yes);
-    }
+    Sleep(1000);
+#endif
+    loadNetwork();
+    splash->clearMessage();
+    splash->close();
 }
 
 MainWindow::~MainWindow()
 {
-    delete tipLabel;
-    delete secondLabel;
+    destoryMembers();
 }
 
-void MainWindow::initStatusBar()
-{
-    QStatusBar* statBar = this->statusBar();
-
-    tipLabel = new QLabel(QObject::tr("ready"));
-    tipLabel->setAlignment(Qt::AlignHCenter);
-    tipLabel->setMinimumSize(tipLabel->sizeHint());
-
-    secondLabel = new QLabel(QObject::tr("second tip"));
-    secondLabel->setIndent(3);
-
-    statBar->addWidget(tipLabel);
-    statBar->addWidget(secondLabel);
-    Sleep(1000);
-}
 
 int MainWindow::loadLocalConfig()
 {
     //TODO: load some config and return the status code:
     //0 is ok and other value means there are some errors, then abort.
-    Sleep(1000);
+
     return 0;
 }
 
@@ -66,6 +66,84 @@ int MainWindow::loadNetwork()
 {
     //TODO: load some network info and return a code.
     //0 is ok and other value is error, and give a tip to user.
-    Sleep(1000);
+
     return 0;
 }
+
+void MainWindow::initMembers()
+{
+    ui.setupUi(this);
+
+    initStatusBarMembers();
+    initMainAreaMembers();
+}
+
+void MainWindow::destoryMembers()
+{
+    destoryStatusBarMembers();
+    destoryMainAreaMembers();
+}
+
+void MainWindow::initStatusBarMembers()
+{
+    QStatusBar* statBar = this->statusBar();
+
+    statusBartipLabel = new QLabel(QObject::tr("ready"), statBar);
+    statusBartipLabel->setAlignment(Qt::AlignHCenter);
+    statusBartipLabel->setMinimumSize(statusBartipLabel->sizeHint());
+
+    statusBartipLabel2 = new QLabel(QObject::tr("second tip"), statBar);
+    statusBartipLabel2->setIndent(3);
+
+    
+    statBar->addWidget(statusBartipLabel);
+    statBar->addWidget(statusBartipLabel2);
+}
+
+void MainWindow::initMainAreaMembers()
+{
+    splitterMain = new QSplitter(Qt::Horizontal);
+    splitterMain->setParent(this);
+
+    //left init
+    leftTab = new QTabWidget(splitterMain);
+    treeTab1 = new QTreeView(leftTab);
+    treeTab2 = new QTreeView(leftTab);
+    leftTab->addTab(treeTab1, tr("视图1"));
+    leftTab->addTab(treeTab2, tr("视图2"));
+
+
+    //right side init
+    qvtkWidget = new QVTKWidget(splitterMain);
+
+    splitterMain->setStretchFactor(1, 1);
+    setCentralWidget(splitterMain);
+}
+
+void MainWindow::destoryStatusBarMembers()
+{
+    delete statusBartipLabel;
+    delete statusBartipLabel2;
+}
+
+void MainWindow::destoryMainAreaMembers()
+{
+    delete qvtkWidget;
+    delete splitterMain;
+}
+
+void MainWindow::displayCube()
+{
+    vtkCubeSource* cubeSource = vtkCubeSource::New();
+    vtkPolyDataMapper* mapper = vtkPolyDataMapper::New();
+    mapper->SetInputConnection(cubeSource->GetOutputPort());
+    vtkActor* actor = vtkActor::New();
+    actor->SetMapper(mapper);
+    vtkRenderer* renderer = vtkRenderer::New();    
+    vtkRenderWindow* renderWindow = qvtkWidget->GetRenderWindow();
+    renderWindow->AddRenderer(renderer);
+    renderer->AddActor(actor);
+    renderer->SetBackground(.3, .2, .1);
+    renderWindow->Render();
+}
+
