@@ -100,6 +100,9 @@
     <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_MainWindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GVSApplicationCore.cpp" />
+    <ClCompile Include="GVSInitializer.cpp" />
+    <ClCompile Include="GVSSettings.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
   </ItemGroup>
@@ -143,6 +146,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\build\Qt\GeneratedFiles\ui_MainWindow.h" />
+    <ClInclude Include="GVSApplicationCore.h" />
+    <ClInclude Include="GVSInitializer.h" />
+    <ClInclude Include="GVSSettings.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

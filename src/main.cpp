@@ -1,14 +1,19 @@
-#include "MainWindow.h"
+//#include "MainWindow.h"
 #include <QtGui/QApplication>
+#include "GVSInitializer.h"
 
 int main(int argc, char *argv[])
 {
-    //init the application
-    QApplication a(argc, argv);
+    QApplication::setApplicationName("GVSClient");
+    QApplication::setApplicationVersion("v0.1");
+    QApplication::setOrganizationName("GVSClient");
 
-    MainWindow w;
-    w.show();
-    w.displayCube();
+    QApplication qtapp(argc, argv);
 
-    return a.exec();
+    GVSInitializer gvsInitializer;
+    if (!gvsInitializer.Initialize()) {
+        return 1;
+    }
+
+    return qtapp.exec();
 }

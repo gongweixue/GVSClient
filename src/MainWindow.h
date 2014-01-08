@@ -29,6 +29,9 @@ private:
     void destoryStatusBarMembers();
     void destoryMainAreaMembers();
 
+    MainWindow(const MainWindow&); // Not implemented.
+    void operator=(const MainWindow&); // Not implemented.
+
     
 private:
     Ui::MainWindowClass ui;
