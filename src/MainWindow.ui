@@ -132,9 +132,41 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionNew"/>
+   <addaction name="actionOpen"/>
+   <addaction name="actionSave"/>
+   <addaction name="separator"/>
+   <addaction name="actionImportProject"/>
+   <addaction name="actionExportProject"/>
+   <addaction name="separator"/>
+   <addaction name="actionServerManage"/>
+   <addaction name="actionConnectServer"/>
+   <addaction name="actionDisconnectServer"/>
+   <addaction name="actionDonwload"/>
+   <addaction name="actionUpload"/>
+   <addaction name="separator"/>
+   <addaction name="actionClipModel"/>
+   <addaction name="actionCubeNotch"/>
+   <addaction name="actionTriangleNotch"/>
+   <addaction name="actionExplodeModel"/>
+   <addaction name="actionLabelManage"/>
+   <addaction name="separator"/>
+   <addaction name="actionLightCtrl"/>
+   <addaction name="actionPaletteCtrl"/>
+   <addaction name="actionAttriColorCtrl"/>
+   <addaction name="actionRulerCtrl"/>
+   <addaction name="actionOrientatorCtrl"/>
+   <addaction name="actionScreenShot"/>
+   <addaction name="separator"/>
+   <addaction name="actionHelpInfo"/>
+   <addaction name="actionQuit"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionNew">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/file.png</normaloff>:/Resources/ToolBar/file.png</iconset>
+   </property>
    <property name="text">
     <string>新建 (&amp;N)...</string>
    </property>
@@ -146,6 +178,10 @@
    </property>
   </action>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/fileopen.png</normaloff>:/Resources/ToolBar/fileopen.png</iconset>
+   </property>
    <property name="text">
     <string>打开 (&amp;O)...</string>
    </property>
@@ -162,6 +198,10 @@
    </property>
   </action>
   <action name="actionSave">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/filesave.png</normaloff>:/Resources/ToolBar/filesave.png</iconset>
+   </property>
    <property name="text">
     <string>保存 (&amp;S)</string>
    </property>
@@ -206,6 +246,10 @@
    </property>
   </action>
   <action name="actionQuit">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/quit.PNG</normaloff>:/Resources/ToolBar/quit.PNG</iconset>
+   </property>
    <property name="text">
     <string>退出 (&amp;X)</string>
    </property>
@@ -217,6 +261,10 @@
    </property>
   </action>
   <action name="actionServerManage">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/ServerList.png</normaloff>:/Resources/ToolBar/ServerList.png</iconset>
+   </property>
    <property name="text">
     <string>服务器列表管理 (&amp;M)...</string>
    </property>
@@ -228,6 +276,10 @@
    </property>
   </action>
   <action name="actionConnectServer">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/connectServer.png</normaloff>:/Resources/ToolBar/connectServer.png</iconset>
+   </property>
    <property name="text">
     <string>连接服务器 (&amp;C)...</string>
    </property>
@@ -239,6 +291,10 @@
    </property>
   </action>
   <action name="actionDisconnectServer">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/disconnectServer.png</normaloff>:/Resources/ToolBar/disconnectServer.png</iconset>
+   </property>
    <property name="text">
     <string>断开服务器 (&amp;D)</string>
    </property>
@@ -250,6 +306,10 @@
    </property>
   </action>
   <action name="actionDonwload">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/download.PNG</normaloff>:/Resources/ToolBar/download.PNG</iconset>
+   </property>
    <property name="text">
     <string>下载 (&amp;L)...</string>
    </property>
@@ -261,6 +321,10 @@
    </property>
   </action>
   <action name="actionUpload">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/upload.PNG</normaloff>:/Resources/ToolBar/upload.PNG</iconset>
+   </property>
    <property name="text">
     <string>上传 (&amp;U)...</string>
    </property>
@@ -352,6 +416,10 @@
    </property>
   </action>
   <action name="actionClipModel">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/Clip.png</normaloff>:/Resources/ToolBar/Clip.png</iconset>
+   </property>
    <property name="text">
     <string>模型剖切 (&amp;C)...</string>
    </property>
@@ -363,6 +431,10 @@
    </property>
   </action>
   <action name="actionCubeNotch">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/cubeNotch.png</normaloff>:/Resources/ToolBar/cubeNotch.png</iconset>
+   </property>
    <property name="text">
     <string>开挖方形豁口 (&amp;R)...</string>
    </property>
@@ -374,6 +446,10 @@
    </property>
   </action>
   <action name="actionTriangleNotch">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/triangelclip.png</normaloff>:/Resources/ToolBar/triangelclip.png</iconset>
+   </property>
    <property name="text">
     <string>开挖三角形豁口 (&amp;T)...</string>
    </property>
@@ -385,6 +461,10 @@
    </property>
   </action>
   <action name="actionExplodeModel">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/explode.png</normaloff>:/Resources/ToolBar/explode.png</iconset>
+   </property>
    <property name="text">
     <string>模型炸开 (&amp;P)...</string>
    </property>
@@ -396,6 +476,10 @@
    </property>
   </action>
   <action name="actionLabelManage">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/label.png</normaloff>:/Resources/ToolBar/label.png</iconset>
+   </property>
    <property name="text">
     <string>模型标注管理 (&amp;L)...</string>
    </property>
@@ -407,6 +491,10 @@
    </property>
   </action>
   <action name="actionLightCtrl">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/LightCtrl.png</normaloff>:/Resources/ToolBar/LightCtrl.png</iconset>
+   </property>
    <property name="text">
     <string>灯光控制 (&amp;L)...</string>
    </property>
@@ -418,6 +506,10 @@
    </property>
   </action>
   <action name="actionPaletteCtrl">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/color.png</normaloff>:/Resources/ToolBar/color.png</iconset>
+   </property>
    <property name="text">
     <string>调色板控制 (&amp;P)...</string>
    </property>
@@ -440,6 +532,10 @@
    </property>
   </action>
   <action name="actionAttriColorCtrl">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/colorCtrl.png</normaloff>:/Resources/ToolBar/colorCtrl.png</iconset>
+   </property>
    <property name="text">
     <string>属性值着色控制 (&amp;C)...</string>
    </property>
@@ -456,6 +552,10 @@
    </property>
   </action>
   <action name="actionRulerCtrl">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/ruler.png</normaloff>:/Resources/ToolBar/ruler.png</iconset>
+   </property>
    <property name="text">
     <string>标尺控制 (&amp;B)...</string>
    </property>
@@ -478,6 +578,10 @@
    </property>
   </action>
   <action name="actionOrientatorCtrl">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/orientationAxes.png</normaloff>:/Resources/ToolBar/orientationAxes.png</iconset>
+   </property>
    <property name="text">
     <string>方向指示器控制 (&amp;O)...</string>
    </property>
@@ -511,6 +615,10 @@
    </property>
   </action>
   <action name="actionHelpInfo">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/help.png</normaloff>:/Resources/ToolBar/help.png</iconset>
+   </property>
    <property name="text">
     <string>帮助信息</string>
    </property>
@@ -518,6 +626,18 @@
   <action name="actionAboutInfo">
    <property name="text">
     <string>关于</string>
+   </property>
+  </action>
+  <action name="actionScreenShot">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/shotscreen.png</normaloff>:/Resources/ToolBar/shotscreen.png</iconset>
+   </property>
+   <property name="text">
+    <string>ScreenShot</string>
+   </property>
+   <property name="toolTip">
+    <string>截图</string>
    </property>
   </action>
  </widget>

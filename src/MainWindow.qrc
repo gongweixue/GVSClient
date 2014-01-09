@@ -1,5 +1,27 @@
 <RCC>
   <qresource prefix="/">
+    <file>Resources/ToolBar/shotscreen.png</file>
+    <file>Resources/ToolBar/help.png</file>
+    <file>Resources/ToolBar/orientationAxes.png</file>
+    <file>Resources/ToolBar/ruler.png</file>
+    <file>Resources/ToolBar/colorCtrl.png</file>
+    <file>Resources/ToolBar/color.png</file>
+    <file>Resources/ToolBar/label.png</file>
+    <file>Resources/ToolBar/LightCtrl.png</file>
+    <file>Resources/ToolBar/explode.png</file>
+    <file>Resources/ToolBar/quit.PNG</file>
+    <file>Resources/ToolBar/cubeNotch.png</file>
+    <file>Resources/ToolBar/Clip.png</file>
+    <file>Resources/ToolBar/triangelclip.png</file>
+    <file>Resources/ToolBar/disconnectServer.png</file>
+    <file>Resources/ToolBar/connectServer.png</file>
+    <file>Resources/ToolBar/download.PNG</file>
+    <file>Resources/ToolBar/upload.PNG</file>
+    <file>Resources/ToolBar/ServerList.png</file>
+    <file>Resources/ToolBar/Clip.png</file>
+    <file>Resources/ToolBar/file.png</file>
+    <file>Resources/ToolBar/fileopen.png</file>
+    <file>Resources/ToolBar/filesave.png</file>
     <file>Resources/startup.jpg</file>
   </qresource>
 </RCC>
