@@ -136,9 +136,6 @@
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
    <addaction name="separator"/>
-   <addaction name="actionImportProject"/>
-   <addaction name="actionExportProject"/>
-   <addaction name="separator"/>
    <addaction name="actionServerManage"/>
    <addaction name="actionConnectServer"/>
    <addaction name="actionDisconnectServer"/>
