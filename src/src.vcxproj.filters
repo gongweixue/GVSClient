@@ -33,6 +33,27 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Header Files\Managers">
+      <UniqueIdentifier>{ddc8265f-c567-4456-b404-6c872b873099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managers">
+      <UniqueIdentifier>{281e3ad3-e681-47b0-9cec-c898baa6e35f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{0ffc4d11-4f14-4616-90d0-a5a5263b2e3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Callbacks">
+      <UniqueIdentifier>{23d47e98-d2c6-4d04-9c97-5a4594871077}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Callbacks">
+      <UniqueIdentifier>{bd27c88c-bb08-477b-9fe4-1debfb87ab51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Options">
+      <UniqueIdentifier>{603e9176-9297-4375-9f6f-a8282b157bb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Options">
+      <UniqueIdentifier>{1ccb51e3-498b-4902-911b-5efe336b2ed1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -59,6 +80,42 @@
     <ClCompile Include="GVSApplicationCore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Managers\vtkObjectsManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\vtkSceneManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Callbacks\vtkBoxClipCallback.cpp">
+      <Filter>Source Files\Callbacks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_CubeAxesOption.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_CubeAxesOption.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Options\CubeAxesOption.cpp">
+      <Filter>Source Files\Options</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_LightOption.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_LightOption.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Options\LightOption.cpp">
+      <Filter>Source Files\Options</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_StdExplode.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_StdExplode.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Options\StdExplode.cpp">
+      <Filter>Source Files\Options</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.h">
@@ -69,6 +126,24 @@
     </CustomBuild>
     <CustomBuild Include="MainWindow.qrc">
       <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Options\CubeAxesOption.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Options\CubeAxesOption.h">
+      <Filter>Header Files\Options</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Options\LightOption.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Options\LightOption.h">
+      <Filter>Header Files\Options</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Options\StdExplode.h">
+      <Filter>Header Files\Options</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Options\StdExplode.ui">
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +158,30 @@
     </ClInclude>
     <ClInclude Include="GVSApplicationCore.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\vtkTotallyInclude.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\vtkObjectsManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers\vtkSceneManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Callbacks\vtkBoxClipCallback.h">
+      <Filter>Header Files\Callbacks</Filter>
+    </ClInclude>
+    <ClInclude Include="Callbacks\vtkPlaneClipCallback.h">
+      <Filter>Header Files\Callbacks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\build\Qt\GeneratedFiles\ui_CubeAxesOption.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\build\Qt\GeneratedFiles\ui_LightOption.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\build\Qt\GeneratedFiles\ui_StdExplode.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

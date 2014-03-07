@@ -1,0 +1,23 @@
+<UI version="4.0" >
+ <class>ScreenShotOption</class>
+ <widget class="QDialig" name="ScreenShotOption" >
+  <property name="objectName" >
+   <string notr="true">ScreenShotOption</string>
+  </property>
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>ScreenShotOption</string>
+  </property>  
+ </widget>
+ <layoutDefault spacing="6" margin="11" />
+ <pixmapfunction></pixmapfunction>
+ <resources/>
+ <connections/>
+</UI>
