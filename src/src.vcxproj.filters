@@ -116,6 +116,15 @@
     <ClCompile Include="Options\StdExplode.cpp">
       <Filter>Source Files\Options</Filter>
     </ClCompile>
+    <ClCompile Include="GVSDoc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_GVSDoc.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_GVSDoc.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.h">
@@ -144,6 +153,9 @@
     </CustomBuild>
     <CustomBuild Include="Options\StdExplode.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GVSDoc.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

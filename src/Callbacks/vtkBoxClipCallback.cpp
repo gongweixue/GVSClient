@@ -1,8 +1,8 @@
 #include "vtkBoxClipCallback.h"
 
 vtkBoxClipCallback * vtkBoxClipCallback::New()
-{ 
-	return new vtkBoxClipCallback; 
+{
+	return new vtkBoxClipCallback;
 }
 //get the box widget's 6 planes and update the pipeline.
 void vtkBoxClipCallback::Execute(vtkObject *caller, unsigned long, void*)
@@ -32,5 +32,4 @@ void vtkBoxClipCallback::Delete()
 
 vtkBoxClipCallback::~vtkBoxClipCallback()
 {
-
 }

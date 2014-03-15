@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/">
+    <file>Resources/ToolBar/showBoxClipper.png</file>
     <file>Resources/ToolBar/shotscreen.png</file>
     <file>Resources/ToolBar/help.png</file>
     <file>Resources/ToolBar/orientationAxes.png</file>

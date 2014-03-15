@@ -17,7 +17,6 @@ StdExplode::StdExplode(QWidget *parent)
 
 StdExplode::~StdExplode()
 {
-
 }
 
 void StdExplode::initDialogCtrls()

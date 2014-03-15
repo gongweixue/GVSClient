@@ -25,7 +25,6 @@ public:
 	};
 	~ObjectRecord()
 	{
-		
 	}
 } ObjectRecord ;
 
@@ -34,7 +33,7 @@ class ObjectsManager
 public:
 	ObjectsManager(void);
 	~ObjectsManager(void);
-	
+
 	void InsertObjectRecord(string fileName);
 	int GetObjectType(string fileName);
 	vector<ObjectRecord>::iterator FindObjectRecord(string fileName);
@@ -50,6 +49,4 @@ public:
 	double m_bounds[6];
 private:
 	vector<ObjectRecord> m_objectsTable;
-	
 };
-

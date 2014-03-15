@@ -6,14 +6,13 @@
 class vtkBoxClipCallback : public vtkCommand
 {
 public:
-	static vtkBoxClipCallback *New(); 
+	static vtkBoxClipCallback *New();
 	void Delete();
 	virtual void Execute(vtkObject *caller, unsigned long, void*);
-	
+
 	vtkBoxClipCallback();
 	~vtkBoxClipCallback();
 	vtkPlane**  boxPlaneArray;
 	vtkBoxWidget* boxWidget;
 	vtkPlanes* planes;
-
 };

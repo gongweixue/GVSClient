@@ -47,7 +47,3 @@ bool DeleteVTKPointer(T& pointer)
 	}
 	return false;
 };
-
-
-
-

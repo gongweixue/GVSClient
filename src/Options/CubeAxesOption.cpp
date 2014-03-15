@@ -17,7 +17,6 @@ CubeAxesOption::CubeAxesOption(int cubeAxesOn, int xGridOn, int yGridOn, QWidget
 
 CubeAxesOption::~CubeAxesOption()
 {
-
 }
 
 void CubeAxesOption::initDialogCtrls()

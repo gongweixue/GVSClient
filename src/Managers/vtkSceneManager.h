@@ -65,7 +65,7 @@ public:
 	double* GetSceneCenter();
 
 	vtkLookupTable* GetLookupTable();
-	
+
 private:
 	vector<ActorRecord> m_ActorRecordTable;
 	int m_CurrentSceneState;
@@ -73,4 +73,3 @@ private:
 	double m_SceneCenter[3];
 	vtkLookupTable* m_lut;
 };
-

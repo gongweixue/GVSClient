@@ -23,7 +23,6 @@ LightOption::LightOption( int camLightOn, double IntencityOfCamLight, int sceneL
 
 LightOption::~LightOption()
 {
-
 }
 
 void LightOption::initDialogCtrls()
