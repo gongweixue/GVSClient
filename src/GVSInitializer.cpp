@@ -57,7 +57,7 @@ bool GVSInitializer::Initialize()
     // give GUI components time to update before the mainwindow is shown
     QApplication::instance()->processEvents();
     this->mainWindow->show();
-    this->mainWindow->displayCube();
+    this->mainWindow->welcomeYou();
 
     QApplication::instance()->processEvents();
 

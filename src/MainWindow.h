@@ -22,7 +22,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
     ~MainWindow();
-    void displayCube();
+    void welcomeYou();
     GVSDoc* getDocument();
     vtkRenderer* getRenderer() { return m_mainRenderer; };
     void removeAllActorsOfRenderer(vtkRenderer* renderer);
@@ -60,12 +60,6 @@ private:
     void OnStdExplode();
     void OnLightOption();
     void OnCubeAxesOption();
-    void OnTurnCubeAxesOnOff();
-    void OnOrientationOnOff();
-    void OnQuickTurnCamLight();
-    void OnQuickTurnSceneLight();
-    
-    
 
 public slots:
     void OnOpenProject();
@@ -76,6 +70,10 @@ public slots:
     void OnPrismClip();
     void OnPrismClipWidgetOnOff();
     void OnRenderOriginal();
+    void OnQuickTurnCamLight();
+    void OnQuickTurnSceneLight();
+    void OnOrientationOnOff();
+    void OnTurnCubeAxesOnOff();
 
 private:
     Ui::MainWindowClass ui;

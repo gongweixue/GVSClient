@@ -17,7 +17,12 @@ void GVSDoc::OnOpenProject()
     m_objectsManager.ClearObjectsTable();
     m_objectsManager.m_docsNameVector.clear();
 
-    LoadProjectFile(getProjectPath());
+    std::string pathName = getProjectPath();
+    if (pathName.empty())
+    {
+        return;
+    }
+    LoadProjectFile(pathName);
 }
 
 void GVSDoc::OnCloseDocument()
@@ -75,7 +80,8 @@ std::string GVSDoc::getProjectPath()
                                0,
                                tr("打开项目文件"),
                                tr("D:\\vtkModel\\pieces"),
-                               tr("所有文件(*.*);;GVP项目文件(*.gvp)"));
+                               tr("所有文件(*.*);;GVP项目文件(*.gvp)"),
+                               &tr("GVP项目文件(*.gvp)"));
 
     return fileName.toStdString();
 }

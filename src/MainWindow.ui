@@ -98,7 +98,8 @@
     <property name="title">
      <string>可视化操作(&amp;V)</string>
     </property>
-    <addaction name="actionLightCtrl"/>
+    <addaction name="actionSceneLight"/>
+    <addaction name="actionCamLight"/>
     <addaction name="actionPaletteCtrl"/>
     <addaction name="actionSmoothCtrl"/>
     <addaction name="actionAttriColorCtrl"/>
@@ -155,7 +156,8 @@
    <addaction name="actionRenderOriginal"/>
    <addaction name="actionLabelManage"/>
    <addaction name="separator"/>
-   <addaction name="actionLightCtrl"/>
+   <addaction name="actionSceneLight"/>
+   <addaction name="actionCamLight"/>
    <addaction name="actionPaletteCtrl"/>
    <addaction name="actionAttriColorCtrl"/>
    <addaction name="actionRulerCtrl"/>
@@ -493,19 +495,19 @@
     <string>模型标注管理</string>
    </property>
   </action>
-  <action name="actionLightCtrl">
+  <action name="actionSceneLight">
    <property name="icon">
     <iconset resource="MainWindow.qrc">
      <normaloff>:/Resources/ToolBar/LightCtrl.png</normaloff>:/Resources/ToolBar/LightCtrl.png</iconset>
    </property>
    <property name="text">
-    <string>灯光控制 (&amp;L)...</string>
+    <string>场景灯光 (&amp;L)...</string>
    </property>
    <property name="iconText">
     <string>灯光控制</string>
    </property>
    <property name="toolTip">
-    <string>灯光控制</string>
+    <string>场景灯光</string>
    </property>
   </action>
   <action name="actionPaletteCtrl">
@@ -637,7 +639,7 @@
      <normaloff>:/Resources/ToolBar/shotscreen.png</normaloff>:/Resources/ToolBar/shotscreen.png</iconset>
    </property>
    <property name="text">
-    <string>ScreenShot</string>
+    <string>截图</string>
    </property>
    <property name="toolTip">
     <string>截图</string>
@@ -668,6 +670,15 @@
    </property>
    <property name="text">
     <string>显示原始模型</string>
+   </property>
+  </action>
+  <action name="actionCamLight">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/camLight.png</normaloff>:/Resources/ToolBar/camLight.png</iconset>
+   </property>
+   <property name="text">
+    <string>cam灯光</string>
    </property>
   </action>
  </widget>

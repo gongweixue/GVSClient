@@ -232,19 +232,12 @@ void MainWindow::destoryCommonMembers()
     delete(m_pDoc);
 }
 
-void MainWindow::displayCube()
+void MainWindow::welcomeYou()
 {
-    vtkCubeSource* cubeSource = vtkCubeSource::New();
-    vtkPolyDataMapper* mapper = vtkPolyDataMapper::New();
-    mapper->SetInputConnection(cubeSource->GetOutputPort());
-    vtkActor* actor = vtkActor::New();
-    actor->SetMapper(mapper);
     vtkRenderer* renderer = this->m_mainRenderer;
-    vtkRenderWindow* renderWindow = qvtkWidget->GetRenderWindow();
-    renderWindow->AddRenderer(renderer);
-    renderer->AddActor(actor);
-    renderer->SetBackground(.3, .2, .1);
-    renderWindow->Render();
+    qvtkWidget->GetRenderWindow()->AddRenderer(renderer);
+    renderer->SetBackground(.32, .34, .43);
+    qvtkWidget->GetRenderWindow()->Render();
 }
 
 GVSDoc* MainWindow::getDocument()
@@ -823,12 +816,16 @@ void MainWindow::bindingActionsWithSlots()
     connect(ui.actionClipModel, SIGNAL(triggered()), this, SLOT(OnRenderClip()));
     connect(ui.actionCrossExplode, SIGNAL(triggered()), this, SLOT(OnCrossExplode()));
     connect(ui.actionCubeNotch, SIGNAL(triggered()), this, SLOT(OnRenderBoxClip()));
-    connect(ui.actionShowHideBoxClipper, SIGNAL(triggered()), 
+    connect(ui.actionShowHideBoxClipper, SIGNAL(triggered()),
             this, SLOT(OnBoxClipWidgetOnOff()));
     connect(ui.actionTriangleNotch, SIGNAL(triggered()), this, SLOT(OnPrismClip()));
-    connect(ui.actionShowHideTriClipper, SIGNAL(triggered()), this, 
+    connect(ui.actionShowHideTriClipper, SIGNAL(triggered()), this,
                                                 SLOT(OnPrismClipWidgetOnOff()));
     connect(ui.actionRenderOriginal, SIGNAL(triggered()), this, SLOT(OnRenderOriginal()));
+    connect(ui.actionCamLight, SIGNAL(triggered()), this, SLOT(OnQuickTurnCamLight()));
+    connect(ui.actionSceneLight, SIGNAL(triggered()), this, SLOT(OnQuickTurnSceneLight()));
+    connect(ui.actionOrientatorCtrl, SIGNAL(triggered()), this, SLOT(OnOrientationOnOff()));
+    connect(ui.actionRulerCtrl, SIGNAL(triggered()), this, SLOT(OnTurnCubeAxesOnOff()));
 }
 
 void MainWindow::OnOpenProject()
@@ -954,4 +951,45 @@ void MainWindow::OnRenderOriginal()
         m_sceneManager.ClearActorTable();
         processRenderRequest(SCENE_STATE_ORIGINAL);
     }
+}
+
+void MainWindow::OnQuickTurnCamLight()
+{
+    int camLightOn=m_camLight->GetSwitch();
+    m_camLight->SetSwitch(!camLightOn);
+
+    if (qvtkWidget->GetRenderWindow())
+    {
+        qvtkWidget->GetRenderWindow()->Render();
+    }
+}
+
+void MainWindow::OnQuickTurnSceneLight()
+{
+    int sceneLightOn=m_sceneLightUp->GetSwitch();
+    m_sceneLightUp->SetSwitch(!sceneLightOn);
+    m_sceneLightDown->SetSwitch(!sceneLightOn);
+
+    if (qvtkWidget->GetRenderWindow())
+    {
+        qvtkWidget->GetRenderWindow()->Render();
+    }
+}
+
+void MainWindow::OnOrientationOnOff()
+{
+    int markerEnable=m_OrientationMarker->GetEnabled();
+    m_OrientationMarker->SetEnabled(!markerEnable);
+    if (qvtkWidget->GetRenderWindow())
+    {
+        qvtkWidget->GetRenderWindow()->Render();
+    }
+}
+
+void MainWindow::OnTurnCubeAxesOnOff()
+{
+    int isOn=!m_cubeAxesActor->GetVisibility();
+    int xGridOn=m_cubeAxesActor->GetDrawXGridlines();
+    int yGridOn=m_cubeAxesActor->GetDrawYGridlines();
+    TurnCubeAxesOnOff(isOn,xGridOn, yGridOn);
 }
