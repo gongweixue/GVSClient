@@ -56,7 +56,7 @@ private:
     void TurnCubeAxesOnOff(int isOn, int xGridOn, int yGridOn);
 
 //public slots:
-    void OnRenderOriginal();
+    
     void OnStdExplode();
     void OnLightOption();
     void OnCubeAxesOption();
@@ -65,7 +65,7 @@ private:
     void OnQuickTurnCamLight();
     void OnQuickTurnSceneLight();
     
-    void OnPrismClipWidgetOnOff();
+    
 
 public slots:
     void OnOpenProject();
@@ -74,6 +74,8 @@ public slots:
     void OnRenderBoxClip();
     void OnBoxClipWidgetOnOff();
     void OnPrismClip();
+    void OnPrismClipWidgetOnOff();
+    void OnRenderOriginal();
 
 private:
     Ui::MainWindowClass ui;

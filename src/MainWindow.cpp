@@ -826,6 +826,9 @@ void MainWindow::bindingActionsWithSlots()
     connect(ui.actionShowHideBoxClipper, SIGNAL(triggered()), 
             this, SLOT(OnBoxClipWidgetOnOff()));
     connect(ui.actionTriangleNotch, SIGNAL(triggered()), this, SLOT(OnPrismClip()));
+    connect(ui.actionShowHideTriClipper, SIGNAL(triggered()), this, 
+                                                SLOT(OnPrismClipWidgetOnOff()));
+    connect(ui.actionRenderOriginal, SIGNAL(triggered()), this, SLOT(OnRenderOriginal()));
 }
 
 void MainWindow::OnOpenProject()
@@ -898,5 +901,57 @@ void MainWindow::OnPrismClip()
         m_mainRenderer->RemoveAllViewProps();
         m_sceneManager.ClearActorTable();
         processRenderRequest(SCENE_STATE_PRISM_CLIP);
+    }
+}
+
+void MainWindow::OnPrismClipWidgetOnOff()
+{
+    if (m_sceneManager.GetSceneState()==SCENE_STATE_PRISM_CLIP)
+    {
+        int isWidgetsOn=m_prismClipWidget[0]->GetEnabled();
+        for (int i=0;i<3;i++)
+        {
+            m_prismClipWidget[i]->SetEnabled(!isWidgetsOn);
+            if (m_prismClipWidget[i]->GetEnabled())
+            {
+                m_prismClipWidget[i]->On();
+            }
+            else
+            {
+                m_prismClipWidget[i]->Off();
+            }
+        }
+    }
+    qvtkWidget->GetRenderWindow()->Render();
+}
+
+void MainWindow::OnRenderOriginal()
+{
+    if (true)
+    {
+        if (SCENE_STATE_PLANE_CLIP==m_sceneManager.GetSceneState())
+        {
+            m_clipPlaneWidget->Off();
+            m_clipPlaneWidget->EnabledOff();
+        }
+
+        if (SCENE_STATE_BOX_CLIP==m_sceneManager.GetSceneState())
+        {
+            m_boxClipWidget->Off();
+            m_boxClipWidget->EnabledOff();
+        }
+
+        if (SCENE_STATE_PRISM_CLIP==m_sceneManager.GetSceneState())
+        {
+            for (int i=0; i<3; i++)
+            {
+                m_prismClipWidget[i]->Off();
+                m_prismClipWidget[i]->EnabledOff();
+            }
+        }
+        m_sceneManager.SetSceneState(SCENE_STATE_ORIGINAL);
+        m_mainRenderer->RemoveAllViewProps();
+        m_sceneManager.ClearActorTable();
+        processRenderRequest(SCENE_STATE_ORIGINAL);
     }
 }

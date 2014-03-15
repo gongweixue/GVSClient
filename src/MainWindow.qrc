@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/">
+    <file>Resources/ToolBar/showHideTriangelClipper.png</file>
+    <file>Resources/ToolBar/renderOriginal.png</file>
     <file>Resources/ToolBar/showBoxClipper.png</file>
     <file>Resources/ToolBar/shotscreen.png</file>
     <file>Resources/ToolBar/help.png</file>
