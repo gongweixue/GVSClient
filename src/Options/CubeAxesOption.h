@@ -2,9 +2,10 @@
 #define CUBEAXESOPTION_H
 
 #include <QWidget>
+#include <QDialog>
 #include "ui_CubeAxesOption.h"
 
-class CubeAxesOption : public QWidget
+class CubeAxesOption : public QDialog
 {
     Q_OBJECT
 
@@ -16,13 +17,18 @@ public:
 private:
     //init the ui of the dialog
     void initDialogCtrls();
-    //when click the ok btn, store the status of ctrls.
-    void OnBnClickedOk();//slot
+    void bindingSlots();
+
+public slots:
+    void OnBnClickedOk();
+    void OnBnClickedCancle();
     //change the ctrl status when turn the checkbox on.
-    void OnClickCubeAxesOnCheckbox();//slot
+    void OnClickCubeAxesOnCheckbox();
 
 private:
     Ui::CubeAxesOption ui;
+
+public:
     int m_isCubeAxesOn;
     int m_isXGridOn;
     int m_isYGridOn;

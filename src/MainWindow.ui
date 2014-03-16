@@ -98,6 +98,7 @@
     <property name="title">
      <string>可视化操作(&amp;V)</string>
     </property>
+    <addaction name="actionLightOption"/>
     <addaction name="actionSceneLight"/>
     <addaction name="actionCamLight"/>
     <addaction name="actionPaletteCtrl"/>
@@ -471,13 +472,13 @@
      <normaloff>:/Resources/ToolBar/explode.png</normaloff>:/Resources/ToolBar/explode.png</iconset>
    </property>
    <property name="text">
-    <string>模型炸开 (&amp;P)...</string>
+    <string>模型十字炸开 (&amp;P)...</string>
    </property>
    <property name="iconText">
     <string>模型炸开</string>
    </property>
    <property name="toolTip">
-    <string>模型炸开</string>
+    <string>模型十字炸开</string>
    </property>
   </action>
   <action name="actionLabelManage">
@@ -679,6 +680,11 @@
    </property>
    <property name="text">
     <string>cam灯光</string>
+   </property>
+  </action>
+  <action name="actionLightOption">
+   <property name="text">
+    <string>灯光调节</string>
    </property>
   </action>
  </widget>

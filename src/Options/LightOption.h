@@ -2,9 +2,10 @@
 #define LIGHTOPTION_H
 
 #include <QWidget>
+#include <QDialog>
 #include "ui_LightOption.h"
 
-class LightOption : public QWidget
+class LightOption : public QDialog
 {
     Q_OBJECT
 
@@ -15,16 +16,19 @@ public:
                 double XYZ[3],QWidget* pParent = 0);
     ~LightOption();
 
-    //slots
+public slots:
+    void OnBnClickCancel();
+    void OnBnClickedOk();
     void OnClickCamLightCheckbox();
     void OnClickSceneLightCheckbox();
-    void OnBnClickedOk();
 
 private:
     void initDialogCtrls();
-
+    void bindingSlots();
 private:
     Ui::LightOption ui;
+
+public:
     int isCamLightOn;
     int isSceneLightOn;
     double intencityCamLight;

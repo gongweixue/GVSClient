@@ -58,8 +58,8 @@ private:
 //public slots:
     
     void OnStdExplode();
-    void OnLightOption();
-    void OnCubeAxesOption();
+    
+    
 
 public slots:
     void OnOpenProject();
@@ -74,6 +74,8 @@ public slots:
     void OnQuickTurnSceneLight();
     void OnOrientationOnOff();
     void OnTurnCubeAxesOnOff();
+    void OnLightOption();
+    void OnCubeAxesOption();
 
 private:
     Ui::MainWindowClass ui;

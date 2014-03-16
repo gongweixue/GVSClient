@@ -1,11 +1,5 @@
 #include "LightOption.h"
 
-LightOption::LightOption(QWidget *parent)
-    : QWidget(parent)
-{
-    ui.setupUi(this);
-}
-
 LightOption::LightOption( int camLightOn, double IntencityOfCamLight, int sceneLightOn, double IntencityOfSceneLight, double XYZ[3],QWidget* pParent /*= 0*/ )
 {
     ui.setupUi(this);
@@ -19,6 +13,7 @@ LightOption::LightOption( int camLightOn, double IntencityOfCamLight, int sceneL
     zSceneLight=XYZ[2];
 
     initDialogCtrls();
+    bindingSlots();
 }
 
 LightOption::~LightOption()
@@ -81,4 +76,24 @@ void LightOption::OnBnClickedOk()
         ySceneLight=(double)(ui.YofSceneLightCtrl->value())/10;
         zSceneLight=(double)(ui.ZofSceneLightCtrl->value())/10;
     }
+    this->close();
+}
+
+void LightOption::bindingSlots()
+{
+    connect(ui.okButton, SIGNAL(clicked()), this, SLOT(OnBnClickedOk()));
+    connect(ui.CamLightCheckBoxCtrl,
+            SIGNAL(clicked()),
+            this,
+            SLOT(OnClickCamLightCheckbox()));
+    connect(ui.SceneLightCheckBoxCtrl,
+            SIGNAL(clicked()),
+            this,
+            SLOT(OnClickSceneLightCheckbox()));
+    connect(ui.cancleButton, SIGNAL(clicked()), this, SLOT(OnBnClickCancel()));
+}
+
+void LightOption::OnBnClickCancel()
+{
+    this->hide();
 }

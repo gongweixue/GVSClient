@@ -17,6 +17,8 @@
 #include <Windows.h>
 #include "MainWindow.h"
 #include "GVSDoc.h"
+#include "Options/LightOption.h"
+#include <Options/CubeAxesOption.h>
 
 //#define GVS_SHOW_SPLISH
 
@@ -826,6 +828,9 @@ void MainWindow::bindingActionsWithSlots()
     connect(ui.actionSceneLight, SIGNAL(triggered()), this, SLOT(OnQuickTurnSceneLight()));
     connect(ui.actionOrientatorCtrl, SIGNAL(triggered()), this, SLOT(OnOrientationOnOff()));
     connect(ui.actionRulerCtrl, SIGNAL(triggered()), this, SLOT(OnTurnCubeAxesOnOff()));
+    connect(ui.actionRulerGridCtrl, SIGNAL(triggered()), this, SLOT(OnCubeAxesOption()));
+    connect(ui.actionLightOption, SIGNAL(triggered()), this, SLOT(OnLightOption()));
+    
 }
 
 void MainWindow::OnOpenProject()
@@ -992,4 +997,46 @@ void MainWindow::OnTurnCubeAxesOnOff()
     int xGridOn=m_cubeAxesActor->GetDrawXGridlines();
     int yGridOn=m_cubeAxesActor->GetDrawYGridlines();
     TurnCubeAxesOnOff(isOn,xGridOn, yGridOn);
+}
+
+void MainWindow::OnLightOption()
+{
+    double sceneLightPos[3];
+    m_sceneLightUp->GetPosition(sceneLightPos);
+    LightOption lightOptionDLG(m_camLight->GetSwitch(),
+                               m_camLight->GetIntensity(),
+                               m_sceneLightUp->GetSwitch()
+                               &&m_sceneLightDown->GetSwitch(), 
+                               m_sceneLightUp->GetIntensity(),
+                               sceneLightPos,
+                               this);
+    lightOptionDLG.setWindowModality(Qt::WindowModal);
+    lightOptionDLG.exec();
+
+    m_camLight->SetSwitch(lightOptionDLG.isCamLightOn);
+    m_camLight->SetIntensity(lightOptionDLG.intencityCamLight);
+    m_sceneLightUp->SetSwitch(lightOptionDLG.isSceneLightOn);
+    m_sceneLightDown->SetSwitch(lightOptionDLG.isSceneLightOn);
+    m_sceneLightUp->SetIntensity(lightOptionDLG.intencitySceneLight);
+    m_sceneLightDown->SetIntensity(lightOptionDLG.intencitySceneLight);
+    m_sceneLightUp->SetPosition(lightOptionDLG.xSceneLight,
+                                lightOptionDLG.ySceneLight,
+                                lightOptionDLG.zSceneLight);
+    m_sceneLightDown->SetPosition(0-lightOptionDLG.xSceneLight,
+                                  0-lightOptionDLG.ySceneLight,
+                                  0-lightOptionDLG.zSceneLight);
+}
+
+void MainWindow::OnCubeAxesOption()
+{
+    CubeAxesOption cubeAxesOptionDialog(m_cubeAxesActor->GetVisibility(),
+                                        m_cubeAxesActor->GetDrawXGridlines(),
+                                        m_cubeAxesActor->GetDrawYGridlines(),
+                                        this);
+    cubeAxesOptionDialog.setWindowModality(Qt::WindowModal);
+    cubeAxesOptionDialog.exec();
+
+    TurnCubeAxesOnOff(cubeAxesOptionDialog.m_isCubeAxesOn,
+                      cubeAxesOptionDialog.m_isXGridOn,
+                      cubeAxesOptionDialog.m_isYGridOn);
 }
