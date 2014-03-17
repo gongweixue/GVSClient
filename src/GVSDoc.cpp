@@ -6,6 +6,7 @@ GVSDoc::GVSDoc(MainWindow* mainWindow, QObject *parent)
 {
     m_pMainWindow = m_pMainWindow;
     m_numOfObjects = 0;
+    m_pathNameOfProject = "";
 }
 
 GVSDoc::~GVSDoc()
@@ -17,12 +18,12 @@ void GVSDoc::OnOpenProject()
     m_objectsManager.ClearObjectsTable();
     m_objectsManager.m_docsNameVector.clear();
 
-    std::string pathName = getProjectPath();
-    if (pathName.empty())
+    m_pathNameOfProject = getProjectPath();
+    if (m_pathNameOfProject.empty())
     {
         return;
     }
-    LoadProjectFile(pathName);
+    LoadProjectFile(m_pathNameOfProject);
 }
 
 void GVSDoc::OnCloseDocument()
@@ -42,12 +43,12 @@ void GVSDoc::LoadProjectFile(std::string projectFileName)
 
 void GVSDoc::LoadDocsNameOfProject( std::string projectFileName )
 {
-    m_objectsManager.m_docsNameVector = parseProject(projectFileName);
+    m_objectsManager.m_docsNameVector = parseProjectObject(projectFileName);
 
     m_numOfObjects=m_objectsManager.m_docsNameVector.size();
 }
 
-vector<string> GVSDoc::parseProject( std::string projectFileName )
+vector<string> GVSDoc::parseProjectObject( std::string projectFileName )
 {
     std::vector<std::string> names;
 

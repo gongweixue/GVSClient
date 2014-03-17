@@ -40,7 +40,10 @@ void CubeAxesOption::OnClickCubeAxesOnCheckbox()
 
 void CubeAxesOption::bindingSlots()
 {
-    connect(ui.CubeAxesCheckBoxCtrl, SIGNAL(clicked()), this, SLOT(OnClickCubeAxesOnCheckbox()));
+    connect(ui.CubeAxesCheckBoxCtrl,
+            SIGNAL(clicked()),
+            this,
+            SLOT(OnClickCubeAxesOnCheckbox()));
     connect(ui.okButton, SIGNAL(clicked()), this, SLOT(OnBnClickedOk()));
     connect(ui.cancleButton, SIGNAL(clicked()), this, SLOT(OnBnClickedCancle()));
 }

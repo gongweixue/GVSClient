@@ -39,11 +39,11 @@ const int evenColLMT=5;
 template<typename T>
 bool DeleteVTKPointer(T& pointer)
 {
-	if (pointer!=0)
-	{
-		pointer->Delete();
-		pointer=0;
-		return true;
-	}
-	return false;
+    if (pointer!=0)
+    {
+        pointer->Delete();
+        pointer=0;
+        return true;
+    }
+    return false;
 };

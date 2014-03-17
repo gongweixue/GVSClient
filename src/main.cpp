@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
     QApplication::setApplicationName("GVSClient");
-    QApplication::setApplicationVersion("v0.1");
+    QApplication::setApplicationVersion("v1.0");
     QApplication::setOrganizationName("GVSClient");
 
     QApplication qtapp(argc, argv);

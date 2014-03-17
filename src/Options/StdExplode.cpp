@@ -6,11 +6,11 @@ StdExplode::StdExplode(QWidget *parent)
     ui.setupUi(this);
 
     //init the member values
-    m_RadioCrossExplodeChecked=0;
-    m_RadioEvenExplodeChecked=0;
-    m_evenRow=2;
-    m_evenCol=2;
-    m_gapRatio=1;
+    m_RadioCrossExplodeChecked = 0;
+    m_RadioEvenExplodeChecked  =0;
+    m_evenRow = 2;
+    m_evenCol = 2;
+    m_gapRatio = 1;
 
     initDialogCtrls();
     bindingSlots();
@@ -61,26 +61,28 @@ void StdExplode::OnBnClickedOk()
     switch (ui.m_EvenExplodeGapRatio->currentIndex())
     {
     case 0:
-        m_gapRatio=1;
+        m_gapRatio = 1;
         break;
     case 1:
-        m_gapRatio=0.5;
+        m_gapRatio = 0.5;
         break;
     case 2:
-        m_gapRatio=0.25;
+        m_gapRatio = 0.25;
         break;
     case 3:
-        m_gapRatio=0.15;
+        m_gapRatio = 0.15;
     default:
-        m_gapRatio=1;
+        m_gapRatio = 1;
     }
     this->close();
 }
 
 void StdExplode::bindingSlots()
 {
-    connect(ui.m_Radio_Cross_Explode, SIGNAL(clicked()), this, SLOT(OnBnClickedRadioCrossExplode()));
-    connect(ui.m_Radio_Even_Explode, SIGNAL(clicked()), this, SLOT(OnBnClickedRadioEvenExplode()));
+    connect(ui.m_Radio_Cross_Explode, SIGNAL(clicked()),
+            this, SLOT(OnBnClickedRadioCrossExplode()));
+    connect(ui.m_Radio_Even_Explode, SIGNAL(clicked()),
+            this, SLOT(OnBnClickedRadioEvenExplode()));
     connect(ui.okButton, SIGNAL(clicked()), this, SLOT(OnBnClickedOk()));
     connect(ui.cancleButton, SIGNAL(clicked()), this, SLOT(OnBnClickedCancle()));
 }

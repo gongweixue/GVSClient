@@ -1,13 +1,18 @@
 #include "LightOption.h"
 
-LightOption::LightOption( int camLightOn, double IntencityOfCamLight, int sceneLightOn, double IntencityOfSceneLight, double XYZ[3],QWidget* pParent /*= 0*/ )
+LightOption::LightOption(int camLightOn,
+                         double IntencityOfCamLight,
+                         int sceneLightOn,
+                         double IntencityOfSceneLight,
+                         double XYZ[3],
+                         QWidget* pParent /*= 0*/ )
 {
     ui.setupUi(this);
 
-    isCamLightOn=camLightOn;
-    isSceneLightOn=sceneLightOn;
-    intencityCamLight=IntencityOfCamLight;
-    intencitySceneLight=IntencityOfSceneLight;
+    isCamLightOn = camLightOn;
+    isSceneLightOn = sceneLightOn;
+    intencityCamLight = IntencityOfCamLight;
+    intencitySceneLight = IntencityOfSceneLight;
     xSceneLight=XYZ[0];
     ySceneLight=XYZ[1];
     zSceneLight=XYZ[2];
@@ -65,16 +70,16 @@ void LightOption::OnBnClickedOk()
     isCamLightOn = ui.CamLightCheckBoxCtrl->isChecked();
     if (isCamLightOn)
     {
-        intencityCamLight = (double)(ui.IntencityOfCamLightCtrl->value())/10;
+        intencityCamLight = (double)(ui.IntencityOfCamLightCtrl->value()) / 10;
     }
 
     isSceneLightOn = ui.SceneLightCheckBoxCtrl->isChecked();
     if (isSceneLightOn)
     {
-        intencitySceneLight=(double)(ui.IntencityOfSceneLightCtrl->value())/10;
-        xSceneLight=(double)(ui.XofSceneLightCtrl->value())/10;
-        ySceneLight=(double)(ui.YofSceneLightCtrl->value())/10;
-        zSceneLight=(double)(ui.ZofSceneLightCtrl->value())/10;
+        intencitySceneLight=(double)(ui.IntencityOfSceneLightCtrl->value()) / 10;
+        xSceneLight=(double)(ui.XofSceneLightCtrl->value()) / 10;
+        ySceneLight=(double)(ui.YofSceneLightCtrl->value()) / 10;
+        zSceneLight=(double)(ui.ZofSceneLightCtrl->value()) / 10;
     }
     this->close();
 }

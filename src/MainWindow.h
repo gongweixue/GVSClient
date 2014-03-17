@@ -25,7 +25,7 @@ public:
     ~MainWindow();
     void welcomeYou();
     GVSDoc* getDocument();
-    vtkRenderer* getRenderer() { return m_mainRenderer; };
+    vtkRenderer* getRenderer() { return m_mainRenderer; }
     void removeAllActorsOfRenderer(vtkRenderer* renderer);
     SceneManager* getSceneManager(){return &m_sceneManager;}
 
@@ -82,8 +82,8 @@ private:
     QLabel* statusBartipLabel2;
     QSplitter* splitterMain;
     QTabWidget* m_ProjectExplorer;
-    QTreeView* treeTab1;
-    QTreeView* treeTab2;
+    //QTreeView* treeTab1;
+    //QTreeView* treeTab2;
     QVTKWidget* qvtkWidget;
     GVSDoc* m_pDoc;
 

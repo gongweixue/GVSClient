@@ -25,8 +25,7 @@
 
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags),
-    m_ColorLegendManager(this->ui.dockColorLegend)
-
+    m_ColorLegendManager(this->ui.dockColorLegend, m_pDoc->getProjectPathName())
 {
     //show startup image while preparing.
     QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
@@ -119,11 +118,6 @@ void MainWindow::initMainAreaMembers()
 
     //left init
     m_ProjectExplorer = new QTabWidget(splitterMain);
-    treeTab1 = new QTreeView(m_ProjectExplorer);
-    treeTab2 = new QTreeView(m_ProjectExplorer);
-    m_ProjectExplorer->addTab(treeTab1, tr("йсм╪1"));
-    m_ProjectExplorer->addTab(treeTab2, tr("йсм╪2"));
-
 
     //right side init
     qvtkWidget = new QVTKWidget(splitterMain);
@@ -218,12 +212,12 @@ void MainWindow::destoryCommonMembers()
     DeleteVTKPointer(m_boxClipWidget);
     DeleteVTKPointer(m_boxClipCallback);
     DeleteVTKPointer(m_boxClipPlanes);
-    for (int i=0;i<6;i++)
+    for (int i = 0; i < 6; i++)
     {
         DeleteVTKPointer(m_boxClipPlane[i]);
     }
 
-    for (int i=0;i<3;i++)
+    for (int i = 0; i < 3; i++)
     {
         DeleteVTKPointer(m_prismClipPlane[i]);
         DeleteVTKPointer(m_prismClipWidget[i]);
@@ -274,36 +268,36 @@ void MainWindow::onInitialUpdate()
 
 void MainWindow::showOrientationMarker()
 {
-    vtkSmartPointer<vtkAxesActor> axesActor=vtkSmartPointer<vtkAxesActor>::New();
+    vtkSmartPointer<vtkAxesActor> axesActor = vtkSmartPointer<vtkAxesActor>::New();
     axesActor->SetYAxisLabelText("N");
     axesActor->SetXAxisLabelText("E");
     axesActor->SetZAxisLabelText("UP");
-    axesActor->GetXAxisShaftProperty()->SetColor(0,0,1);
-    axesActor->GetYAxisShaftProperty()->SetColor(0,1,0);
-    axesActor->GetZAxisShaftProperty()->SetColor(1,0,0);
-    axesActor->GetXAxisTipProperty()->SetColor(0,0,1);
-    axesActor->GetYAxisTipProperty()->SetColor(0,1,0);
-    axesActor->GetZAxisTipProperty()->SetColor(1,0,0);
-    axesActor->SetTotalLength(1,1,1);
+    axesActor->GetXAxisShaftProperty()->SetColor(0, 0, 1);
+    axesActor->GetYAxisShaftProperty()->SetColor(0, 1, 0);
+    axesActor->GetZAxisShaftProperty()->SetColor(1, 0, 0);
+    axesActor->GetXAxisTipProperty()->SetColor(0, 0, 1);
+    axesActor->GetYAxisTipProperty()->SetColor(0, 1, 0);
+    axesActor->GetZAxisTipProperty()->SetColor(1, 0, 0);
+    axesActor->SetTotalLength(1, 1, 1);
 
     double backColor[3];
     m_mainRenderer->GetBackground(backColor);
-    m_OrientationMarker->SetOutlineColor(backColor[0],backColor[1],backColor[2]);
+    m_OrientationMarker->SetOutlineColor(backColor[0], backColor[1], backColor[2]);
     m_OrientationMarker->SetOrientationMarker( axesActor );
-    m_OrientationMarker->SetInteractor( this->qvtkWidget->GetInteractor());
-    m_OrientationMarker->SetOutlineColor(1,1,1);
+    m_OrientationMarker->SetInteractor(this->qvtkWidget->GetInteractor());
+    m_OrientationMarker->SetOutlineColor(1, 1, 1);
     m_OrientationMarker->SetEnabled(1);
-    m_OrientationMarker->SetViewport( 0.0, 1-0.2, 0.2, 1 );
+    m_OrientationMarker->SetViewport(0.0, 1-0.2, 0.2, 1);
     m_OrientationMarker->KeyPressActivationOff();
     m_OrientationMarker->InteractiveOn();
 }
 
-void MainWindow::removeAllActorsOfRenderer( vtkRenderer* renderer )
+void MainWindow::removeAllActorsOfRenderer(vtkRenderer* renderer)
 {
     renderer->RemoveAllViewProps();
 }
 
-void MainWindow::processRenderRequest( int state )
+void MainWindow::processRenderRequest(int state)
 {
     removeAllActorsOfRenderer(m_mainRenderer);
     m_sceneManager.ClearActorTable();
@@ -312,7 +306,7 @@ void MainWindow::processRenderRequest( int state )
         return;
     else
     {
-        if (pDoc->GetObjectsManager()->GetObjectsTable()->size()!=0)
+        if (pDoc->GetObjectsManager()->GetObjectsTable()->size() != 0)
         {
             switch (state)
             {
@@ -331,6 +325,8 @@ void MainWindow::processRenderRequest( int state )
             case SCENE_STATE_PRISM_CLIP:
                 RenderPrismClip();
                 break;
+            default:
+                throw std::exception("Wrong state value.");
             }
         }
     }
@@ -342,14 +338,15 @@ void MainWindow::processRenderRequest( int state )
 
 void MainWindow::RenderOriginal()
 {
-    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size()!=0)
+    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size() != 0)
     {
         m_sceneManager.SetSceneBounds(getDocument()->GetObjectsManager()->m_bounds);
         vector<ObjectRecord>::iterator iter_ObRcd=
                 getDocument()->GetObjectsManager()->GetObjectsTable()->begin();
-        for (; iter_ObRcd!=getDocument()->GetObjectsManager()->GetObjectsTable()->end(); iter_ObRcd++)
+        ObjectsManager* manager = getDocument()->GetObjectsManager();
+        for (; iter_ObRcd != manager->GetObjectsTable()->end(); iter_ObRcd++)
         {
-            vtkActor* tempActor=MappingDataSetToActor(iter_ObRcd->reader->GetOutput());
+            vtkActor* tempActor = MappingDataSetToActor(iter_ObRcd->reader->GetOutput());
             m_sceneManager.InsertActorRecord(tempActor,
                                              iter_ObRcd->fileName,
                                              SCENE_STATE_ORIGINAL,
@@ -363,13 +360,13 @@ void MainWindow::RenderOriginal()
 
 void MainWindow::RenderPlaneClip()
 {
-    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size()!=0)
+    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size() != 0)
     {
         vtkSmartPointer<vtkAppendFilter> apdFilter=
                 vtkSmartPointer<vtkAppendFilter>::New();
-        vector<ObjectRecord>::iterator iter_ObRcd=
-                getDocument()->GetObjectsManager()->GetObjectsTable()->begin();
-        for ( ; iter_ObRcd!=getDocument()->GetObjectsManager()->GetObjectsTable()->end(); iter_ObRcd++)
+        ObjectsManager* manager = getDocument()->GetObjectsManager();
+        vector<ObjectRecord>::iterator iter_ObRcd= manager->GetObjectsTable()->begin();
+        for ( ; iter_ObRcd != manager->GetObjectsTable()->end(); iter_ObRcd++)
         {
             if(iter_ObRcd->visible)
             {
@@ -389,7 +386,10 @@ void MainWindow::RenderPlaneClip()
         clipper->Update();
 
         vtkActor* clipActor = MappingDataSetToActor(clipper->GetOutput());
-        m_sceneManager.InsertActorRecord(clipActor,"_TempClipResult", SCENE_STATE_PLANE_CLIP, 1);
+        m_sceneManager.InsertActorRecord(clipActor,
+                                         "_TempClipResult",
+                                         SCENE_STATE_PLANE_CLIP,
+                                         1);
         m_sceneManager.AddCrrtStatActrToRnder(m_mainRenderer);
 
         m_clipPlaneRep->SetPlaceFactor(1.25);
@@ -397,7 +397,9 @@ void MainWindow::RenderPlaneClip()
         mergedDataSet->GetBounds(tmpBounds);
         m_clipPlaneRep->PlaceWidget(tmpBounds);
         m_clipPlaneRep->SetNormal(m_clipPlane->GetNormal());
-        m_clipPlaneRep->SetOrigin((tmpBounds[0]+tmpBounds[1])/2, (tmpBounds[2]+tmpBounds[3])/2, (tmpBounds[5]+tmpBounds[4])/2);
+        m_clipPlaneRep->SetOrigin((tmpBounds[0]+tmpBounds[1]) / 2,
+                                  (tmpBounds[2]+tmpBounds[3]) / 2,
+                                  (tmpBounds[5]+tmpBounds[4]) / 2);
         m_clipPlaneRep->DrawPlaneOff();
 
         m_clipCallback->Plane=m_clipPlane;
@@ -417,10 +419,10 @@ void MainWindow::RenderPlaneClip()
 void MainWindow::RenderStdExplode()
 {
     //append object data which visible=1.
-    vtkSmartPointer<vtkAppendFilter> apdFilter=vtkSmartPointer<vtkAppendFilter>::New();
-    vector<ObjectRecord>::iterator iter_ObRcd=
-            getDocument()->GetObjectsManager()->GetObjectsTable()->begin();
-    for ( ; iter_ObRcd!=getDocument()->GetObjectsManager()->GetObjectsTable()->end(); iter_ObRcd++)
+    vtkSmartPointer<vtkAppendFilter> apdFilter = vtkSmartPointer<vtkAppendFilter>::New();
+    ObjectsManager* manager = getDocument()->GetObjectsManager();
+    vector<ObjectRecord>::iterator iter_ObRcd= manager->GetObjectsTable()->begin();
+    for ( ; iter_ObRcd!=manager->GetObjectsTable()->end(); iter_ObRcd++)
     {
         if(iter_ObRcd->visible)
         {
@@ -434,81 +436,89 @@ void MainWindow::RenderStdExplode()
     double bounds[6];
     mergedDataSet->GetBounds(bounds);
     //gap size
-    double explodeGap=m_evenExplodeGapRatio*(bounds[5]-bounds[4]);
+    double explodeGap=m_evenExplodeGapRatio*(bounds[5] - bounds[4]);
 
     //--------------------------------horizon cut-------------------------------
     //temp var to store clipper, trans,etc.
     vtkSmartPointer<vtkDataSet> hResultData[evenRowLMT];
-    vtkSmartPointer<vtkPlane> hPlane[evenRowLMT-1];
-    vtkSmartPointer<vtkTableBasedClipDataSet> hClipper[evenRowLMT-1][2];
+    vtkSmartPointer<vtkPlane> hPlane[evenRowLMT - 1];
+    vtkSmartPointer<vtkTableBasedClipDataSet> hClipper[evenRowLMT - 1][2];
     vtkSmartPointer<vtkTransform> hTrans[evenRowLMT-1];
-    vtkSmartPointer<vtkTransformFilter> hTransFilter[evenRowLMT-1];
+    vtkSmartPointer<vtkTransformFilter> hTransFilter[evenRowLMT - 1];
     //temp var to be process in next loop.
     vtkSmartPointer<vtkDataSet> inputData=mergedDataSet;
     // horizon cut begin
-    for (int i=0;i<m_evenExplodeRow-1;i++)
+    for (int i = 0; i  <m_evenExplodeRow - 1; i++)
     {
         hPlane[i]=vtkSmartPointer<vtkPlane>::New();
         hPlane[i]->SetNormal(0, 1, 0);
-        hPlane[i]->SetOrigin(0, (bounds[3]-(i+1)*(bounds[3]-bounds[2])/m_evenExplodeRow) , 0);
+        hPlane[i]->SetOrigin(0,
+                (bounds[3] -
+                (i + 1) *
+                (bounds[3] - bounds[2]) /
+                m_evenExplodeRow),
+                0);
         //clipper positive, insideOutOff
-        hClipper[i][0]=vtkSmartPointer<vtkTableBasedClipDataSet>::New();
+        hClipper[i][0] = vtkSmartPointer<vtkTableBasedClipDataSet>::New();
         hClipper[i][0]->SetInput(inputData);
         hClipper[i][0]->SetClipFunction(hPlane[i]);
         hClipper[i][0]->InsideOutOff();
         hClipper[i][0]->Update();
         //transFilter
-        hTrans[i]=vtkSmartPointer<vtkTransform>::New();
-        hTrans[i]->Translate(0, (m_evenExplodeRow-i-1)*explodeGap, 0);
-        hTransFilter[i]=vtkSmartPointer<vtkTransformFilter>::New();
+        hTrans[i] = vtkSmartPointer<vtkTransform>::New();
+        hTrans[i]->Translate(0, (m_evenExplodeRow - i - 1)*explodeGap, 0);
+        hTransFilter[i] = vtkSmartPointer<vtkTransformFilter>::New();
         hTransFilter[i]->SetInputConnection(hClipper[i][0]->GetOutputPort());
         hTransFilter[i]->SetTransform(hTrans[i]);
         hTransFilter[i]->Update();
         //store into tmp var
-        hResultData[i]=hTransFilter[i]->GetOutput();
+        hResultData[i] = hTransFilter[i]->GetOutput();
         //clipper nagtive, insideOutOn
-        hClipper[i][1]=vtkSmartPointer<vtkTableBasedClipDataSet>::New();
+        hClipper[i][1] = vtkSmartPointer<vtkTableBasedClipDataSet>::New();
         hClipper[i][1]->SetInput(inputData);
         hClipper[i][1]->SetClipFunction(hPlane[i]);
         hClipper[i][1]->InsideOutOn();
         hClipper[i][1]->Update();
         //prepare for next loop
-        inputData=hClipper[i][1]->GetOutput();
+        inputData = hClipper[i][1]->GetOutput();
     }
     //store the last ClippedOutput in to hResultData.
-    hResultData[m_evenExplodeRow-1]=inputData;
+    hResultData[m_evenExplodeRow-1] = inputData;
 
     //----------------------------------------vertical cut--------------------------
     //temp var to store clipper, trans,etc.
-    vtkSmartPointer<vtkPlane> vPlane[evenRowLMT][evenColLMT-1];
-    vtkSmartPointer<vtkTableBasedClipDataSet> vClipper[evenRowLMT][evenColLMT-1][2];
-    vtkSmartPointer<vtkTransform> vTrans[evenRowLMT][evenColLMT-1];
-    vtkSmartPointer<vtkTransformFilter> vTransFilter[evenRowLMT][evenColLMT-1];
-    vtkSmartPointer<vtkDataSet> resultData[evenRowLMT][evenColLMT];//final result dataset array.
+    vtkSmartPointer<vtkPlane> vPlane[evenRowLMT][evenColLMT - 1];
+    vtkSmartPointer<vtkTableBasedClipDataSet> vClipper[evenRowLMT][evenColLMT - 1][2];
+    vtkSmartPointer<vtkTransform> vTrans[evenRowLMT][evenColLMT - 1];
+    vtkSmartPointer<vtkTransformFilter> vTransFilter[evenRowLMT][evenColLMT - 1];
+    vtkSmartPointer<vtkDataSet> resultData[evenRowLMT][evenColLMT];
     //vertical cut begin
-    for (int i=0;i<m_evenExplodeRow;i++)
+    for (int i = 0; i < m_evenExplodeRow;i++)
     {
         inputData=hResultData[i];//for every horizon result data.
-        for (int j=0;j<m_evenExplodeCol-1;j++)
+        for (int j = 0; j < m_evenExplodeCol - 1; j++)
         {
             vPlane[i][j]=vtkSmartPointer<vtkPlane>::New();
             vPlane[i][j]->SetNormal(1, 0, 0);
-            vPlane[i][j]->SetOrigin( (bounds[1]-(j+1)*(bounds[1]-bounds[0])/m_evenExplodeCol) , 0, 0 );
+            vPlane[i][j]->SetOrigin((bounds[1] - (j + 1) * (bounds[1] - bounds[0]) /
+                                    m_evenExplodeCol),
+                                    0,
+                                    0);
             //clipper positive insideOutOff
-            vClipper[i][j][0]=vtkSmartPointer<vtkTableBasedClipDataSet>::New();
+            vClipper[i][j][0] = vtkSmartPointer<vtkTableBasedClipDataSet>::New();
             vClipper[i][j][0]->SetInput(inputData);
             vClipper[i][j][0]->SetClipFunction(vPlane[i][j]);
             vClipper[i][j][0]->InsideOutOff();
             vClipper[i][j][0]->Update();
             //transFilter
-            vTrans[i][j]=vtkSmartPointer<vtkTransform>::New();
-            vTrans[i][j]->Translate( (m_evenExplodeCol-j-1)*explodeGap , 0, 0);
-            vTransFilter[i][j]=vtkSmartPointer<vtkTransformFilter>::New();
+            vTrans[i][j] = vtkSmartPointer<vtkTransform>::New();
+            vTrans[i][j]->Translate( (m_evenExplodeCol - j - 1)*explodeGap, 0, 0);
+            vTransFilter[i][j] = vtkSmartPointer<vtkTransformFilter>::New();
             vTransFilter[i][j]->SetInputConnection(vClipper[i][j][0]->GetOutputPort());
             vTransFilter[i][j]->SetTransform(vTrans[i][j]);
             vTransFilter[i][j]->Update();
             //store into final data array.
-            resultData[i][j]=vTransFilter[i][j]->GetOutput();
+            resultData[i][j] = vTransFilter[i][j]->GetOutput();
             //clipper nagtive, insideOutOn
             vClipper[i][j][1]=vtkSmartPointer<vtkTableBasedClipDataSet>::New();
             vClipper[i][j][1]->SetInput(inputData);
@@ -516,18 +526,21 @@ void MainWindow::RenderStdExplode()
             vClipper[i][j][1]->InsideOutOn();
             vClipper[i][j][1]->Update();
             //for next loop
-            inputData=vClipper[i][j][1]->GetOutput();
+            inputData = vClipper[i][j][1]->GetOutput();
         }
-        resultData[i][m_evenExplodeCol-1]=inputData;
+        resultData[i][m_evenExplodeCol - 1] = inputData;
     }
 
     //mapping data to actor
-    for (int i=0; i<m_evenExplodeRow; i++)
+    for (int i = 0; i < m_evenExplodeRow; i++)
     {
-        for (int j=0; j<m_evenExplodeCol; j++)
+        for (int j = 0; j < m_evenExplodeCol; j++)
         {
             vtkActor* tmpActor=MappingDataSetToActor(resultData[i][j]);
-            m_sceneManager.InsertActorRecord(tmpActor,"_StdExplodeResult",SCENE_STATE_STD_EXPLODE,true);
+            m_sceneManager.InsertActorRecord(tmpActor,
+                                             "_StdExplodeResult",
+                                             SCENE_STATE_STD_EXPLODE,
+                                             true);
         }
     }
     //add all actor which state=stdExplode
@@ -539,14 +552,14 @@ void MainWindow::RenderStdExplode()
 
 void MainWindow::RenderPrismClip()
 {
-    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size()!=0)
+    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size() != 0)
     {
         //append the object data which visible=1.
         vtkSmartPointer<vtkAppendFilter> source=
                 vtkSmartPointer<vtkAppendFilter>::New();
-        vector<ObjectRecord>::iterator iter_ObRcd=
-                getDocument()->GetObjectsManager()->GetObjectsTable()->begin();
-        for ( ; iter_ObRcd!=getDocument()->GetObjectsManager()->GetObjectsTable()->end(); iter_ObRcd++)
+        ObjectsManager* manager = getDocument()->GetObjectsManager();
+        vector<ObjectRecord>::iterator iter_ObRcd = manager->GetObjectsTable()->begin();
+        for ( ; iter_ObRcd!=manager->GetObjectsTable()->end(); iter_ObRcd++)
         {
             if(iter_ObRcd->visible)
             {
@@ -557,10 +570,10 @@ void MainWindow::RenderPrismClip()
         source->Update();
         vtkSmartPointer<vtkAppendFilter> apdResult=
             vtkSmartPointer<vtkAppendFilter>::New();
-        vtkDataSet* dataToClip=source->GetOutput();//appended result
+        vtkDataSet* dataToClip = source->GetOutput();//appended result
         double bounds[6];
         dataToClip->GetBounds(bounds);
-        for (int i=0;i<5;i++)
+        for (int i = 0; i < 5; i++)
         {
             bounds[i]*=1.1;
         }
@@ -578,19 +591,19 @@ void MainWindow::RenderPrismClip()
         clipper12->SetInput(dataToClip);
         clipper12->InsideOutOff();
         clipper12->Update();
-        dataToClip=clipper12->GetOutput();
+        dataToClip = clipper12->GetOutput();
 
 
         m_prismClipPlane[1]->SetOrigin(source->GetOutput()->GetCenter());
-        m_prismClipPlane[1]->SetNormal(1,-1,0);
-        vtkTableBasedClipDataSet* clipper21=vtkTableBasedClipDataSet::New();
+        m_prismClipPlane[1]->SetNormal(1, -1, 0);
+        vtkTableBasedClipDataSet* clipper21 = vtkTableBasedClipDataSet::New();
         clipper21->SetClipFunction(m_prismClipPlane[1]);
         clipper21->SetInput(dataToClip);
         clipper21->InsideOutOn();
         clipper21->Update();
         apdResult->AddInput(clipper21->GetOutput());
 
-        vtkTableBasedClipDataSet* clipper22=vtkTableBasedClipDataSet::New();
+        vtkTableBasedClipDataSet* clipper22 = vtkTableBasedClipDataSet::New();
         clipper22->SetClipFunction(m_prismClipPlane[1]);
         clipper22->SetInput(dataToClip);
         clipper22->InsideOutOff();
@@ -599,8 +612,8 @@ void MainWindow::RenderPrismClip()
 
 
         m_prismClipPlane[2]->SetOrigin(source->GetOutput()->GetCenter());
-        m_prismClipPlane[2]->SetNormal(-1,-1,0);
-        vtkTableBasedClipDataSet* clipper31=vtkTableBasedClipDataSet::New();
+        m_prismClipPlane[2]->SetNormal(-1, -1, 0);
+        vtkTableBasedClipDataSet* clipper31 = vtkTableBasedClipDataSet::New();
         clipper31->SetClipFunction(m_prismClipPlane[2]);
         clipper31->SetInput(dataToClip);
         clipper31->InsideOutOn();
@@ -609,10 +622,11 @@ void MainWindow::RenderPrismClip()
         apdResult->Update();
 
         vtkActor* tmpActor=MappingDataSetToActor(apdResult->GetOutput() );
-        m_sceneManager.InsertActorRecord(tmpActor,"_PrismClipResult", SCENE_STATE_PRISM_CLIP, 1);
+        m_sceneManager.InsertActorRecord(tmpActor,
+                                         "_PrismClipResult",
+                                         SCENE_STATE_PRISM_CLIP,
+                                         1);
         m_sceneManager.AddCrrtStatActrToRnder(m_mainRenderer);
-
-
 
         //----------------------------clip2------------------------------
         //rep2
@@ -629,18 +643,16 @@ void MainWindow::RenderPrismClip()
         m_prismClipRep[1]->GetOutlineProperty()->SetOpacity(0);
         m_prismClipRep[1]->GetSelectedOutlineProperty()->SetOpacity(0);
         //callback 2
-        //m_prismClipCallback[1]=vtkPlaneClipCallback::New();
         m_prismClipCallback[1]->Plane=m_prismClipPlane[1];
         //widget2
-        //m_prismClipWidget[1]=vtkImplicitPlaneWidget2::New();
         m_prismClipWidget[1]->SetInteractor(qvtkWidget->GetInteractor());
         m_prismClipWidget[1]->SetRepresentation(m_prismClipRep[1]);
-        m_prismClipWidget[1]->AddObserver(vtkCommand::EndInteractionEvent, m_prismClipCallback[1]);
+        m_prismClipWidget[1]->AddObserver(vtkCommand::EndInteractionEvent,
+                                          m_prismClipCallback[1]);
         m_prismClipWidget[1]->On();
         m_prismClipWidget[1]->EnabledOn();
         //----------------------------clip3------------------------------
         //rep3
-        //m_prismClipRep[2]=vtkImplicitPlaneRepresentation::New();
         m_prismClipRep[2]->SetPlaceFactor(1);
         m_prismClipRep[2]->PlaceWidget(bounds);
         m_prismClipRep[2]->SetNormal(m_prismClipPlane[2]->GetNormal());
@@ -653,17 +665,15 @@ void MainWindow::RenderPrismClip()
         m_prismClipRep[2]->GetOutlineProperty()->SetOpacity(0);
         m_prismClipRep[2]->GetSelectedOutlineProperty()->SetOpacity(0);
         //callback2
-        //m_prismClipCallback[2]=vtkPlaneClipCallback::New();
         m_prismClipCallback[2]->Plane=m_prismClipPlane[2];
         //widget2
-        //m_prismClipWidget[2]=vtkImplicitPlaneWidget2::New();
         m_prismClipWidget[2]->SetInteractor(qvtkWidget->GetInteractor());
         m_prismClipWidget[2]->SetRepresentation(m_prismClipRep[2]);
-        m_prismClipWidget[2]->AddObserver(vtkCommand::EndInteractionEvent, m_prismClipCallback[2]);
+        m_prismClipWidget[2]->AddObserver(vtkCommand::EndInteractionEvent,
+                                          m_prismClipCallback[2]);
         m_prismClipWidget[2]->On();
         m_prismClipWidget[2]->EnabledOn();
         //----------------------------clip1------------------------------
-        //m_prismClipRep[0]=vtkImplicitPlaneRepresentation::New();
         m_prismClipRep[0]->SetPlaceFactor(1);
         m_prismClipRep[0]->PlaceWidget(bounds);
         m_prismClipRep[0]->SetNormal(m_prismClipPlane[0]->GetNormal());
@@ -676,13 +686,12 @@ void MainWindow::RenderPrismClip()
         m_prismClipRep[0]->GetOutlineProperty()->SetOpacity(0);
         m_prismClipRep[0]->GetSelectedOutlineProperty()->SetOpacity(0);
 
-        //m_prismClipCallback[0]=vtkPlaneClipCallback::New();
-        m_prismClipCallback[0]->Plane=m_prismClipPlane[0];
+        m_prismClipCallback[0]->Plane = m_prismClipPlane[0];
 
-        //m_prismClipWidget[0]=vtkImplicitPlaneWidget2::New();
         m_prismClipWidget[0]->SetInteractor(qvtkWidget->GetInteractor());
         m_prismClipWidget[0]->SetRepresentation(m_prismClipRep[0]);
-        m_prismClipWidget[0]->AddObserver(vtkCommand::EndInteractionEvent, m_prismClipCallback[0]);
+        m_prismClipWidget[0]->AddObserver(vtkCommand::EndInteractionEvent,
+                                          m_prismClipCallback[0]);
         m_prismClipWidget[0]->On();
         m_prismClipWidget[0]->EnabledOn();
 
@@ -693,13 +702,13 @@ void MainWindow::RenderPrismClip()
 
 void MainWindow::RenderBoxClip()
 {
-    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size()!=0)
+    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size() != 0)
     {
         vtkSmartPointer<vtkAppendFilter> apdOriginFilter=
                 vtkSmartPointer<vtkAppendFilter>::New();
-        vector<ObjectRecord>::iterator iter_ObRcd=
-                getDocument()->GetObjectsManager()->GetObjectsTable()->begin();
-        for ( ; iter_ObRcd!=getDocument()->GetObjectsManager()->GetObjectsTable()->end(); iter_ObRcd++)
+        ObjectsManager* manager = getDocument()->GetObjectsManager();
+        vector<ObjectRecord>::iterator iter_ObRcd = manager->GetObjectsTable()->begin();
+        for ( ; iter_ObRcd != manager->GetObjectsTable()->end(); iter_ObRcd++)
         {
             if(iter_ObRcd->visible)
             {
@@ -717,11 +726,11 @@ void MainWindow::RenderBoxClip()
         m_boxClipWidget->SetPlaceFactor(1);
         m_boxClipWidget->SetInput(apdOriginFilter->GetOutput());
         m_boxClipWidget->PlaceWidget(  bounds[0],
-            (bounds[0]+ (bounds[1]-bounds[0])/4),
+            (bounds[0] + (bounds[1]-bounds[0]) / 4),
             bounds[2],
-            (bounds[2] + (bounds[3]-bounds[2])/4),
-            (bounds[4]+bounds[5])/2,
-            (bounds[5] + (bounds[5]-bounds[4])/4)
+            (bounds[2] + (bounds[3]-bounds[2]) / 4),
+            (bounds[4] + bounds[5]) / 2,
+            (bounds[5] + (bounds[5] - bounds[4]) / 4)
             );
 
         m_boxClipWidget->InsideOutOn();
@@ -729,49 +738,47 @@ void MainWindow::RenderBoxClip()
         m_boxClipWidget->SetHandleSize(0.002);
 
         //planes
-        //m_boxClipPlanes=vtkPlanes::New();
         m_boxClipWidget->GetPlanes(m_boxClipPlanes);
-        for (int i=0; i<6;i++)
+        for (int i = 0; i < 6; i++)
         {
-            //m_boxClipPlane[i]=vtkPlane::New();
             m_boxClipPlanes->GetPlane(i, m_boxClipPlane[i]);
         }
         //box clip result
         vtkSmartPointer<vtkDataSet> result[6];
         vtkSmartPointer<vtkTableBasedClipDataSet> clipper[6][2];
-        vtkDataSet* dataToClip=apdOriginFilter->GetOutput();
+        vtkDataSet* dataToClip = apdOriginFilter->GetOutput();
         //clip with 6 planes
-        for (int i=0; i<6; i++)
+        for (int i = 0; i < 6; i++)
         {
-            clipper[i][0]=vtkSmartPointer<vtkTableBasedClipDataSet>::New();
+            clipper[i][0] = vtkSmartPointer<vtkTableBasedClipDataSet>::New();
             clipper[i][0]->SetInput(dataToClip);
             clipper[i][0]->SetClipFunction(m_boxClipPlane[i]);
             clipper[i][0]->InsideOutOn();
             clipper[i][0]->Update();
-            result[i]=clipper[i][0]->GetOutput();
+            result[i] = clipper[i][0]->GetOutput();
 
-            clipper[i][1]=vtkSmartPointer<vtkTableBasedClipDataSet>::New();
+            clipper[i][1] = vtkSmartPointer<vtkTableBasedClipDataSet>::New();
             clipper[i][1]->SetInput(dataToClip);
             clipper[i][1]->SetClipFunction(m_boxClipPlane[i]);
             clipper[i][1]->InsideOutOff();
             clipper[i][1]->Update();
-            dataToClip=clipper[i][1]->GetOutput();
+            dataToClip = clipper[i][1]->GetOutput();
         }
         //append result
-        vtkSmartPointer<vtkAppendFilter> apdResult=vtkSmartPointer<vtkAppendFilter>::New();
-        for (int i=0; i<6; i++)
+        vtkSmartPointer<vtkAppendFilter> apdResult =
+                vtkSmartPointer<vtkAppendFilter>::New();
+        for (int i = 0; i < 6; i++)
         {
             apdResult->AddInput(result[i]);
         }
         apdResult->Update();
         //callback
-        //m_boxClipCallback=vtkBoxClipCallback::New();
-        m_boxClipCallback->boxPlaneArray=m_boxClipPlane;
-        m_boxClipCallback->boxWidget=m_boxClipWidget;
+        m_boxClipCallback->boxPlaneArray = m_boxClipPlane;
+        m_boxClipCallback->boxWidget = m_boxClipWidget;
         m_boxClipWidget->AddObserver(vtkCommand::EndInteractionEvent, m_boxClipCallback);
         //insert record
         vtkActor* tmpActor=MappingDataSetToActor(apdResult->GetOutput());
-        m_sceneManager.InsertActorRecord(tmpActor,"_BoxClipActor",SCENE_STATE_BOX_CLIP,1);
+        m_sceneManager.InsertActorRecord(tmpActor,"_BoxClipActor", SCENE_STATE_BOX_CLIP,1);
         //add actor to renderer
         m_mainRenderer->AddActor(tmpActor);
         //widget on
@@ -780,21 +787,21 @@ void MainWindow::RenderBoxClip()
     }
 }
 
-vtkActor* MainWindow::MappingDataSetToActor( vtkDataSet* ds )
+vtkActor* MainWindow::MappingDataSetToActor(vtkDataSet* ds)
 {
     vtkSmartPointer<vtkDataSetMapper> mapper = vtkSmartPointer<vtkDataSetMapper>::New();
     mapper->SetInput(ds);
     mapper->Update();
-    vtkActor* actor=vtkActor::New();
+    vtkActor* actor = vtkActor::New();
     actor->SetMapper(mapper);
     return actor;
 }
 
-void MainWindow::TurnCubeAxesOnOff( int isOn, int xGridOn, int yGridOn )
+void MainWindow::TurnCubeAxesOnOff(int isOn, int xGridOn, int yGridOn)
 {
-    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size()!=0)
+    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size() != 0)
     {
-        if (m_sceneManager.GetSceneState()==SCENE_STATE_ORIGINAL)
+        if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL)
         {
             m_cubeAxesActor->SetVisibility(isOn);
             m_cubeAxesActor->SetDrawXGridlines(xGridOn);
@@ -826,18 +833,21 @@ void MainWindow::bindingActionsWithSlots()
     connect(ui.actionShowHideBoxClipper, SIGNAL(triggered()),
             this, SLOT(OnBoxClipWidgetOnOff()));
     connect(ui.actionTriangleNotch, SIGNAL(triggered()), this, SLOT(OnPrismClip()));
-    connect(ui.actionShowHideTriClipper, SIGNAL(triggered()), this,
-                                                SLOT(OnPrismClipWidgetOnOff()));
+    connect(ui.actionShowHideTriClipper, SIGNAL(triggered()),
+            this, SLOT(OnPrismClipWidgetOnOff()));
     connect(ui.actionRenderOriginal, SIGNAL(triggered()), this, SLOT(OnRenderOriginal()));
     connect(ui.actionCamLight, SIGNAL(triggered()), this, SLOT(OnQuickTurnCamLight()));
-    connect(ui.actionSceneLight, SIGNAL(triggered()), this, SLOT(OnQuickTurnSceneLight()));
-    connect(ui.actionOrientatorCtrl, SIGNAL(triggered()), this, SLOT(OnOrientationOnOff()));
+    connect(ui.actionSceneLight, SIGNAL(triggered()),
+            this, SLOT(OnQuickTurnSceneLight()));
+    connect(ui.actionOrientatorCtrl, SIGNAL(triggered()),
+            this, SLOT(OnOrientationOnOff()));
     connect(ui.actionRulerCtrl, SIGNAL(triggered()), this, SLOT(OnTurnCubeAxesOnOff()));
     connect(ui.actionRulerGridCtrl, SIGNAL(triggered()), this, SLOT(OnCubeAxesOption()));
     connect(ui.actionLightOption, SIGNAL(triggered()), this, SLOT(OnLightOption()));
     connect(ui.actionStdExplode, SIGNAL(triggered()), this, SLOT(OnStdExplode()));
     connect(ui.actionShowColorLegend, SIGNAL(triggered()), this, SLOT(OnColorLegend()));
-    connect(ui.actionShowProjectExplorer, SIGNAL(triggered()), this, SLOT(OnProjectExplorer()));
+    connect(ui.actionShowProjectExplorer, SIGNAL(triggered()),
+            this, SLOT(OnProjectExplorer()));
 }
 
 void MainWindow::OnOpenProject()
@@ -860,7 +870,7 @@ void MainWindow::OnRenderClip()
 
 void MainWindow::OnCrossExplode()
 {
-    if (m_sceneManager.GetSceneState()==SCENE_STATE_ORIGINAL)
+    if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL)
     {
         m_sceneManager.SetSceneState(SCENE_STATE_STD_EXPLODE);
         m_mainRenderer->RemoveAllViewProps();
@@ -875,7 +885,7 @@ void MainWindow::OnCrossExplode()
 
 void MainWindow::OnRenderBoxClip()
 {
-    if (m_sceneManager.GetSceneState()==SCENE_STATE_ORIGINAL)
+    if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL)
     {
         m_sceneManager.SetSceneState(SCENE_STATE_BOX_CLIP);
         m_mainRenderer->RemoveAllViewProps();
@@ -886,9 +896,9 @@ void MainWindow::OnRenderBoxClip()
 
 void MainWindow::OnBoxClipWidgetOnOff()
 {
-    if (m_sceneManager.GetSceneState()==SCENE_STATE_BOX_CLIP)
+    if (m_sceneManager.GetSceneState() == SCENE_STATE_BOX_CLIP)
     {
-        int isEnable=m_boxClipWidget->GetEnabled();
+        int isEnable = m_boxClipWidget->GetEnabled();
         m_boxClipWidget->SetEnabled(!isEnable);
         if (m_boxClipWidget->GetEnabled())
         {
@@ -904,7 +914,7 @@ void MainWindow::OnBoxClipWidgetOnOff()
 
 void MainWindow::OnPrismClip()
 {
-    if (m_sceneManager.GetSceneState()==SCENE_STATE_ORIGINAL)
+    if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL)
     {
         m_sceneManager.SetSceneState(SCENE_STATE_PRISM_CLIP);
         m_mainRenderer->RemoveAllViewProps();
@@ -915,10 +925,10 @@ void MainWindow::OnPrismClip()
 
 void MainWindow::OnPrismClipWidgetOnOff()
 {
-    if (m_sceneManager.GetSceneState()==SCENE_STATE_PRISM_CLIP)
+    if (m_sceneManager.GetSceneState() == SCENE_STATE_PRISM_CLIP)
     {
-        int isWidgetsOn=m_prismClipWidget[0]->GetEnabled();
-        for (int i=0;i<3;i++)
+        int isWidgetsOn = m_prismClipWidget[0]->GetEnabled();
+        for (int i = 0; i < 3; i++)
         {
             m_prismClipWidget[i]->SetEnabled(!isWidgetsOn);
             if (m_prismClipWidget[i]->GetEnabled())
@@ -938,21 +948,21 @@ void MainWindow::OnRenderOriginal()
 {
     if (true)
     {
-        if (SCENE_STATE_PLANE_CLIP==m_sceneManager.GetSceneState())
+        if (SCENE_STATE_PLANE_CLIP == m_sceneManager.GetSceneState())
         {
             m_clipPlaneWidget->Off();
             m_clipPlaneWidget->EnabledOff();
         }
 
-        if (SCENE_STATE_BOX_CLIP==m_sceneManager.GetSceneState())
+        if (SCENE_STATE_BOX_CLIP == m_sceneManager.GetSceneState())
         {
             m_boxClipWidget->Off();
             m_boxClipWidget->EnabledOff();
         }
 
-        if (SCENE_STATE_PRISM_CLIP==m_sceneManager.GetSceneState())
+        if (SCENE_STATE_PRISM_CLIP == m_sceneManager.GetSceneState())
         {
-            for (int i=0; i<3; i++)
+            for (int i = 0; i < 3; i++)
             {
                 m_prismClipWidget[i]->Off();
                 m_prismClipWidget[i]->EnabledOff();
@@ -967,7 +977,7 @@ void MainWindow::OnRenderOriginal()
 
 void MainWindow::OnQuickTurnCamLight()
 {
-    int camLightOn=m_camLight->GetSwitch();
+    int camLightOn = m_camLight->GetSwitch();
     m_camLight->SetSwitch(!camLightOn);
 
     if (qvtkWidget->GetRenderWindow())
@@ -978,7 +988,7 @@ void MainWindow::OnQuickTurnCamLight()
 
 void MainWindow::OnQuickTurnSceneLight()
 {
-    int sceneLightOn=m_sceneLightUp->GetSwitch();
+    int sceneLightOn = m_sceneLightUp->GetSwitch();
     m_sceneLightUp->SetSwitch(!sceneLightOn);
     m_sceneLightDown->SetSwitch(!sceneLightOn);
 
@@ -990,7 +1000,7 @@ void MainWindow::OnQuickTurnSceneLight()
 
 void MainWindow::OnOrientationOnOff()
 {
-    int markerEnable=m_OrientationMarker->GetEnabled();
+    int markerEnable = m_OrientationMarker->GetEnabled();
     m_OrientationMarker->SetEnabled(!markerEnable);
     if (qvtkWidget->GetRenderWindow())
     {
@@ -1000,9 +1010,9 @@ void MainWindow::OnOrientationOnOff()
 
 void MainWindow::OnTurnCubeAxesOnOff()
 {
-    int isOn=!m_cubeAxesActor->GetVisibility();
-    int xGridOn=m_cubeAxesActor->GetDrawXGridlines();
-    int yGridOn=m_cubeAxesActor->GetDrawYGridlines();
+    int isOn = !m_cubeAxesActor->GetVisibility();
+    int xGridOn = m_cubeAxesActor->GetDrawXGridlines();
+    int yGridOn = m_cubeAxesActor->GetDrawYGridlines();
     TurnCubeAxesOnOff(isOn,xGridOn, yGridOn);
 }
 
@@ -1029,9 +1039,9 @@ void MainWindow::OnLightOption()
     m_sceneLightUp->SetPosition(lightOptionDLG.xSceneLight,
                                 lightOptionDLG.ySceneLight,
                                 lightOptionDLG.zSceneLight);
-    m_sceneLightDown->SetPosition(0-lightOptionDLG.xSceneLight,
-                                  0-lightOptionDLG.ySceneLight,
-                                  0-lightOptionDLG.zSceneLight);
+    m_sceneLightDown->SetPosition(0 - lightOptionDLG.xSceneLight,
+                                  0 - lightOptionDLG.ySceneLight,
+                                  0 - lightOptionDLG.zSceneLight);
 }
 
 void MainWindow::OnCubeAxesOption()
@@ -1062,23 +1072,23 @@ void MainWindow::OnStdExplode()
     stdExplodeDLG.setWindowModality(Qt::WindowModal);
     stdExplodeDLG.exec();
 
-    if (m_sceneManager.GetSceneState()==SCENE_STATE_ORIGINAL)
+    if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL)
     {
         m_sceneManager.SetSceneState(SCENE_STATE_STD_EXPLODE);
         m_mainRenderer->RemoveAllViewProps();
         m_sceneManager.ClearActorTable();
         //cross explode
-        if (stdExplodeDLG.m_RadioCrossExplodeChecked==1)
+        if (stdExplodeDLG.m_RadioCrossExplodeChecked == 1)
         {
-            m_evenExplodeRow=2;
-            m_evenExplodeCol=2;
-            m_evenExplodeGapRatio=1;
+            m_evenExplodeRow = 2;
+            m_evenExplodeCol = 2;
+            m_evenExplodeGapRatio = 1;
             processRenderRequest(SCENE_STATE_STD_EXPLODE);
-        } else if (stdExplodeDLG.m_RadioEvenExplodeChecked==1)
+        } else if (stdExplodeDLG.m_RadioEvenExplodeChecked == 1)
         {
-            m_evenExplodeRow=stdExplodeDLG.m_evenRow;
-            m_evenExplodeCol=stdExplodeDLG.m_evenCol;
-            m_evenExplodeGapRatio=stdExplodeDLG.m_gapRatio;
+            m_evenExplodeRow = stdExplodeDLG.m_evenRow;
+            m_evenExplodeCol = stdExplodeDLG.m_evenCol;
+            m_evenExplodeGapRatio = stdExplodeDLG.m_gapRatio;
             processRenderRequest(SCENE_STATE_STD_EXPLODE);
         } else {
             m_sceneManager.SetSceneState(SCENE_STATE_ORIGINAL);

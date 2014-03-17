@@ -19,7 +19,7 @@ GVSSettings* GVSApplicationCore::getSettings()
     return this->settings;
 }
 
-void GVSApplicationCore::loadConfiguration( const QString& fileName )
+void GVSApplicationCore::loadConfiguration(const QString& fileName)
 {
     //Todo:
     //Parse the config file indicated the file name, load the configuration

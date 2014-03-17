@@ -54,6 +54,12 @@
     <Filter Include="Header Files\Options">
       <UniqueIdentifier>{1ccb51e3-498b-4902-911b-5efe336b2ed1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Widgets">
+      <UniqueIdentifier>{9f8b6638-f71e-48ff-93f1-e17210691aa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Widgets">
+      <UniqueIdentifier>{685195f3-101e-47bc-b467-3ad3fa463ff6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
