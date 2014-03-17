@@ -19,6 +19,7 @@
 #include "GVSDoc.h"
 #include "Options/LightOption.h"
 #include <Options/CubeAxesOption.h>
+#include <Options/StdExplode.h>
 
 //#define GVS_SHOW_SPLISH
 
@@ -435,7 +436,7 @@ void MainWindow::RenderStdExplode()
     //temp var to store clipper, trans,etc.
     vtkSmartPointer<vtkDataSet> hResultData[evenRowLMT];
     vtkSmartPointer<vtkPlane> hPlane[evenRowLMT-1];
-    vtkSmartPointer<vtkTableBasedClipDataSet> hClipper[evenRowLMT-1][2]; //正反切两次得到的两边。
+    vtkSmartPointer<vtkTableBasedClipDataSet> hClipper[evenRowLMT-1][2];
     vtkSmartPointer<vtkTransform> hTrans[evenRowLMT-1];
     vtkSmartPointer<vtkTransformFilter> hTransFilter[evenRowLMT-1];
     //temp var to be process in next loop.
@@ -830,7 +831,8 @@ void MainWindow::bindingActionsWithSlots()
     connect(ui.actionRulerCtrl, SIGNAL(triggered()), this, SLOT(OnTurnCubeAxesOnOff()));
     connect(ui.actionRulerGridCtrl, SIGNAL(triggered()), this, SLOT(OnCubeAxesOption()));
     connect(ui.actionLightOption, SIGNAL(triggered()), this, SLOT(OnLightOption()));
-    
+    connect(ui.actionStdExplode, SIGNAL(triggered()), this, SLOT(OnStdExplode()));
+    connect(ui.actionShowColorLegend, SIGNAL(triggered()), this, SLOT(OnColorLegend()));
 }
 
 void MainWindow::OnOpenProject()
@@ -1040,3 +1042,53 @@ void MainWindow::OnCubeAxesOption()
                       cubeAxesOptionDialog.m_isXGridOn,
                       cubeAxesOptionDialog.m_isYGridOn);
 }
+
+void MainWindow::OnStdExplode()
+{
+    if (m_sceneManager.GetSceneState() != SCENE_STATE_ORIGINAL)
+    {
+        QMessageBox::information(this,
+                                 tr("提示"),
+                                 tr("请在原始模型状态进行操作。"),
+                                 QMessageBox::Yes);
+        return;
+    }
+    StdExplode stdExplodeDLG;
+    stdExplodeDLG.setWindowModality(Qt::WindowModal);
+    stdExplodeDLG.exec();
+
+    if (m_sceneManager.GetSceneState()==SCENE_STATE_ORIGINAL)
+    {
+        m_sceneManager.SetSceneState(SCENE_STATE_STD_EXPLODE);
+        m_mainRenderer->RemoveAllViewProps();
+        m_sceneManager.ClearActorTable();
+        //cross explode
+        if (stdExplodeDLG.m_RadioCrossExplodeChecked==1)
+        {
+            m_evenExplodeRow=2;
+            m_evenExplodeCol=2;
+            m_evenExplodeGapRatio=1;
+            processRenderRequest(SCENE_STATE_STD_EXPLODE);
+        } else if (stdExplodeDLG.m_RadioEvenExplodeChecked==1)
+        {
+            m_evenExplodeRow=stdExplodeDLG.m_evenRow;
+            m_evenExplodeCol=stdExplodeDLG.m_evenCol;
+            m_evenExplodeGapRatio=stdExplodeDLG.m_gapRatio;
+            processRenderRequest(SCENE_STATE_STD_EXPLODE);
+        } else {
+            m_sceneManager.SetSceneState(SCENE_STATE_ORIGINAL);
+            processRenderRequest(SCENE_STATE_ORIGINAL);
+        }
+    }
+}
+
+void MainWindow::OnColorLegend()
+{
+    if (ui.dockColorLegend->isHidden())
+    {
+        ui.dockColorLegend->show();
+    } else {
+        ui.dockColorLegend->hide();
+    }
+}
+

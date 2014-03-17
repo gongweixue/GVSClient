@@ -89,6 +89,7 @@
     <addaction name="actionShowHideBoxClipper"/>
     <addaction name="actionTriangleNotch"/>
     <addaction name="actionShowHideTriClipper"/>
+    <addaction name="actionStdExplode"/>
     <addaction name="actionCrossExplode"/>
     <addaction name="actionRenderOriginal"/>
     <addaction name="separator"/>
@@ -103,7 +104,7 @@
     <addaction name="actionCamLight"/>
     <addaction name="actionPaletteCtrl"/>
     <addaction name="actionSmoothCtrl"/>
-    <addaction name="actionAttriColorCtrl"/>
+    <addaction name="actionShowColorLegend"/>
     <addaction name="actionPerspectiveCtrl"/>
     <addaction name="actionRulerCtrl"/>
     <addaction name="actionRulerGridCtrl"/>
@@ -160,13 +161,33 @@
    <addaction name="actionSceneLight"/>
    <addaction name="actionCamLight"/>
    <addaction name="actionPaletteCtrl"/>
-   <addaction name="actionAttriColorCtrl"/>
+   <addaction name="actionShowColorLegend"/>
    <addaction name="actionRulerCtrl"/>
    <addaction name="actionOrientatorCtrl"/>
    <addaction name="actionScreenShot"/>
    <addaction name="separator"/>
-   <addaction name="actionHelpInfo"/>
    <addaction name="actionQuit"/>
+  </widget>
+  <widget class="QDockWidget" name="dockColorLegend">
+   <property name="minimumSize">
+    <size>
+     <width>80</width>
+     <height>160</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>图例</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4"/>
   </widget>
   <action name="actionNew">
    <property name="icon">
@@ -537,19 +558,19 @@
     <string>曲面平滑控制</string>
    </property>
   </action>
-  <action name="actionAttriColorCtrl">
+  <action name="actionShowColorLegend">
    <property name="icon">
     <iconset resource="MainWindow.qrc">
-     <normaloff>:/Resources/ToolBar/colorCtrl.png</normaloff>:/Resources/ToolBar/colorCtrl.png</iconset>
+     <normaloff>:/Resources/ToolBar/colorLegend.png</normaloff>:/Resources/ToolBar/colorLegend.png</iconset>
    </property>
    <property name="text">
-    <string>属性值着色控制 (&amp;C)...</string>
+    <string>图例 (&amp;C)...</string>
    </property>
    <property name="iconText">
     <string>属性值着色控制</string>
    </property>
    <property name="toolTip">
-    <string>属性值着色控制</string>
+    <string>图例</string>
    </property>
   </action>
   <action name="actionPerspectiveCtrl">
@@ -685,6 +706,11 @@
   <action name="actionLightOption">
    <property name="text">
     <string>灯光调节</string>
+   </property>
+  </action>
+  <action name="actionStdExplode">
+   <property name="text">
+    <string>模型炸裂选项</string>
    </property>
   </action>
  </widget>

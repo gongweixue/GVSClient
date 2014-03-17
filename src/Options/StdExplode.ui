@@ -23,8 +23,28 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>-1</number>
+    <number>0</number>
    </property>
+   <item>
+    <property name="text">
+     <string>2</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>3</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>4</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>5</string>
+    </property>
+   </item>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
@@ -58,8 +78,28 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>-1</number>
+    <number>0</number>
    </property>
+   <item>
+    <property name="text">
+     <string>2</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>3</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>4</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>5</string>
+    </property>
+   </item>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
@@ -115,8 +155,28 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>-1</number>
+    <number>0</number>
    </property>
+   <item>
+    <property name="text">
+     <string>1</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>0.5</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>0.25</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>0.15</string>
+    </property>
+   </item>
   </widget>
   <widget class="QPushButton" name="okButton">
    <property name="geometry">

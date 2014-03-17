@@ -55,12 +55,6 @@ private:
     vtkActor* MappingDataSetToActor(vtkDataSet* ds);
     void TurnCubeAxesOnOff(int isOn, int xGridOn, int yGridOn);
 
-//public slots:
-    
-    void OnStdExplode();
-    
-    
-
 public slots:
     void OnOpenProject();
     void OnRenderClip();
@@ -76,9 +70,12 @@ public slots:
     void OnTurnCubeAxesOnOff();
     void OnLightOption();
     void OnCubeAxesOption();
+    void OnStdExplode();
+    void OnColorLegend();
+public:
+    Ui::MainWindowClass ui;
 
 private:
-    Ui::MainWindowClass ui;
     QLabel* statusBartipLabel;
     QLabel* statusBartipLabel2;
     QSplitter* splitterMain;

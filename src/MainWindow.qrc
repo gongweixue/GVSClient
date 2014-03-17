@@ -8,8 +8,8 @@
     <file>Resources/ToolBar/help.png</file>
     <file>Resources/ToolBar/orientationAxes.png</file>
     <file>Resources/ToolBar/ruler.png</file>
-    <file>Resources/ToolBar/colorCtrl.png</file>
     <file>Resources/ToolBar/color.png</file>
+    <file>Resources/ToolBar/colorLegend.png</file>
     <file>Resources/ToolBar/label.png</file>
     <file>Resources/ToolBar/LightCtrl.png</file>
     <file>Resources/ToolBar/explode.png</file>

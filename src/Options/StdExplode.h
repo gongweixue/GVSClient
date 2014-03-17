@@ -11,16 +11,20 @@ class StdExplode : public QDialog
 public:
     StdExplode(QWidget *parent = 0);
     ~StdExplode();
-    //slots
+
+public slots:
     void OnBnClickedRadioCrossExplode();
     void OnBnClickedRadioEvenExplode();
     void OnBnClickedOk();
+    void OnBnClickedCancle();
 
 private:
     void initDialogCtrls();
-
+    void bindingSlots();
 private:
     Ui::StdExplode ui;
+
+public:
     int m_RadioCrossExplodeChecked;
     int m_RadioEvenExplodeChecked;
     int m_evenRow;

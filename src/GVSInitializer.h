@@ -12,8 +12,10 @@ public:
 
     bool Initialize();
 
-private:
+public:
     MainWindow* mainWindow;
+
+private:
     GVSApplicationCore* gvsApp;
     QSplashScreen* splash;
 };
