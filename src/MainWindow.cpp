@@ -24,7 +24,9 @@
 //#define GVS_SHOW_SPLISH
 
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
-    : QMainWindow(parent, flags)
+    : QMainWindow(parent, flags),
+    m_ColorLegendManager(this->ui.dockColorLegend)
+
 {
     //show startup image while preparing.
     QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
@@ -116,11 +118,11 @@ void MainWindow::initMainAreaMembers()
     splitterMain->setParent(this);
 
     //left init
-    leftTab = new QTabWidget(splitterMain);
-    treeTab1 = new QTreeView(leftTab);
-    treeTab2 = new QTreeView(leftTab);
-    leftTab->addTab(treeTab1, tr("视图1"));
-    leftTab->addTab(treeTab2, tr("视图2"));
+    m_ProjectExplorer = new QTabWidget(splitterMain);
+    treeTab1 = new QTreeView(m_ProjectExplorer);
+    treeTab2 = new QTreeView(m_ProjectExplorer);
+    m_ProjectExplorer->addTab(treeTab1, tr("视图1"));
+    m_ProjectExplorer->addTab(treeTab2, tr("视图2"));
 
 
     //right side init
@@ -128,6 +130,8 @@ void MainWindow::initMainAreaMembers()
 
     splitterMain->setStretchFactor(1, 1);
     setCentralWidget(splitterMain);
+
+    this->ui.dockColorLegend->setVisible(false);
 }
 
 void MainWindow::initCommonMembers()
@@ -833,6 +837,7 @@ void MainWindow::bindingActionsWithSlots()
     connect(ui.actionLightOption, SIGNAL(triggered()), this, SLOT(OnLightOption()));
     connect(ui.actionStdExplode, SIGNAL(triggered()), this, SLOT(OnStdExplode()));
     connect(ui.actionShowColorLegend, SIGNAL(triggered()), this, SLOT(OnColorLegend()));
+    connect(ui.actionShowProjectExplorer, SIGNAL(triggered()), this, SLOT(OnProjectExplorer()));
 }
 
 void MainWindow::OnOpenProject()
@@ -1089,6 +1094,16 @@ void MainWindow::OnColorLegend()
         ui.dockColorLegend->show();
     } else {
         ui.dockColorLegend->hide();
+    }
+}
+
+void MainWindow::OnProjectExplorer()
+{
+    if (m_ProjectExplorer->isHidden())
+    {
+        m_ProjectExplorer->show();
+    } else {
+        m_ProjectExplorer->hide();
     }
 }
 

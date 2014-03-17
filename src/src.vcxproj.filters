@@ -125,6 +125,15 @@
     <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_GVSDoc.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_ColorLegendManager.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_ColorLegendManager.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\ColorLegendManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.h">
@@ -156,6 +165,9 @@
     </CustomBuild>
     <CustomBuild Include="GVSDoc.h">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Managers\ColorLegendManager.h">
+      <Filter>Header Files\Managers</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

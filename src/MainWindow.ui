@@ -104,7 +104,6 @@
     <addaction name="actionCamLight"/>
     <addaction name="actionPaletteCtrl"/>
     <addaction name="actionSmoothCtrl"/>
-    <addaction name="actionShowColorLegend"/>
     <addaction name="actionPerspectiveCtrl"/>
     <addaction name="actionRulerCtrl"/>
     <addaction name="actionRulerGridCtrl"/>
@@ -124,7 +123,15 @@
     <addaction name="actionHelpInfo"/>
     <addaction name="actionAboutInfo"/>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>视图</string>
+    </property>
+    <addaction name="actionShowColorLegend"/>
+    <addaction name="actionShowProjectExplorer"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menu"/>
    <addaction name="menuServer"/>
    <addaction name="menuModel"/>
    <addaction name="menuVisualization"/>
@@ -711,6 +718,11 @@
   <action name="actionStdExplode">
    <property name="text">
     <string>模型炸裂选项</string>
+   </property>
+  </action>
+  <action name="actionShowProjectExplorer">
+   <property name="text">
+    <string>文件浏览侧边栏</string>
    </property>
   </action>
  </widget>

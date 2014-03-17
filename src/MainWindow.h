@@ -10,6 +10,7 @@
 #include "ui_MainWindow.h"
 
 #include "Managers/vtkSceneManager.h"
+#include "Managers/ColorLegendManager.h"
 #include "Callbacks/vtkBoxClipCallback.h"
 #include "Callbacks/vtkPlaneClipCallback.h"
 
@@ -72,6 +73,7 @@ public slots:
     void OnCubeAxesOption();
     void OnStdExplode();
     void OnColorLegend();
+    void OnProjectExplorer();
 public:
     Ui::MainWindowClass ui;
 
@@ -79,7 +81,7 @@ private:
     QLabel* statusBartipLabel;
     QLabel* statusBartipLabel2;
     QSplitter* splitterMain;
-    QTabWidget* leftTab;
+    QTabWidget* m_ProjectExplorer;
     QTreeView* treeTab1;
     QTreeView* treeTab2;
     QVTKWidget* qvtkWidget;
@@ -88,7 +90,6 @@ private:
     vtkOrientationMarkerWidget* m_OrientationMarker;
 
     vtkRenderer* m_mainRenderer;
-    SceneManager m_sceneManager;
 
     vtkPlane* m_clipPlane;
     vtkPlaneClipCallback* m_clipCallback;
@@ -114,6 +115,9 @@ private:
     vtkImplicitPlaneRepresentation* m_prismClipRep[3];
     vtkImplicitPlaneWidget2* m_prismClipWidget[3];
     vtkPlaneClipCallback* m_prismClipCallback[3];
+
+    SceneManager m_sceneManager;
+    ColorLegendManager m_ColorLegendManager;
 };
 
 #endif // MAINWINDOW_H
