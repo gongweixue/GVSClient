@@ -24,8 +24,7 @@
 //#define GVS_SHOW_SPLISH
 
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
-    : QMainWindow(parent, flags),
-    m_ColorLegendManager(this->ui.dockColorLegend, m_pDoc->getProjectPathName())
+    : QMainWindow(parent, flags)
 {
     //show startup image while preparing.
     QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
@@ -181,6 +180,9 @@ void MainWindow::initCommonMembers()
         m_prismClipRep[i] = vtkImplicitPlaneRepresentation::New();
         m_prismClipCallback[i] = vtkPlaneClipCallback::New();
     }
+
+    m_ColorLegendManager = new ColorLegendManager(this->ui.dockColorLegend,
+                                                  m_pDoc->getProjectPathName());
 }
 
 void MainWindow::destoryStatusBarMembers()
@@ -231,6 +233,7 @@ void MainWindow::destoryCommonMembers()
     DeleteVTKPointer(m_mainRenderer);
 
     delete(m_pDoc);
+    delete(m_ColorLegendManager);
 }
 
 void MainWindow::welcomeYou()

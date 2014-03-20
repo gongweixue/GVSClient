@@ -178,8 +178,14 @@
   <widget class="QDockWidget" name="dockColorLegend">
    <property name="minimumSize">
     <size>
-     <width>80</width>
-     <height>160</height>
+     <width>120</width>
+     <height>240</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>500</width>
+     <height>524287</height>
     </size>
    </property>
    <property name="features">

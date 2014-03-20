@@ -117,7 +117,7 @@ private:
     vtkPlaneClipCallback* m_prismClipCallback[3];
 
     SceneManager m_sceneManager;
-    ColorLegendManager m_ColorLegendManager;
+    ColorLegendManager* m_ColorLegendManager;
 };
 
 #endif // MAINWINDOW_H
