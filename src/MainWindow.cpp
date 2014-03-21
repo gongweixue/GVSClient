@@ -181,8 +181,10 @@ void MainWindow::initCommonMembers()
         m_prismClipCallback[i] = vtkPlaneClipCallback::New();
     }
 
-    m_ColorLegendManager = new ColorLegendManager(this->ui.dockColorLegend,
+    m_ColorLegendManager = new ColorLegendManager(this->ui.legendItemList,
                                                   m_pDoc->getProjectPathName());
+    ui.dockColorLegend->setWidget(ui.legendItemList);
+    ui.dockColorLegend->setWindowTitle(tr("Í¼Àý"));
 }
 
 void MainWindow::destoryStatusBarMembers()

@@ -7,8 +7,8 @@
 #include <vector>
 #include <QColor>
 #include <QVBoxLayout>
+#include <QListWidgetItem>
 
-#include "Widgets/LegendItem.h"
 #include "Widgets/LegendRecord.h"
 
 using namespace std;
@@ -19,24 +19,23 @@ class ColorLegendManager : public QObject
 
 public:
     
-    ColorLegendManager(QDockWidget* pLegend, string path, QObject* parent = 0);
+    ColorLegendManager(QListWidget* pListWidget, string path, QObject* parent = 0);
     ~ColorLegendManager();
 
 public slots:
-    void initOrUpdateLegend();//should be called after edition on the legend dock.
+    //should be called after edition on the legend dock.
+    void initOrUpdateLegend();
 
 private:
     ColorLegendManager(QObject* parent);
     void parseLegendNames();
     void fillLegendDock();
     void genericItems();
-    void clearVecOfItems();
 private:
-    QDockWidget* m_pLegend;
+    QListWidget* m_pListWidget;
     string m_pathNameOfProject;
     vector<LegendRecord> vecOfLegendRecord;
-    vector<LegendItem*> vecOfLegendItem;
-    QVBoxLayout* pLayout;
+    vector<QListWidgetItem> vecOfLegendItem;
 };
 
 #endif // COLORLEGENDMANAGER_H

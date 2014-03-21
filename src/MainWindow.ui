@@ -178,13 +178,13 @@
   <widget class="QDockWidget" name="dockColorLegend">
    <property name="minimumSize">
     <size>
-     <width>120</width>
-     <height>240</height>
+     <width>100</width>
+     <height>300</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
-     <width>500</width>
+     <width>100</width>
      <height>524287</height>
     </size>
    </property>
@@ -200,7 +200,24 @@
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_4"/>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <widget class="QListWidget" name="legendItemList">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>121</width>
+       <height>192</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+    </widget>
+   </widget>
   </widget>
   <action name="actionNew">
    <property name="icon">

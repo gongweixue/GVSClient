@@ -1,4 +1,5 @@
 #include "ColorLegendManager.h"
+#include <sstream>
 
 ColorLegendManager::ColorLegendManager(QObject *parent)
     : QObject(parent)
@@ -6,34 +7,33 @@ ColorLegendManager::ColorLegendManager(QObject *parent)
     throw std::exception("ColorLegendManage's Default constructor is not implement.");
 }
 
-ColorLegendManager::ColorLegendManager(QDockWidget* pLegend, string path, QObject* parent)
+ColorLegendManager::ColorLegendManager(QListWidget* pListWidget, string path, QObject* parent)
     : QObject(parent)
 {
-    m_pLegend = pLegend;
+    m_pListWidget = pListWidget;
     m_pathNameOfProject = path;
     vecOfLegendRecord.clear();
     vecOfLegendItem.clear();
-    pLayout = new QVBoxLayout(m_pLegend);
-    m_pLegend->setLayout(pLayout);
+
+    connect(m_pListWidget, SIGNAL(itemSelectionChanged()),
+            m_pListWidget, SLOT(clearSelection()));
+
     initOrUpdateLegend();
 }
 
 ColorLegendManager::~ColorLegendManager()
 {
-    clearVecOfItems();
-    if (pLayout)
-    {
-        delete pLayout;
-    }
-
 }
 
 void ColorLegendManager::initOrUpdateLegend()
 {
-    clearVecOfItems();
     vecOfLegendRecord.clear();
+    vecOfLegendItem.clear();
+
     parseLegendNames();
+
     genericItems();
+
     fillLegendDock();
 }
 
@@ -52,48 +52,56 @@ void ColorLegendManager::parseLegendNames()
 
 
     ///////////mock some record ///////////////////////
-    LegendRecord lr1(1, "ABC", QColor(30, 80, 90), "description 1");
-    LegendRecord lr2(2, "ABC", QColor(130, 100, 70), "description 2");
-    LegendRecord lr3(3, "ABC", QColor(230, 180, 190), "description 3");
-    vecOfLegendRecord.push_back(lr1);
-    vecOfLegendRecord.push_back(lr2);
-    vecOfLegendRecord.push_back(lr3);
+    for (int i = 0; i < 50; ++i)
+    {
+        string str = "num ";
+        std::ostringstream oss;
+        oss << i << " ";
+        str += oss.str();
+        LegendRecord lr(i, str, QColor((i * 10)%255, (i*20)%255, (i*30)%255), str + "description");
+        vecOfLegendRecord.push_back(lr);
+    }
 }
 
 void ColorLegendManager::genericItems()
 {
-    //TODO:iterate the vector of the legend record
+    if (vecOfLegendRecord.empty())
+    {
+        return;
+    }
+
     vector<LegendRecord>::const_iterator iter;
     for (iter = vecOfLegendRecord.begin(); iter != vecOfLegendRecord.end(); iter++)
     {
-        LegendItem* pItem = new LegendItem(*iter);
-        vecOfLegendItem.push_back(pItem);
+        QString itemName(tr("\n"));
+        itemName.append(tr(iter->name.c_str()));
+        itemName.append(tr("\n"));
+        QListWidgetItem item(itemName);
+
+        item.setBackgroundColor(iter->rgb);
+        QColor textColor(255 - iter->rgb.red(), 
+                       255 - iter->rgb.green(), 
+                       255 - iter->rgb.blue());
+        item.setTextColor(textColor);
+        item.setTextAlignment(Qt::AlignHCenter);
+
+        //TODO set the font size, 
+
+        item.setToolTip(tr(iter->description.c_str()));
+        vecOfLegendItem.push_back(item);
     }
 }
 
 void ColorLegendManager::fillLegendDock()
 {
-    //TODO: add the item widgets onto the dock widget of main window.
-    if (pLayout)
+    if (!vecOfLegendItem.empty())
     {
-        vector<LegendItem*>::iterator iter = vecOfLegendItem.begin();
+        vector<QListWidgetItem>::iterator iter = vecOfLegendItem.begin();
         for (iter = vecOfLegendItem.begin(); iter != vecOfLegendItem.end(); iter++)
         {
-            pLayout->addWidget(*iter);
+            m_pListWidget->addItem(&(*iter));
         }
     }
 }
 
-void ColorLegendManager::clearVecOfItems()
-{
-    if (!vecOfLegendItem.empty())
-    {
-        vector<LegendItem*>::const_iterator iter;
-        for (iter = vecOfLegendItem.begin(); iter != vecOfLegendItem.end(); iter++)
-        {
-            delete *iter;
-        }
-    }
-    vecOfLegendItem.clear();
-}
 

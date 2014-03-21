@@ -140,15 +140,6 @@
     <ClCompile Include="Managers\ColorLegendManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_LegendItem.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_LegendItem.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="Widgets\LegendItem.cpp">
-      <Filter>Source Files\Widgets</Filter>
-    </ClCompile>
     <ClCompile Include="Widgets\LegendRecord.cpp">
       <Filter>Source Files\Widgets</Filter>
     </ClCompile>
@@ -187,12 +178,6 @@
     <CustomBuild Include="Managers\ColorLegendManager.h">
       <Filter>Header Files\Managers</Filter>
     </CustomBuild>
-    <CustomBuild Include="Widgets\LegendItem.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Widgets\LegendItem.h">
-      <Filter>Header Files\Widgets</Filter>
-    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\build\Qt\GeneratedFiles\ui_MainWindow.h">
@@ -229,9 +214,6 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\build\Qt\GeneratedFiles\ui_StdExplode.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\build\Qt\GeneratedFiles\ui_LegendItem.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="Widgets\LegendRecord.h">
