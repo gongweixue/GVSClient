@@ -1,9 +1,14 @@
 #include "MainWindow.h"
 #include <QtGui/QApplication>
 #include "GVSInitializer.h"
+#include <QTextCodec>
 
 int main(int argc, char *argv[])
 {
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("GB2312"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("GB2312"));
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("GB2312"));
+
     QApplication::setApplicationName("GVSClient");
     QApplication::setApplicationVersion("v1.0");
     QApplication::setOrganizationName("GVSClient");

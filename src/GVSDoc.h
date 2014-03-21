@@ -19,7 +19,7 @@ public:
     string getProjectPathName() { return m_pathNameOfProject; }
 
 public slots:
-    void OnOpenProject();
+    bool OnOpenProject();
 
 private:
     void LoadDocsNameOfProject(std::string projectFileName);

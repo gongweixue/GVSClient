@@ -13,17 +13,18 @@ GVSDoc::~GVSDoc()
 {
 }
 
-void GVSDoc::OnOpenProject()
+bool GVSDoc::OnOpenProject()
 {
+    string path = getProjectPath();
+    if (path.empty() || !path.compare(m_pathNameOfProject))
+    {
+        return false;
+    }
+    m_pathNameOfProject = path;
     m_objectsManager.ClearObjectsTable();
     m_objectsManager.m_docsNameVector.clear();
-
-    m_pathNameOfProject = getProjectPath();
-    if (m_pathNameOfProject.empty())
-    {
-        return;
-    }
     LoadProjectFile(m_pathNameOfProject);
+    return true;
 }
 
 void GVSDoc::OnCloseDocument()

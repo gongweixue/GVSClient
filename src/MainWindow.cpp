@@ -21,19 +21,19 @@
 #include <Options/CubeAxesOption.h>
 #include <Options/StdExplode.h>
 
-//#define GVS_SHOW_SPLISH
+//#define GVS_SHOW_SPLASH
 
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)
 {
     //show startup image while preparing.
     QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
+
+#ifdef GVS_SHOW_SPLASH
     QSplashScreen *splash = new QSplashScreen();
     splash->setPixmap(QPixmap(":/Resources/startup.jpg"));
     splash->show();
-
     Qt::Alignment topRight = Qt::AlignRight | Qt::AlignTop;
-#ifdef GVS_SHOW_SPLISH
     splash->showMessage(QObject::tr("对象初始化"), topRight,Qt::red);
     Sleep(1000);
 #endif
@@ -41,18 +41,18 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     initMembers();
     bindingActionsWithSlots();
 
-#ifdef GVS_SHOW_SPLISH
+#ifdef GVS_SHOW_SPLASH
     splash->showMessage(QObject::tr("加载本地配置"), topRight, Qt::red);
     Sleep(1000);
 #endif
     loadLocalConfig();
-#ifdef GVS_SHOW_SPLISH
+    loadNetwork();
+#ifdef GVS_SHOW_SPLASH
     splash->showMessage(QObject::tr("设置网络"), topRight, Qt::red);
     Sleep(1000);
-#endif
-    loadNetwork();
     splash->clearMessage();
     splash->close();
+#endif
 }
 
 MainWindow::~MainWindow()
@@ -258,6 +258,7 @@ void MainWindow::onInitialUpdate()
     m_mainRenderer->ResetCamera();
     m_mainRenderer->AutomaticLightCreationOff();
     m_mainRenderer->RemoveAllViewProps();
+    m_sceneManager.ClearActorTable();
     m_mainRenderer->Render();
     //////////////////////
     if (m_pDoc->GetObjectsManager()->GetObjectsTable()->size())
@@ -857,9 +858,12 @@ void MainWindow::bindingActionsWithSlots()
 
 void MainWindow::OnOpenProject()
 {
-    m_pDoc->OnOpenProject();
-
-    onInitialUpdate();
+    if (m_pDoc->OnOpenProject())
+    {
+        onInitialUpdate();
+        m_ColorLegendManager->initOrUpdateLegend(m_pDoc->getProjectPathName());
+    }
+    
 }
 
 void MainWindow::OnRenderClip()
