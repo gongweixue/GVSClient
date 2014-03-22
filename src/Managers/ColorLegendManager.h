@@ -18,13 +18,15 @@ class ColorLegendManager : public QObject
     Q_OBJECT
 
 public:
-    
     ColorLegendManager(QListWidget* pListWidget, string path, QObject* parent = 0);
     ~ColorLegendManager();
+    string getFilePath() {return projectFilePath;}
+    bool insertItem(string name, QColor rgb, string description);
 
 public slots:
     //should be called after edition on the legend dock.
     void initOrUpdateLegend(string gvpFullFileName);
+    vector<LegendRecord>* getVecPtrOfRecord() {return &vecOfLegendRecord;}
 
 private:
     ColorLegendManager(QObject* parent);
@@ -35,6 +37,7 @@ private:
     QListWidget* m_pListWidget;
     vector<LegendRecord> vecOfLegendRecord;
     vector<QListWidgetItem> vecOfLegendItem;
+    string projectFilePath;
 };
 
 #endif // COLORLEGENDMANAGER_H

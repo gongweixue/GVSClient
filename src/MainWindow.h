@@ -72,8 +72,9 @@ public slots:
     void OnLightOption();
     void OnCubeAxesOption();
     void OnStdExplode();
-    void OnColorLegend();
+    void OnShowColorLegend();
     void OnProjectExplorer();
+    void OnEditColorLegend();
 public:
     Ui::MainWindowClass ui;
 

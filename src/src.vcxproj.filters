@@ -60,6 +60,18 @@
     <Filter Include="Source Files\Widgets">
       <UniqueIdentifier>{685195f3-101e-47bc-b467-3ad3fa463ff6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Form Files\Options">
+      <UniqueIdentifier>{0beda84e-ea7e-47ed-af60-10c6fa0c5e85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Form Files\Options\ColorLegend">
+      <UniqueIdentifier>{8da9492b-f7f5-45ad-b729-31fed7fc5968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Options\ColorLegend">
+      <UniqueIdentifier>{fa2ac704-f6b3-4335-8c40-bf3b3dffa43e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Options\ColorLegend">
+      <UniqueIdentifier>{30d2bba1-350b-4efb-b17c-1ce8005e1362}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -143,6 +155,24 @@
     <ClCompile Include="Widgets\LegendRecord.cpp">
       <Filter>Source Files\Widgets</Filter>
     </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_ColorLegendEditor.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_ColorLegendEditor.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_LegendItemAddtion.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_LegendItemAddtion.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Options\ColorLegendEditor.cpp">
+      <Filter>Source Files\Options\ColorLegend</Filter>
+    </ClCompile>
+    <ClCompile Include="Options\LegendItemAddtion.cpp">
+      <Filter>Source Files\Options\ColorLegend</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.h">
@@ -154,14 +184,8 @@
     <CustomBuild Include="MainWindow.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="Options\CubeAxesOption.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="Options\CubeAxesOption.h">
       <Filter>Header Files\Options</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Options\LightOption.ui">
-      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Options\LightOption.h">
       <Filter>Header Files\Options</Filter>
@@ -169,14 +193,32 @@
     <CustomBuild Include="Options\StdExplode.h">
       <Filter>Header Files\Options</Filter>
     </CustomBuild>
-    <CustomBuild Include="Options\StdExplode.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="GVSDoc.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Managers\ColorLegendManager.h">
       <Filter>Header Files\Managers</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Options\ColorLegendEditor.ui">
+      <Filter>Form Files\Options\ColorLegend</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Options\LegendItemAddtion.ui">
+      <Filter>Form Files\Options\ColorLegend</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Options\CubeAxesOption.ui">
+      <Filter>Form Files\Options</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Options\LightOption.ui">
+      <Filter>Form Files\Options</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Options\StdExplode.ui">
+      <Filter>Form Files\Options</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Options\ColorLegendEditor.h">
+      <Filter>Header Files\Options\ColorLegend</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Options\LegendItemAddtion.h">
+      <Filter>Header Files\Options\ColorLegend</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -218,6 +260,12 @@
     </ClInclude>
     <ClInclude Include="Widgets\LegendRecord.h">
       <Filter>Header Files\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\build\Qt\GeneratedFiles\ui_ColorLegendEditor.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\build\Qt\GeneratedFiles\ui_LegendItemAddtion.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

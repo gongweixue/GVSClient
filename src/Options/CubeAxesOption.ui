@@ -10,6 +10,18 @@
     <height>300</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>231</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>231</width>
+    <height>300</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>模型网格标尺选项</string>
   </property>

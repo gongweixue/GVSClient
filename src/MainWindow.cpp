@@ -18,8 +18,9 @@
 #include "MainWindow.h"
 #include "GVSDoc.h"
 #include "Options/LightOption.h"
-#include <Options/CubeAxesOption.h>
-#include <Options/StdExplode.h>
+#include "Options/CubeAxesOption.h"
+#include "Options/StdExplode.h"
+#include "Options/ColorLegendEditor.h"
 
 //#define GVS_SHOW_SPLASH
 
@@ -851,9 +852,10 @@ void MainWindow::bindingActionsWithSlots()
     connect(ui.actionRulerGridCtrl, SIGNAL(triggered()), this, SLOT(OnCubeAxesOption()));
     connect(ui.actionLightOption, SIGNAL(triggered()), this, SLOT(OnLightOption()));
     connect(ui.actionStdExplode, SIGNAL(triggered()), this, SLOT(OnStdExplode()));
-    connect(ui.actionShowColorLegend, SIGNAL(triggered()), this, SLOT(OnColorLegend()));
+    connect(ui.actionShowColorLegend, SIGNAL(triggered()), this, SLOT(OnShowColorLegend()));
     connect(ui.actionShowProjectExplorer, SIGNAL(triggered()),
             this, SLOT(OnProjectExplorer()));
+    connect(ui.actionEditColorLegend, SIGNAL(triggered()), this, SLOT(OnEditColorLegend()));
 }
 
 void MainWindow::OnOpenProject()
@@ -861,6 +863,9 @@ void MainWindow::OnOpenProject()
     if (m_pDoc->OnOpenProject())
     {
         onInitialUpdate();
+        delete m_ColorLegendManager;
+        m_ColorLegendManager = new ColorLegendManager(this->ui.legendItemList,
+                                                      m_pDoc->getProjectPathName());
         m_ColorLegendManager->initOrUpdateLegend(m_pDoc->getProjectPathName());
     }
     
@@ -1106,7 +1111,7 @@ void MainWindow::OnStdExplode()
     }
 }
 
-void MainWindow::OnColorLegend()
+void MainWindow::OnShowColorLegend()
 {
     if (ui.dockColorLegend->isHidden())
     {
@@ -1124,5 +1129,11 @@ void MainWindow::OnProjectExplorer()
     } else {
         m_ProjectExplorer->hide();
     }
+}
+
+void MainWindow::OnEditColorLegend()
+{
+    ColorLegendEditor* editor = new ColorLegendEditor(m_ColorLegendManager, this);
+    editor->exec();
 }
 

@@ -10,6 +10,18 @@
     <height>325</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>264</width>
+    <height>325</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>264</width>
+    <height>325</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>模型炸裂选项</string>
   </property>

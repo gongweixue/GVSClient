@@ -4,6 +4,8 @@
 #include <QDomElement>
 #include <QFile>
 #include <QMessageBox>
+#include <sstream>
+#include <QTextStream>
 
 ColorLegendManager::ColorLegendManager(QObject *parent)
     : QObject(parent)
@@ -34,6 +36,7 @@ void ColorLegendManager::initOrUpdateLegend(string gvpFullFileName)
     vecOfLegendRecord.clear();
     vecOfLegendItem.clear();
 
+    projectFilePath = gvpFullFileName;
     parseLegendNames(gvpFullFileName);
 
     genericItems();
@@ -129,8 +132,8 @@ void ColorLegendManager::genericItems()
 
         item.setBackgroundColor(iter->rgb);
         QColor textColor(255 - iter->rgb.red(), 
-                       255 - iter->rgb.green(), 
-                       255 - iter->rgb.blue());
+                         255 - iter->rgb.green(), 
+                         255 - iter->rgb.blue());
         item.setTextColor(textColor);
         item.setTextAlignment(Qt::AlignHCenter);
 
@@ -151,6 +154,109 @@ void ColorLegendManager::fillLegendDock()
             m_pListWidget->addItem(&(*iter));
         }
     }
+}
+
+bool ColorLegendManager::insertItem( string name, QColor rgb, string description )
+{
+    if(projectFilePath.empty())
+        return false;  
+
+    QFile file(projectFilePath.c_str());
+    if( !file.open(QIODevice::ReadOnly) ) {
+        QMessageBox::information(NULL, tr("插入图例失败"), file.errorString());
+        return false;
+    }
+
+    QDomDocument domDoc;
+    QString strError;
+    int errLine = 0, errCol = 0;
+    if( !domDoc.setContent(&file) ) {
+        QMessageBox::information(NULL, tr("插入图例失败"), tr("文件格式不正确"));
+        file.close();
+        return false;
+    }
+
+    if( domDoc.isNull() ) {
+        file.close();
+        return false;
+    }
+
+    //get the root of file
+    QDomElement root = domDoc.documentElement();
+    QDomNodeList list = root.childNodes();
+    int countNodeOfProject = list.count();
+    for (int i = 0; i < countNodeOfProject; ++i)
+    {
+        QDomNode node = list.item(i);
+        QDomElement childOfProject = node.toElement();
+        QString tagChild = childOfProject.tagName();
+        if (0 != tagChild.compare("ColorLegendItems"))
+        {
+            continue;
+        }
+        else
+        {
+            QDomNodeList nodeListOfItems = childOfProject.childNodes();
+            int countItems = nodeListOfItems.count();
+            ostringstream oss;
+            oss << (countItems + 1);
+            //item root
+            QDomElement legendItem = domDoc.createElement("legend_item");
+            legendItem.setAttribute("id", oss.str().c_str());
+            //name
+            QDomElement nameNode = domDoc.createElement("name");
+            QDomText nameText = domDoc.createTextNode(tr(name.c_str()));
+            nameNode.appendChild(nameText);
+            //red
+            QDomElement redNode = domDoc.createElement("red");
+            ostringstream ossRed;
+            ossRed << rgb.red();
+            string redStr = ossRed.str();
+            QDomText redText = domDoc.createTextNode(tr(redStr.c_str()));
+            redNode.appendChild(redText);
+            //green
+            QDomElement greenNode = domDoc.createElement("green");
+            ostringstream ossGreen;
+            ossGreen << rgb.green();
+            string greenStr = ossGreen.str();
+            QDomText greenText = domDoc.createTextNode(tr(greenStr.c_str()));
+            greenNode.appendChild(greenText);
+            //blue
+            QDomElement blueNode = domDoc.createElement("blue");
+            ostringstream ossBlue;
+            ossBlue << rgb.blue();
+            string blueStr = ossBlue.str();
+            QDomText blueText = domDoc.createTextNode(tr(blueStr.c_str()));
+            blueNode.appendChild(blueText);
+            //
+            QDomElement descNode = domDoc.createElement("description");
+            QDomText descText = domDoc.createTextNode(tr(description.c_str()));
+            descNode.appendChild(descText);
+
+            legendItem.appendChild(nameNode);
+            legendItem.appendChild(redNode);
+            legendItem.appendChild(greenNode);
+            legendItem.appendChild(blueNode);
+            legendItem.appendChild(descNode);
+            QDomNode ret = childOfProject.appendChild(legendItem);
+
+            file.close();
+            if (ret.isNull())
+            {
+                return false;
+            }
+            QFile fileModify(projectFilePath.c_str());
+            if (!fileModify.open(QFile::WriteOnly | QFile::Text)){
+                return false;
+            }
+            QTextStream out(&fileModify);
+            domDoc.save(out, 4);
+            fileModify.close();
+            break;
+        }
+    }
+
+    return true;
 }
 
 

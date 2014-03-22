@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <Project name="cw06">
     <Models>
         <model id="1">
@@ -50,7 +50,6 @@
             <name>Qnd1.vtk</name>
         </model>
     </Models>
-    
     <ColorLegendItems>
         <legend_item id="1">
             <name>标本</name>
@@ -122,5 +121,145 @@
             <blue>10</blue>
             <description>白云石矿的图例解释</description>
         </legend_item>
-  </ColorLegendItems>
+        <legend_item id="11">
+            <name>1</name>
+            <red>1</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description>1</description>
+        </legend_item>
+        <legend_item id="12">
+            <name>2</name>
+            <red>2</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description>2</description>
+        </legend_item>
+        <legend_item id="13">
+            <name>3</name>
+            <red>3</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description>3</description>
+        </legend_item>
+        <legend_item id="14">
+            <name>4</name>
+            <red>40</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description>4</description>
+        </legend_item>
+        <legend_item id="15">
+            <name>5</name>
+            <red>5</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description>5</description>
+        </legend_item>
+        <legend_item id="16">
+            <name/>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description/>
+        </legend_item>
+        <legend_item id="17">
+            <name/>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description/>
+        </legend_item>
+        <legend_item id="18">
+            <name/>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description/>
+        </legend_item>
+        <legend_item id="19">
+            <name/>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description/>
+        </legend_item>
+        <legend_item id="20">
+            <name/>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description/>
+        </legend_item>
+        <legend_item id="21">
+            <name/>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description/>
+        </legend_item>
+        <legend_item id="22">
+            <name/>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description/>
+        </legend_item>
+        <legend_item id="23">
+            <name/>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description/>
+        </legend_item>
+        <legend_item id="24">
+            <name/>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description/>
+        </legend_item>
+        <legend_item id="25">
+            <name>1111111111</name>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description>1111111111111111111111111111111</description>
+        </legend_item>
+        <legend_item id="26">
+            <name>2222222222</name>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description>22222222222222222222222222222222222</description>
+        </legend_item>
+        <legend_item id="27">
+            <name>1111111111</name>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description>11111111111111111111111111111111</description>
+        </legend_item>
+        <legend_item id="28">
+            <name>2222222222</name>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description>222222222222222222222222222222222222</description>
+        </legend_item>
+        <legend_item id="29">
+            <name/>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description/>
+        </legend_item>
+        <legend_item id="30">
+            <name>zheshiyige</name>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+            <description>zheshiyige</description>
+        </legend_item>
+    </ColorLegendItems>
 </Project>

@@ -128,6 +128,7 @@
      <string>视图</string>
     </property>
     <addaction name="actionShowColorLegend"/>
+    <addaction name="actionEditColorLegend"/>
     <addaction name="actionShowProjectExplorer"/>
    </widget>
    <addaction name="menuFile"/>
@@ -169,6 +170,7 @@
    <addaction name="actionCamLight"/>
    <addaction name="actionPaletteCtrl"/>
    <addaction name="actionShowColorLegend"/>
+   <addaction name="actionEditColorLegend"/>
    <addaction name="actionRulerCtrl"/>
    <addaction name="actionOrientatorCtrl"/>
    <addaction name="actionScreenShot"/>
@@ -594,7 +596,7 @@
      <normaloff>:/Resources/ToolBar/colorLegend.png</normaloff>:/Resources/ToolBar/colorLegend.png</iconset>
    </property>
    <property name="text">
-    <string>图例 (&amp;C)...</string>
+    <string>显示隐藏图例 (&amp;C)...</string>
    </property>
    <property name="iconText">
     <string>属性值着色控制</string>
@@ -746,6 +748,15 @@
   <action name="actionShowProjectExplorer">
    <property name="text">
     <string>文件浏览侧边栏</string>
+   </property>
+  </action>
+  <action name="actionEditColorLegend">
+   <property name="icon">
+    <iconset resource="MainWindow.qrc">
+     <normaloff>:/Resources/ToolBar/LegendEditor.png</normaloff>:/Resources/ToolBar/LegendEditor.png</iconset>
+   </property>
+   <property name="text">
+    <string>编辑图例</string>
    </property>
   </action>
  </widget>
