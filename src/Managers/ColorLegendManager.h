@@ -24,16 +24,15 @@ public:
 
 public slots:
     //should be called after edition on the legend dock.
-    void initOrUpdateLegend(string pathOfProjectFile);
+    void initOrUpdateLegend(string gvpFullFileName);
 
 private:
     ColorLegendManager(QObject* parent);
-    void parseLegendNames(string pathOfProjectFile);
+    void parseLegendNames(string gvpFullFileName);
     void fillLegendDock();
     void genericItems();
 private:
     QListWidget* m_pListWidget;
-    //string pathOfProjectFile;
     vector<LegendRecord> vecOfLegendRecord;
     vector<QListWidgetItem> vecOfLegendItem;
 };

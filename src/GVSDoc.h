@@ -16,21 +16,21 @@ public:
     ~GVSDoc();
     void OnCloseDocument();
     ObjectsManager* GetObjectsManager(){return &m_objectsManager;}
-    string getProjectPathName() { return m_pathNameOfProject; }
+    string getProjectPathName() { return m_gvpFullFileName; }
 
 public slots:
     bool OnOpenProject();
 
 private:
-    void LoadDocsNameOfProject(std::string projectFileName);
-    void LoadProjectFile(std::string projectFileName);
-    vector<string> parseProjectObject(std::string projectFileName);
+    void LoadDocsNameOfProject(std::string gvpFullFileName);
+    void LoadProjectFile(std::string gvpFullFileName);
+    void parseProjectObject(std::string gvpFullFileName);
     std::string getProjectPath();
 private:
-    MainWindow* m_pMainWindow;//pointer to view
+    MainWindow* m_pMainWindow;
     ObjectsManager m_objectsManager;
     int m_numOfObjects;
-    std::string m_pathNameOfProject;
+    std::string m_gvpFullFileName;
 };
 
 #endif // GVSDOC_H

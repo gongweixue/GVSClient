@@ -3,6 +3,7 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QFile>
+#include <QMessageBox>
 
 ColorLegendManager::ColorLegendManager(QObject *parent)
     : QObject(parent)
@@ -10,7 +11,8 @@ ColorLegendManager::ColorLegendManager(QObject *parent)
     throw std::exception("ColorLegendManage's Default constructor is not implement.");
 }
 
-ColorLegendManager::ColorLegendManager(QListWidget* pListWidget, string path, QObject* parent)
+ColorLegendManager::ColorLegendManager(QListWidget* pListWidget,
+    string path, QObject* parent)
     : QObject(parent)
 {
     m_pListWidget = pListWidget;
@@ -27,28 +29,26 @@ ColorLegendManager::~ColorLegendManager()
 {
 }
 
-void ColorLegendManager::initOrUpdateLegend(string pathOfProjectFile)
+void ColorLegendManager::initOrUpdateLegend(string gvpFullFileName)
 {
     vecOfLegendRecord.clear();
     vecOfLegendItem.clear();
 
-    parseLegendNames(pathOfProjectFile);
+    parseLegendNames(gvpFullFileName);
 
     genericItems();
 
     fillLegendDock();
 }
 
-void ColorLegendManager::parseLegendNames(string pathOfProjectFile)
+void ColorLegendManager::parseLegendNames(string gvpFullFileName)
 {
-    if(pathOfProjectFile.empty())
+    if(gvpFullFileName.empty())
         return;  
 
-    QFile file(pathOfProjectFile.c_str());
+    QFile file(gvpFullFileName.c_str());
     if( !file.open(QFile::ReadOnly | QFile::Text) ) {
-        printf("open file '%s' failed, error: %s !\n", 
-            pathOfProjectFile.c_str(),
-            file.errorString().toStdString().c_str());
+        QMessageBox::information(NULL, tr("加载图例失败"), file.errorString());
         return;
     }
 
@@ -56,14 +56,12 @@ void ColorLegendManager::parseLegendNames(string pathOfProjectFile)
     QString strError;
     int errLine = 0, errCol = 0;
     if( !domDoc.setContent(&file, false, &strError, &errLine, &errCol) ) {
-        printf("parse file failed at line %d column %d, %s !\n",
-            errLine, errCol, strError );
+        QMessageBox::information(NULL, tr("加载图例失败"), tr("文件格式不正确"));
         file.close();
         return;
     }
 
     if( domDoc.isNull() ) {
-        printf( "document is null !\n" );
         file.close();
         return;
     }
@@ -77,8 +75,7 @@ void ColorLegendManager::parseLegendNames(string pathOfProjectFile)
         QDomNode node = list.item(i);
         QDomElement childOfProject = node.toElement();
         QString tagChild = childOfProject.tagName();
-        //printf("tag of project %s.\n", tagChild.toStdString().c_str());
-        if (tagChild.compare("ColorLegendItems"))
+        if (0 != tagChild.compare("ColorLegendItems"))
         {
             continue;
         }
@@ -108,22 +105,11 @@ void ColorLegendManager::parseLegendNames(string pathOfProjectFile)
 
                 vecOfLegendRecord.push_back(rcrd);
             }
+            break;
         }
-        break;
     }
 
     file.close();
-
-
-//     for (int i = 0; i < 50; ++i)
-//     {
-//         string str = "num ";
-//         std::ostringstream oss;
-//         oss << i << " ";
-//         str += oss.str();
-//         LegendRecord lr(i, str, QColor((i * 10)%255, (i*20)%255, (i*30)%255), str + "description");
-//         vecOfLegendRecord.push_back(lr);
-//     }
 }
 
 void ColorLegendManager::genericItems()
