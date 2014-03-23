@@ -7,6 +7,7 @@ LegendItemAddtion::LegendItemAddtion(QWidget *parent)
 {
     ui.setupUi(this);
     connectSignalSlots();
+    isAdd = false;
 }
 
 LegendItemAddtion::~LegendItemAddtion()

@@ -97,11 +97,11 @@ void ColorLegendManager::parseLegendNames(string gvpFullFileName)
                 rcrd.name = itemName.text().toStdString();
                 //get rgb of item
                 QDomElement red = itemName.nextSiblingElement();
-                rcrd.rgb.setRed(red.text().toInt() % 255);
+                rcrd.rgb.setRed(red.text().toInt() % 256);
                 QDomElement green = red.nextSiblingElement();
-                rcrd.rgb.setGreen(green.text().toInt() % 255);
+                rcrd.rgb.setGreen(green.text().toInt() % 256);
                 QDomElement blue = green.nextSiblingElement();
-                rcrd.rgb.setBlue(blue.text().toInt() % 255);
+                rcrd.rgb.setBlue(blue.text().toInt() % 256);
                 //get description of item
                 QDomElement desc = blue.nextSiblingElement();
                 rcrd.description = desc.text().toStdString();
@@ -156,7 +156,7 @@ void ColorLegendManager::fillLegendDock()
     }
 }
 
-bool ColorLegendManager::insertItem( string name, QColor rgb, string description )
+bool ColorLegendManager::insertItemToFile( string name, QColor rgb, string description )
 {
     if(projectFilePath.empty())
         return false;  

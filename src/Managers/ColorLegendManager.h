@@ -21,7 +21,7 @@ public:
     ColorLegendManager(QListWidget* pListWidget, string path, QObject* parent = 0);
     ~ColorLegendManager();
     string getFilePath() {return projectFilePath;}
-    bool insertItem(string name, QColor rgb, string description);
+    bool insertItemToFile(string name, QColor rgb, string description);
 
 public slots:
     //should be called after edition on the legend dock.

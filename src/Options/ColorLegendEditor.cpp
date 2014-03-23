@@ -14,6 +14,8 @@ ColorLegendEditor::ColorLegendEditor(ColorLegendManager* manager, QWidget *paren
 {
     ui.setupUi(this);
     m_manager = manager;
+    connectSignalSlots();
+    recordToInsert.name.clear();
     initUpdate();
 }
 
@@ -25,8 +27,6 @@ ColorLegendEditor::~ColorLegendEditor()
 void ColorLegendEditor::initUpdate()
 {
     fillListWidget();
-    // remove this function to avoid the recursively invoking connectSignalSlots();
-    //get path
     m_manager->initOrUpdateLegend(m_manager->getFilePath());
 }
 
@@ -35,6 +35,13 @@ void ColorLegendEditor::fillListWidget() {
     if (vecRecord->empty())
     {
         return;
+    }
+    else
+    {
+        if (!recordToInsert.name.empty())
+        {
+            vecRecord->push_back(recordToInsert);
+        }
     }
     vecOfItems.clear();
     //generate list items and store
@@ -47,8 +54,8 @@ void ColorLegendEditor::fillListWidget() {
         //item color
         item.setBackgroundColor(iterRecord->rgb);
         QColor textColor(255 - iterRecord->rgb.red(),
-            255 - iterRecord->rgb.green(),
-            255 - iterRecord->rgb.blue());
+                         255 - iterRecord->rgb.green(),
+                         255 - iterRecord->rgb.blue());
         item.setTextColor(textColor);
 
         //store item
@@ -70,24 +77,25 @@ void ColorLegendEditor::connectSignalSlots()
 
 void ColorLegendEditor::OnAddItem()
 {
-    QMessageBox::information(NULL, "log", "ColorLegendEditor::OnAddItem()");
-    throw std::exception("This point always been invoked twice, should be fixed!!!!");
-    //If removing the belowing real operation works? Should been tested.!!!!!!
+//     QMessageBox::information(NULL, "log", "ColorLegendEditor::OnAddItem()");
+//     throw std::exception("This point always been invoked twice, should be fixed!!!!");
+//     //If removing the belowing real operation works? Should been tested.!!!!!!
 
     LegendItemAddtion itemAddDialog(this);
     itemAddDialog.exec();
-    if (!m_manager->getFilePath().empty() || itemAddDialog.getAddConfirm())
+    if (!m_manager->getFilePath().empty() && itemAddDialog.getAddConfirm())
     {
         //insert into file
-        bool insertOk = m_manager->insertItem(
+        bool insertOk = m_manager->insertItemToFile(
             itemAddDialog.name.toStdString(),
             itemAddDialog.rgb,
             itemAddDialog.description.toStdString());
         if (insertOk)
         {
-             /******************************************************************
-             *******************************************************************
-             ****************!!!!!the probled should been here????*************/
+            recordToInsert.name = itemAddDialog.name.toStdString();
+            recordToInsert.rgb = itemAddDialog.rgb;
+            recordToInsert.description = itemAddDialog.description.toStdString();
+
             initUpdate();
         }
     }

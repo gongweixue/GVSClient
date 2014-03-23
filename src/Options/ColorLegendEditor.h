@@ -28,6 +28,7 @@ private:
     Ui::ColorLegendEditor ui;
     ColorLegendManager* m_manager;
     vector<QListWidgetItem> vecOfItems;
+    LegendRecord recordToInsert;
 
 };
 
