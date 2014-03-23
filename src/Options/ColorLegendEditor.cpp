@@ -25,7 +25,7 @@ ColorLegendEditor::~ColorLegendEditor()
 void ColorLegendEditor::initUpdate()
 {
     fillListWidget();
-    connectSignalSlots();
+    // remove this function to avoid the recursively invoking connectSignalSlots();
     //get path
     m_manager->initOrUpdateLegend(m_manager->getFilePath());
 }
@@ -47,7 +47,7 @@ void ColorLegendEditor::fillListWidget() {
         //item color
         item.setBackgroundColor(iterRecord->rgb);
         QColor textColor(255 - iterRecord->rgb.red(),
-            255 - iterRecord->rgb.green(), 
+            255 - iterRecord->rgb.green(),
             255 - iterRecord->rgb.blue());
         item.setTextColor(textColor);
 
@@ -70,9 +70,13 @@ void ColorLegendEditor::connectSignalSlots()
 
 void ColorLegendEditor::OnAddItem()
 {
+    QMessageBox::information(NULL, "log", "ColorLegendEditor::OnAddItem()");
+    throw std::exception("This point always been invoked twice, should be fixed!!!!");
+    //If removing the belowing real operation works? Should been tested.!!!!!!
+
     LegendItemAddtion itemAddDialog(this);
     itemAddDialog.exec();
-    if (!m_manager->getFilePath().empty())
+    if (!m_manager->getFilePath().empty() || itemAddDialog.getAddConfirm())
     {
         //insert into file
         bool insertOk = m_manager->insertItem(
@@ -81,6 +85,9 @@ void ColorLegendEditor::OnAddItem()
             itemAddDialog.description.toStdString());
         if (insertOk)
         {
+             /******************************************************************
+             *******************************************************************
+             ****************!!!!!the probled should been here????*************/
             initUpdate();
         }
     }

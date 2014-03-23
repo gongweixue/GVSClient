@@ -29,13 +29,13 @@ void LegendItemAddtion::OnClickedOK()
                  ui.blueSpinBox->value());
     description = ui.descriptionTextEdit->toPlainText();
 
-    done(QDialog::Accepted);
+    this->hide();
     isAdd = true;
 }
 
 void LegendItemAddtion::OnBtnClickedCancle()
 {
-    done(QDialog::Rejected);
+    this->hide();
     isAdd = false;
 }
 
