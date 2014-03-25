@@ -26,8 +26,8 @@ ColorLegendEditor::~ColorLegendEditor()
 
 void ColorLegendEditor::initUpdate()
 {
-    fillListWidget();
     m_manager->initOrUpdateLegend(m_manager->getFilePath());
+    fillListWidget();
 }
 
 void ColorLegendEditor::fillListWidget() {
@@ -36,13 +36,7 @@ void ColorLegendEditor::fillListWidget() {
     {
         return;
     }
-    else
-    {
-        if (!recordToInsert.name.empty())
-        {
-            vecRecord->push_back(recordToInsert);
-        }
-    }
+
     vecOfItems.clear();
     //generate list items and store
     vector<LegendRecord>::const_iterator iterRecord;
@@ -53,9 +47,9 @@ void ColorLegendEditor::fillListWidget() {
         QListWidgetItem item(itemName);
         //item color
         item.setBackgroundColor(iterRecord->rgb);
-        QColor textColor(255 - iterRecord->rgb.red(),
-                         255 - iterRecord->rgb.green(),
-                         255 - iterRecord->rgb.blue());
+        QColor textColor((128 + iterRecord->rgb.red()) % 256,
+                         (128 + iterRecord->rgb.green()) % 256,
+                         (128 - iterRecord->rgb.blue()) % 256);
         item.setTextColor(textColor);
 
         //store item

@@ -121,26 +121,5 @@
             <blue>10</blue>
             <description>白云石矿的图例解释</description>
         </legend_item>
-        <legend_item id="11">
-            <name>red</name>
-            <red>255</red>
-            <green>0</green>
-            <blue>0</blue>
-            <description>red</description>
-        </legend_item>
-        <legend_item id="12">
-            <name>green</name>
-            <red>0</red>
-            <green>255</green>
-            <blue>0</blue>
-            <description>green</description>
-        </legend_item>
-        <legend_item id="13">
-            <name>blue</name>
-            <red>0</red>
-            <green>0</green>
-            <blue>255</blue>
-            <description>blue</description>
-        </legend_item>
     </ColorLegendItems>
 </Project>

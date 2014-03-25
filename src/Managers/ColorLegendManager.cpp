@@ -131,9 +131,9 @@ void ColorLegendManager::genericItems()
         QListWidgetItem item(itemName);
 
         item.setBackgroundColor(iter->rgb);
-        QColor textColor(255 - iter->rgb.red(), 
-                         255 - iter->rgb.green(), 
-                         255 - iter->rgb.blue());
+        QColor textColor((128 + iter->rgb.red()) % 256, 
+                         (128 + iter->rgb.green()) % 256, 
+                         (128 + iter->rgb.blue()) % 256);
         item.setTextColor(textColor);
         item.setTextAlignment(Qt::AlignHCenter);
 
