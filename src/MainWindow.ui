@@ -59,10 +59,8 @@
    </widget>
    <widget class="QMenu" name="menuServer">
     <property name="title">
-     <string>服务器(&amp;S)</string>
+     <string>传输(&amp;T)</string>
     </property>
-    <addaction name="actionServerManage"/>
-    <addaction name="separator"/>
     <addaction name="actionConnectServer"/>
     <addaction name="actionDisconnectServer"/>
     <addaction name="separator"/>
@@ -150,7 +148,6 @@
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
    <addaction name="separator"/>
-   <addaction name="actionServerManage"/>
    <addaction name="actionConnectServer"/>
    <addaction name="actionDisconnectServer"/>
    <addaction name="actionDonwload"/>
@@ -311,21 +308,6 @@
    </property>
    <property name="toolTip">
     <string>退出</string>
-   </property>
-  </action>
-  <action name="actionServerManage">
-   <property name="icon">
-    <iconset resource="MainWindow.qrc">
-     <normaloff>:/Resources/ToolBar/ServerList.png</normaloff>:/Resources/ToolBar/ServerList.png</iconset>
-   </property>
-   <property name="text">
-    <string>服务器列表管理 (&amp;M)...</string>
-   </property>
-   <property name="iconText">
-    <string>服务器列表管理</string>
-   </property>
-   <property name="toolTip">
-    <string>服务器列表管理</string>
    </property>
   </action>
   <action name="actionConnectServer">

@@ -21,6 +21,7 @@
 #include "Options/CubeAxesOption.h"
 #include "Options/StdExplode.h"
 #include "Options/ColorLegendEditor.h"
+#include "Managers/TransportationManager.h"
 
 //#define GVS_SHOW_SPLASH
 
@@ -186,6 +187,8 @@ void MainWindow::initCommonMembers()
                                                   m_pDoc->getProjectPathName());
     ui.dockColorLegend->setWidget(ui.legendItemList);
     ui.dockColorLegend->setWindowTitle(tr("Í¼Àý"));
+
+    m_transManager = new TransportationManager(this, 0);
 }
 
 void MainWindow::destoryStatusBarMembers()
@@ -235,8 +238,9 @@ void MainWindow::destoryCommonMembers()
 
     DeleteVTKPointer(m_mainRenderer);
 
-    delete(m_pDoc);
-    delete(m_ColorLegendManager);
+    delete m_pDoc;
+    delete m_ColorLegendManager;
+    delete m_transManager;
 }
 
 void MainWindow::welcomeYou()

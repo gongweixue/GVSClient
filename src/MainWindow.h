@@ -15,6 +15,7 @@
 #include "Callbacks/vtkPlaneClipCallback.h"
 
 class GVSDoc;
+class TransportationManager;
 
 class MainWindow : public QMainWindow
 {
@@ -119,6 +120,7 @@ private:
 
     SceneManager m_sceneManager;
     ColorLegendManager* m_ColorLegendManager;
+    TransportationManager* m_transManager;
 };
 
 #endif // MAINWINDOW_H

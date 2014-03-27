@@ -48,29 +48,38 @@
     <Filter Include="Source Files\Callbacks">
       <UniqueIdentifier>{bd27c88c-bb08-477b-9fe4-1debfb87ab51}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Options">
-      <UniqueIdentifier>{603e9176-9297-4375-9f6f-a8282b157bb8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Options">
-      <UniqueIdentifier>{1ccb51e3-498b-4902-911b-5efe336b2ed1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Widgets">
+    <Filter Include="Header Files\Records">
       <UniqueIdentifier>{9f8b6638-f71e-48ff-93f1-e17210691aa8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Widgets">
-      <UniqueIdentifier>{685195f3-101e-47bc-b467-3ad3fa463ff6}</UniqueIdentifier>
+    <Filter Include="Header Files\Dialogs">
+      <UniqueIdentifier>{64985d4f-51f4-43ab-b1bb-9e3c8bf7b464}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Form Files\Options">
+    <Filter Include="Form Files\Dialogs">
+      <UniqueIdentifier>{34dec912-1dfc-4c7c-87fc-eb3c30dce46e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Form Files\Dialogs\Options">
       <UniqueIdentifier>{0beda84e-ea7e-47ed-af60-10c6fa0c5e85}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Form Files\Options\ColorLegend">
+    <Filter Include="Form Files\Dialogs\Options\ColorLegend">
       <UniqueIdentifier>{8da9492b-f7f5-45ad-b729-31fed7fc5968}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Options\ColorLegend">
+    <Filter Include="Header Files\Dialogs\Options">
+      <UniqueIdentifier>{1ccb51e3-498b-4902-911b-5efe336b2ed1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Dialogs\Options\ColorLegend">
       <UniqueIdentifier>{fa2ac704-f6b3-4335-8c40-bf3b3dffa43e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Options\ColorLegend">
+    <Filter Include="Source Files\Dialogs">
+      <UniqueIdentifier>{a30c0e01-16a9-4ac6-aa9c-c7ca362d1441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Dialogs\Options">
+      <UniqueIdentifier>{603e9176-9297-4375-9f6f-a8282b157bb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Dialogs\Options\ColorLegend">
       <UniqueIdentifier>{30d2bba1-350b-4efb-b17c-1ce8005e1362}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Records">
+      <UniqueIdentifier>{685195f3-101e-47bc-b467-3ad3fa463ff6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -114,7 +123,7 @@
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="Options\CubeAxesOption.cpp">
-      <Filter>Source Files\Options</Filter>
+      <Filter>Source Files\Dialogs\Options</Filter>
     </ClCompile>
     <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_LightOption.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -123,7 +132,7 @@
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="Options\LightOption.cpp">
-      <Filter>Source Files\Options</Filter>
+      <Filter>Source Files\Dialogs\Options</Filter>
     </ClCompile>
     <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_StdExplode.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -132,7 +141,7 @@
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="Options\StdExplode.cpp">
-      <Filter>Source Files\Options</Filter>
+      <Filter>Source Files\Dialogs\Options</Filter>
     </ClCompile>
     <ClCompile Include="GVSDoc.cpp">
       <Filter>Source Files</Filter>
@@ -152,9 +161,6 @@
     <ClCompile Include="Managers\ColorLegendManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\LegendRecord.cpp">
-      <Filter>Source Files\Widgets</Filter>
-    </ClCompile>
     <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_ColorLegendEditor.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -168,10 +174,31 @@
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="Options\ColorLegendEditor.cpp">
-      <Filter>Source Files\Options\ColorLegend</Filter>
+      <Filter>Source Files\Dialogs\Options\ColorLegend</Filter>
     </ClCompile>
     <ClCompile Include="Options\LegendItemAddtion.cpp">
-      <Filter>Source Files\Options\ColorLegend</Filter>
+      <Filter>Source Files\Dialogs\Options\ColorLegend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_TransportationManager.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_TransportationManager.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Managers\TransportationManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_ConnectServerDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_ConnectServerDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\ConnectServerDialog.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="Records\LegendRecord.cpp">
+      <Filter>Source Files\Records</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -185,13 +212,13 @@
       <Filter>Resource Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Options\CubeAxesOption.h">
-      <Filter>Header Files\Options</Filter>
+      <Filter>Header Files\Dialogs\Options</Filter>
     </CustomBuild>
     <CustomBuild Include="Options\LightOption.h">
-      <Filter>Header Files\Options</Filter>
+      <Filter>Header Files\Dialogs\Options</Filter>
     </CustomBuild>
     <CustomBuild Include="Options\StdExplode.h">
-      <Filter>Header Files\Options</Filter>
+      <Filter>Header Files\Dialogs\Options</Filter>
     </CustomBuild>
     <CustomBuild Include="GVSDoc.h">
       <Filter>Header Files</Filter>
@@ -200,25 +227,34 @@
       <Filter>Header Files\Managers</Filter>
     </CustomBuild>
     <CustomBuild Include="Options\ColorLegendEditor.ui">
-      <Filter>Form Files\Options\ColorLegend</Filter>
+      <Filter>Form Files\Dialogs\Options\ColorLegend</Filter>
     </CustomBuild>
     <CustomBuild Include="Options\LegendItemAddtion.ui">
-      <Filter>Form Files\Options\ColorLegend</Filter>
+      <Filter>Form Files\Dialogs\Options\ColorLegend</Filter>
     </CustomBuild>
     <CustomBuild Include="Options\CubeAxesOption.ui">
-      <Filter>Form Files\Options</Filter>
+      <Filter>Form Files\Dialogs\Options</Filter>
     </CustomBuild>
     <CustomBuild Include="Options\LightOption.ui">
-      <Filter>Form Files\Options</Filter>
+      <Filter>Form Files\Dialogs\Options</Filter>
     </CustomBuild>
     <CustomBuild Include="Options\StdExplode.ui">
-      <Filter>Form Files\Options</Filter>
+      <Filter>Form Files\Dialogs\Options</Filter>
     </CustomBuild>
     <CustomBuild Include="Options\ColorLegendEditor.h">
-      <Filter>Header Files\Options\ColorLegend</Filter>
+      <Filter>Header Files\Dialogs\Options\ColorLegend</Filter>
     </CustomBuild>
     <CustomBuild Include="Options\LegendItemAddtion.h">
-      <Filter>Header Files\Options\ColorLegend</Filter>
+      <Filter>Header Files\Dialogs\Options\ColorLegend</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Managers\TransportationManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Dialog\ConnectServerDialog.ui">
+      <Filter>Form Files\Dialogs</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Dialog\ConnectServerDialog.h">
+      <Filter>Header Files\Dialogs</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -258,14 +294,20 @@
     <ClInclude Include="..\build\Qt\GeneratedFiles\ui_StdExplode.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="Widgets\LegendRecord.h">
-      <Filter>Header Files\Widgets</Filter>
-    </ClInclude>
     <ClInclude Include="..\build\Qt\GeneratedFiles\ui_ColorLegendEditor.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\build\Qt\GeneratedFiles\ui_LegendItemAddtion.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\build\Qt\GeneratedFiles\ui_ConnectServerDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Records\ConnectionRecord.h">
+      <Filter>Header Files\Records</Filter>
+    </ClInclude>
+    <ClInclude Include="Records\LegendRecord.h">
+      <Filter>Header Files\Records</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

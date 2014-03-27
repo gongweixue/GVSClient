@@ -9,7 +9,7 @@
 #include <QVBoxLayout>
 #include <QListWidgetItem>
 
-#include "Widgets/LegendRecord.h"
+#include "Records/LegendRecord.h"
 
 using namespace std;
 
