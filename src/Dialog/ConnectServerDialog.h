@@ -11,11 +11,6 @@
 
 using namespace std;
 
-enum ConnectState {
-    Connected = 0,
-    Disconnected = 1
-};
-
 class ConnectServerDialog : public QDialog
 {
     Q_OBJECT
@@ -24,7 +19,6 @@ public:
     ConnectServerDialog(QWidget *parent = 0);
     ConnectServerDialog(std::vector<ConnectionRecord>* connList, QFtp* ftpConn, QWidget *parent = 0);
     ~ConnectServerDialog();
-    ConnectState getState() {return connState;}
 
 private slots:
     void OnClickOk();
@@ -37,7 +31,6 @@ private:
     vector<ConnectionRecord>* pSvrList;
     QFtp* ftp;
     vector<QListWidgetItem> vecOfItem;
-    ConnectState connState;
 };
 
 #endif // CONNECTSERVERDIALOG_H

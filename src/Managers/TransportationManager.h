@@ -23,6 +23,7 @@ private slots:
     void OnDisonnectServer();
     void OnUploadProject();
     void OnDownloadProject();
+    void ftpCmdFinished(int id, bool error);
 
 private:
     TransportationManager(QObject *parent);//not impelement.
@@ -30,9 +31,8 @@ private:
     void initConnectionList();
 private:
     MainWindow* mainWindow;
-    ConnectState connState;
     vector<ConnectionRecord> connList;
-    QFtp* ftpConn;
+    QFtp* ftp;
 };
 
 #endif // TRANSPORTATIONMANAGER_H

@@ -100,16 +100,17 @@ void MainWindow::initStatusBarMembers()
 {
     QStatusBar* statBar = this->statusBar();
 
-    statusBartipLabel = new QLabel(QObject::tr("ready"), statBar);
-    statusBartipLabel->setAlignment(Qt::AlignHCenter);
-    statusBartipLabel->setMinimumSize(statusBartipLabel->sizeHint());
 
-    statusBartipLabel2 = new QLabel(QObject::tr("second tip"), statBar);
-    statusBartipLabel2->setIndent(3);
-
-
-    statBar->addWidget(statusBartipLabel);
-    statBar->addWidget(statusBartipLabel2);
+//     statusBartipLabel = new QLabel(QObject::tr("ready"), statBar);
+//     statusBartipLabel->setAlignment(Qt::AlignHCenter);
+//     statusBartipLabel->setMinimumSize(statusBartipLabel->sizeHint());
+// 
+//     statusBartipLabel2 = new QLabel(QObject::tr("second tip"), statBar);
+//     statusBartipLabel2->setIndent(3);
+// 
+// 
+//     statBar->addWidget(statusBartipLabel);
+//     statBar->addWidget(statusBartipLabel2);
 }
 
 void MainWindow::initMainAreaMembers()
@@ -193,8 +194,8 @@ void MainWindow::initCommonMembers()
 
 void MainWindow::destoryStatusBarMembers()
 {
-    delete statusBartipLabel;
-    delete statusBartipLabel2;
+//     delete statusBartipLabel;
+//     delete statusBartipLabel2;
 }
 
 void MainWindow::destoryMainAreaMembers()

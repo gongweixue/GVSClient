@@ -80,8 +80,6 @@ public:
     Ui::MainWindowClass ui;
 
 private:
-    QLabel* statusBartipLabel;
-    QLabel* statusBartipLabel2;
     QSplitter* splitterMain;
     QTabWidget* m_ProjectExplorer;
     //QTreeView* treeTab1;

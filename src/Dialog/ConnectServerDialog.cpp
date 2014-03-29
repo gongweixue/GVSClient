@@ -15,7 +15,6 @@ ConnectServerDialog::ConnectServerDialog(vector<ConnectionRecord>* connList,
                                          QWidget *parent)
 {
     ui.setupUi(this);
-    connState = Disconnected;
     ftp = ftpConn;
     pSvrList = connList;
     init();
@@ -48,28 +47,18 @@ void ConnectServerDialog::OnClickOk()
         //get ip and port
         QString ipStr(connRecord.ip.c_str());
         QString portStr(connRecord.port.c_str());
-        //connect
+
+        //connect and login
         ftp->connectToHost(ipStr, portStr.toUShort());
-        while(true)
-        {
-            if (QFtp::Connected == ftp->state())
-            {
-                ftp->login(ui.usrNameEdit->text(), ui.passwdEdit->text());
-                while(true)
-                {
-                    if (QFtp::LoggedIn == ftp->state())
-                    {
-                        return;
-                    }
-                }
-            }
-        }
+        ftp->login(ui.usrNameEdit->text(), ui.passwdEdit->text());
+        QString usrname = ui.usrNameEdit->text();
+        QString psswd = ui.passwdEdit->text();
+        this->hide();
     }
 }
 
 void ConnectServerDialog::OnClickCancle()
 {
-    this->connState = Disconnected;
     this->close();
 }
 
