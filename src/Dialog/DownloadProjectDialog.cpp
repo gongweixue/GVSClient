@@ -28,7 +28,7 @@ void DownloadProjectDialog::init()
     }
     ui.projectList->setHeaderLabels(QStringList()<<tr("名称")<<tr("大小")<<tr("时间"));
     initSignalSlots();
-    ftp->cd("/projects");
+    ftp->cd("/");
     ftp->list();
 }
 

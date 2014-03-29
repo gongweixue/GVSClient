@@ -3,6 +3,7 @@
 #include "QMessageBox"
 #include "Dialog/ConnectServerDialog.h"
 #include "Dialog/DownloadProjectDialog.h"
+#include "Dialog/UploadProjectDialog.h"
 #include "Records/ConnectionRecord.h"
 
 TransportationManager::TransportationManager(MainWindow* window, QObject *parent)
@@ -44,7 +45,7 @@ void TransportationManager::OnConnectServer()
     connect(ftp, SIGNAL(commandFinished(int, bool)),
             this, SLOT(ftpCmdFinished(int, bool)));
 
-    ConnectServerDialog connSvrDlg(&connList, ftp);
+    ConnectServerDialog connSvrDlg(&connList, ftp, this->mainWindow);
     connSvrDlg.exec();
 }
 
@@ -63,7 +64,12 @@ void TransportationManager::OnDisonnectServer()
 
 void TransportationManager::OnUploadProject()
 {
-    QMessageBox::information(mainWindow, "upload", "upload");
+    if (NULL == ftp || ftp->state() != QFtp::LoggedIn) {
+        QMessageBox::information(0, tr("提示"), tr("请先登录服务器。"));
+        return;
+    }
+    UploadProjectDialog uploadDlg(ftp, this->mainWindow);
+    uploadDlg.exec();
 }
 
 void TransportationManager::OnDownloadProject()
@@ -72,8 +78,7 @@ void TransportationManager::OnDownloadProject()
         QMessageBox::information(0, tr("提示"), tr("请先登录服务器。"));
         return;
     }
-    DownloadProjectDialog downloadDlg(ftp);
-    //connect(ftp, listinfo(), downloadDlg, add to list);
+    DownloadProjectDialog downloadDlg(ftp, this->mainWindow);
     downloadDlg.exec();
 }
 

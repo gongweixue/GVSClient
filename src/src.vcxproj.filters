@@ -81,6 +81,15 @@
     <Filter Include="Source Files\Records">
       <UniqueIdentifier>{685195f3-101e-47bc-b467-3ad3fa463ff6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Dialogs\Transportation">
+      <UniqueIdentifier>{432d918a-1d0c-43c5-9321-27ae96264f4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Dialogs\Transportation">
+      <UniqueIdentifier>{c61d2032-caa6-4ba3-986b-744caea61781}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Form Files\Dialogs\Transportation">
+      <UniqueIdentifier>{5e98e223-8353-4ece-b692-92fa2ef88c55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -194,9 +203,6 @@
     <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_ConnectServerDialog.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="Dialog\ConnectServerDialog.cpp">
-      <Filter>Source Files\Dialogs</Filter>
-    </ClCompile>
     <ClCompile Include="Records\LegendRecord.cpp">
       <Filter>Source Files\Records</Filter>
     </ClCompile>
@@ -206,8 +212,20 @@
     <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_DownloadProjectDialog.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_UploadProjectDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_UploadProjectDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\ConnectServerDialog.cpp">
+      <Filter>Source Files\Dialogs\Transportation</Filter>
+    </ClCompile>
     <ClCompile Include="Dialog\DownloadProjectDialog.cpp">
-      <Filter>Source Files\Dialogs</Filter>
+      <Filter>Source Files\Dialogs\Transportation</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\UploadProjectDialog.cpp">
+      <Filter>Source Files\Dialogs\Transportation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -259,17 +277,23 @@
     <CustomBuild Include="Managers\TransportationManager.h">
       <Filter>Header Files\Managers</Filter>
     </CustomBuild>
-    <CustomBuild Include="Dialog\ConnectServerDialog.ui">
-      <Filter>Form Files\Dialogs</Filter>
-    </CustomBuild>
     <CustomBuild Include="Dialog\ConnectServerDialog.h">
-      <Filter>Header Files\Dialogs</Filter>
-    </CustomBuild>
-    <CustomBuild Include="Dialog\DownloadProjectDialog.ui">
-      <Filter>Form Files\Dialogs</Filter>
+      <Filter>Header Files\Dialogs\Transportation</Filter>
     </CustomBuild>
     <CustomBuild Include="Dialog\DownloadProjectDialog.h">
-      <Filter>Header Files\Dialogs</Filter>
+      <Filter>Header Files\Dialogs\Transportation</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Dialog\UploadProjectDialog.h">
+      <Filter>Header Files\Dialogs\Transportation</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Dialog\ConnectServerDialog.ui">
+      <Filter>Form Files\Dialogs\Transportation</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Dialog\DownloadProjectDialog.ui">
+      <Filter>Form Files\Dialogs\Transportation</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Dialog\UploadProjectDialog.ui">
+      <Filter>Form Files\Dialogs\Transportation</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -325,6 +349,9 @@
       <Filter>Header Files\Records</Filter>
     </ClInclude>
     <ClInclude Include="..\build\Qt\GeneratedFiles\ui_DownloadProjectDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\build\Qt\GeneratedFiles\ui_UploadProjectDialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
