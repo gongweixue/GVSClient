@@ -200,6 +200,15 @@
     <ClCompile Include="Records\LegendRecord.cpp">
       <Filter>Source Files\Records</Filter>
     </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_DownloadProjectDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_DownloadProjectDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\DownloadProjectDialog.cpp">
+      <Filter>Source Files\Dialogs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.h">
@@ -256,6 +265,12 @@
     <CustomBuild Include="Dialog\ConnectServerDialog.h">
       <Filter>Header Files\Dialogs</Filter>
     </CustomBuild>
+    <CustomBuild Include="Dialog\DownloadProjectDialog.ui">
+      <Filter>Form Files\Dialogs</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Dialog\DownloadProjectDialog.h">
+      <Filter>Header Files\Dialogs</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\build\Qt\GeneratedFiles\ui_MainWindow.h">
@@ -308,6 +323,9 @@
     </ClInclude>
     <ClInclude Include="Records\LegendRecord.h">
       <Filter>Header Files\Records</Filter>
+    </ClInclude>
+    <ClInclude Include="..\build\Qt\GeneratedFiles\ui_DownloadProjectDialog.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -28,7 +28,7 @@ private slots:
 private:
     TransportationManager(QObject *parent);//not impelement.
     void connectSignalSlots();
-    void initConnectionList();
+    void initServerList();
 private:
     MainWindow* mainWindow;
     vector<ConnectionRecord> connList;

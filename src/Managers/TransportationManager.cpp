@@ -2,6 +2,7 @@
 #include "MainWindow.h"
 #include "QMessageBox"
 #include "Dialog/ConnectServerDialog.h"
+#include "Dialog/DownloadProjectDialog.h"
 #include "Records/ConnectionRecord.h"
 
 TransportationManager::TransportationManager(MainWindow* window, QObject *parent)
@@ -11,7 +12,7 @@ TransportationManager::TransportationManager(MainWindow* window, QObject *parent
     ftp = NULL;
     connList.clear();
     connectSignalSlots();
-    initConnectionList();
+    initServerList();
 }
 
 TransportationManager::~TransportationManager()
@@ -67,10 +68,16 @@ void TransportationManager::OnUploadProject()
 
 void TransportationManager::OnDownloadProject()
 {
-    QMessageBox::information(mainWindow, "download", "download");
+    if (NULL == ftp || ftp->state() != QFtp::LoggedIn) {
+        QMessageBox::information(0, tr("提示"), tr("请先登录服务器。"));
+        return;
+    }
+    DownloadProjectDialog downloadDlg(ftp);
+    //connect(ftp, listinfo(), downloadDlg, add to list);
+    downloadDlg.exec();
 }
 
-void TransportationManager::initConnectionList()
+void TransportationManager::initServerList()
 {
     this->connList.clear();
 
