@@ -16,7 +16,8 @@ DownloadProjectDialog::DownloadProjectDialog( QFtp* pFtp, QWidget *parent)
     ftp = pFtp;
     this->projectFile = NULL;
     modelFileList.clear();
-    //ui.downLoadBtn->setEnabled(false);/*this should be open when no item selected.*/
+    idListModels = -1;
+    isInModelDir = false;
     init();
 }
 
@@ -33,7 +34,7 @@ void DownloadProjectDialog::init()
         return;
     }
 
-    ui.projectList->setHeaderLabels(QStringList()<<tr("名称")<<tr("大小")<<tr("时间"));
+    ui.projectList->setHeaderLabels(QStringList() << tr("名称") << tr("时间"));
     initSignalSlots();
     ftp->cd("/");
     ftp->list();
@@ -43,42 +44,74 @@ void DownloadProjectDialog::initSignalSlots()
 {
     connect(ftp, SIGNAL(done(bool)), this, SLOT(OnDone(bool)));
     connect(ftp, SIGNAL(commandFinished(int, bool)), this, SLOT(ftpCmdFinished(int, bool)));
-    connect(ftp, SIGNAL(listInfo(const QUrlInfo&)), this, SLOT(addProjectItem(const QUrlInfo&)));
-    connect(ui.downLoadBtn, SIGNAL(clicked(bool)), this, SLOT(OnDownloadProject(bool)));
+    connect(ftp, SIGNAL(listInfo(const QUrlInfo&)), this, SLOT(OnListInfo(const QUrlInfo&)));
+    connect(ui.downLoadBtn, SIGNAL(clicked(bool)), this, SLOT(OnClickDownload(bool)));
 }
 
 void DownloadProjectDialog::ftpCmdFinished(int id, bool error)
 {
     if (error) {
         QMessageBox::information(0, "", ftp->errorString());
+        ftp->cd("/");
+        ftp->abort();
+        return;
+    }
+    if (id == idListModels)
+    {
+        //down model files, push into list
+        QStringList strSplit = strProjectFileName.split('.');
+        QString projectName;
+        for (int i = 0; i < strSplit.count() - 1; ++i)
+        {
+            projectName.append(strSplit[i]);
+        }
+        QString pathModel = strLocalPath + projectName + "/";
+        QDir().mkdir(pathModel);
+        for (int i = 0; i < modelNameList.count(); ++i)
+        {
+
+            QFile* pFile = new QFile(pathModel + modelNameList[i]);
+            modelFileList.push_back(pFile);
+            if (!pFile->open(QIODevice::ReadWrite)) {
+                QMessageBox::information(this, tr("错误"), ftp->errorString());
+                ftp->abort();
+                ftp->cd("/");
+                return;
+            }
+            QString modelName = modelNameList[i];
+            ftp->get(modelName, pFile);
+        }
+        ftp->cd("/");
     }
 }
 
 void DownloadProjectDialog::addProjectItem( const QUrlInfo& urlInfo )
 {
-    //make a item of list
-    //add to list widget
+    if (urlInfo.isFile())
+    {
+        qint64 size = urlInfo.size();
+        QDateTime modifiedTime = urlInfo.lastModified();
+        QTreeWidgetItem* item = new QTreeWidgetItem();
+        item->setText(0, urlInfo.name());
+        item->setText(1, urlInfo.lastModified().toString("hh:mm:ss yyyy-MM-dd"));
+        ui.projectList->addTopLevelItem(item);
+    }
 }
 
-void DownloadProjectDialog::OnDownloadProject(bool checked)
+void DownloadProjectDialog::OnClickDownload(bool checked)
 {
-    //get the item chose, if no item chosed, then return.
-    //if (list has item chosed)
-    //    get the name of project
-    //else
-    //return;
+    QList<QTreeWidgetItem*> items = (ui.projectList->selectedItems());
+    if (items.isEmpty())
+        return;
+
     //get the name of project
-    QString fileName = "aaa.gvp";
-    QString projectName = "aaa";
-
-    //get model file list
-    QStringList modelNameList;//#######################list(), to trigger list info
-    //!!!mock some model name
-    modelNameList.push_back("1.txt");
-    modelNameList.push_back("2.txt");
-    modelNameList.push_back("3.txt");
-
-
+    QString fileName = items[0]->text(0);
+    QStringList strSplit = fileName.split('.');
+    QString projectName;
+    for (int i = 0; i < strSplit.count() - 1; ++i)
+    {
+        projectName.append(strSplit[i]);
+    }
 
     //get the path to store
     QString pathToStore = QFileDialog::getExistingDirectory(this,
@@ -86,43 +119,16 @@ void DownloadProjectDialog::OnDownloadProject(bool checked)
                                   tr("d:/"),
                                   QFileDialog::ShowDirsOnly
                                   | QFileDialog::HideNameFilterDetails);
-    pathToStore.append("/");
-
-    //down project file
-    projectFile = new QFile(pathToStore + fileName);
-    if (!projectFile->open(QIODevice::ReadWrite)) {
-        QMessageBox::information(this, tr("错误"), tr("无法创建项目") + projectName);
-        ftp->abort();
+    if (pathToStore.isEmpty())
+    {
         return;
     }
+    pathToStore.append("/");
+
     ftp->cd("/");
-    ftp->get(fileName, projectFile);
+    isInModelDir = false;
 
-    //cd model dir
-    ftp->cd(projectName);
-
-
-    //down model files, push into list
-    QString pathModel = pathToStore + projectName + "/";
-    QDir().mkdir(pathModel);
-    for (int i = 0; i < modelNameList.count(); ++i)
-    {
-        
-        QFile* pFile = new QFile(pathModel + modelNameList[i]);
-        modelFileList.push_back(pFile);
-        if (!pFile->open(QIODevice::ReadWrite)) {
-            QMessageBox::information(this, tr("错误"), ftp->errorString());
-            ftp->abort();
-            ftp->cd("/");
-            return;
-        }
-        QString modelName = modelNameList[i];
-        ftp->get(modelName, pFile);
-    }
-
-    //cd to root
-    ftp->cd("/");
-    ui.downLoadBtn->setEnabled(false);
+    downLoadFiles(fileName, pathToStore);
 }
 
 void DownloadProjectDialog::clearQFiles()
@@ -146,8 +152,52 @@ void DownloadProjectDialog::OnDone(bool err)
 {
     if (err) {
         QMessageBox::information(this, tr("出错啦"), ftp->errorString());
+        ftp->cd("/");
+        ftp->abort();
+        return;
     }
+
     clearQFiles();
     ui.downLoadBtn->setEnabled(true);
 }
 
+void DownloadProjectDialog::downLoadFiles( QString fileName, QString pathToStore )
+{
+    strLocalPath = pathToStore;
+    strProjectFileName = fileName;
+
+    QStringList strSplit = fileName.split('.');
+    QString projectName;
+    for (int i = 0; i < strSplit.count() - 1; ++i)
+    {
+        projectName.append(strSplit[i]);
+    }
+    //down project file
+    projectFile = new QFile(pathToStore + fileName);
+    if (!projectFile->open(QIODevice::ReadWrite)) {
+        QMessageBox::information(this, tr("错误"), tr("无法创建项目") + projectName);
+        ftp->abort();
+        return;
+    }
+    ftp->cd("/");
+    ftp->get(fileName, projectFile);
+
+    //cd model dir
+    ftp->cd(projectName);
+    isInModelDir = true;
+    idListModels = ftp->list();
+
+    ui.downLoadBtn->setEnabled(false);
+}
+
+void DownloadProjectDialog::OnListInfo(const QUrlInfo& urlInfo)
+{
+    if (!isInModelDir)
+    {
+        addProjectItem(urlInfo);
+    }
+    else
+    {
+        modelNameList.push_back(urlInfo.name());
+    }
+}

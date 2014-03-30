@@ -86,14 +86,14 @@ void TransportationManager::initServerList()
 {
     this->connList.clear();
 
+    //Todo: here should be parse the server config file to fill up the connList.
     ConnectionRecord record1;
-    record1.ip = "192.168.1.100";
-    record1.port = "14174";
+    record1.ip = "192.168.1.103";
+    record1.port = "21";
     connList.push_back(record1);
-
     ConnectionRecord record2;
     record1.ip = "127.0.0.1";
-    record1.port = "21";
+    record1.port = "8086";
     connList.push_back(record1);
 }
 
