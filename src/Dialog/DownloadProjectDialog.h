@@ -10,12 +10,13 @@ class DownloadProjectDialog : public QDialog
     Q_OBJECT
 
 public:
-    DownloadProjectDialog(QWidget *parent = 0);
+    
     DownloadProjectDialog(QFtp* pFtp, QWidget *parent = 0);
     ~DownloadProjectDialog();
 
 private:
     void init();
+    DownloadProjectDialog(QWidget *parent = 0);
 
 private slots:
     void initSignalSlots();

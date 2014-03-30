@@ -11,11 +11,11 @@ class UploadProjectDialog : public QDialog
     Q_OBJECT
 
 public:
-    UploadProjectDialog(QWidget *parent = 0);
     UploadProjectDialog(QFtp* pFtp, QWidget *parent = 0);
     ~UploadProjectDialog();
 
 private:
+    UploadProjectDialog(QWidget *parent = 0);
     void init();
     void clearQFiles();
 

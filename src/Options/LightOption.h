@@ -10,7 +10,6 @@ class LightOption : public QDialog
     Q_OBJECT
 
 public:
-    LightOption(QWidget *parent = 0);
     LightOption(int camLightOn, double IntencityOfCamLight,
                 int sceneLightOn, double IntencityOfSceneLight,
                 double XYZ[3],QWidget* pParent = 0);
@@ -23,6 +22,7 @@ public slots:
     void OnClickSceneLightCheckbox();
 
 private:
+    LightOption(QWidget *parent = 0);
     void initDialogCtrls();
     void bindingSlots();
 private:

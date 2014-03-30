@@ -16,16 +16,18 @@ class ConnectServerDialog : public QDialog
     Q_OBJECT
 
 public:
-    ConnectServerDialog(QWidget *parent = 0);
     ConnectServerDialog(std::vector<ConnectionRecord>* connList, QFtp* ftpConn, QWidget *parent = 0);
     ~ConnectServerDialog();
 
 private slots:
     void OnClickOk();
     void OnClickCancle();
+
 private:
+    ConnectServerDialog(QWidget *parent = 0);
     void init();
     void connectSignalSlots();
+
 private:
     Ui::ConnectServerDialog ui;
     vector<ConnectionRecord>* pSvrList;

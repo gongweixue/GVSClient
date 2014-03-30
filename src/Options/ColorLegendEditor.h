@@ -11,11 +11,11 @@ class ColorLegendEditor : public QDialog
     Q_OBJECT
 
 public:
-    ColorLegendEditor(QWidget *parent = 0);
     ColorLegendEditor(ColorLegendManager* manager, QWidget *parent = 0);
     ~ColorLegendEditor();
 
 private:
+    ColorLegendEditor(QWidget *parent = 0);
     void initUpdate();
     void fillListWidget();
     void connectSignalSlots();
