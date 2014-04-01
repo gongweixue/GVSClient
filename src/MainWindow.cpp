@@ -1140,5 +1140,6 @@ void MainWindow::OnEditColorLegend()
 {
     ColorLegendEditor* editor = new ColorLegendEditor(m_ColorLegendManager, this);
     editor->exec();
+    delete editor;
 }
 

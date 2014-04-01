@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Model name="cw06">
+    <Objects>
+        <object id="1" type="surf">
+            <name>Ar2c1.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="2" type="surf">
+            <name>Ar2c2.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="3" type="surf">
+            <name>Ar2d1.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="4" type="surf">
+            <name>bj.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="5" type="surf">
+            <name>dem.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="6" type="surf">
+            <name>di.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="7" type="surf">
+            <name>Ej-m2.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="8" type="surf">
+            <name>Eoy-l2.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="9" type="surf">
+            <name>Ez-cm2.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="10" type="surf">
+            <name>F1.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="11" type="surf">
+            <name>F2.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="12" type="surf">
+            <name>F3.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="13" type="surf">
+            <name>F4.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="14" type="surf">
+            <name>F5.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="15" type="surf">
+            <name>Om2.vtk</name>
+            <visible>1</visible>
+        </object>
+        <object id="16" type="surf">
+            <name>Qnd1.vtk</name>
+            <visible>1</visible>
+        </object>
+    </Objects>
+    <ColorLegendItems>
+        <legend_item id="1">
+            <name>标本</name>
+            <red>54</red>
+            <green>250</green>
+            <blue>73</blue>
+            <description>这是一个解释</description>
+        </legend_item>
+        <legend_item id="2">
+            <name>构造标本</name>
+            <red>154</red>
+            <green>50</green>
+            <blue>173</blue>
+            <description>这是构造标本的解释</description>
+        </legend_item>
+        <legend_item id="3">
+            <name>单矿物分析样</name>
+            <red>254</red>
+            <green>160</green>
+            <blue>13</blue>
+            <description>单矿物分析样的图例解释</description>
+        </legend_item>
+        <legend_item id="4">
+            <name>广谱全分析样</name>
+            <red>24</red>
+            <green>100</green>
+            <blue>190</blue>
+            <description>广谱全分析样的图例解释</description>
+        </legend_item>
+        <legend_item id="5">
+            <name>孔隙度测定样</name>
+            <red>124</red>
+            <green>10</green>
+            <blue>90</blue>
+            <description>孔隙度测定样的图例解释</description>
+        </legend_item>
+        <legend_item id="6">
+            <name>自然重砂</name>
+            <red>50</red>
+            <green>10</green>
+            <blue>250</blue>
+            <description>自然重砂的图例解释</description>
+        </legend_item>
+        <legend_item id="7">
+            <name>物性测定</name>
+            <red>200</red>
+            <green>120</green>
+            <blue>20</blue>
+            <description>物性测定的图例解释</description>
+        </legend_item>
+        <legend_item id="8">
+            <name>同位素地质年龄</name>
+            <red>20</red>
+            <green>20</green>
+            <blue>120</blue>
+            <description>同位素地质年龄的图例解释</description>
+        </legend_item>
+        <legend_item id="9">
+            <name>含沙粘土</name>
+            <red>160</red>
+            <green>120</green>
+            <blue>120</blue>
+            <description>含沙粘土的图例解释</description>
+        </legend_item>
+        <legend_item id="10">
+            <name>白云石矿</name>
+            <red>180</red>
+            <green>80</green>
+            <blue>10</blue>
+            <description>白云石矿的图例解释</description>
+        </legend_item>
+    </ColorLegendItems>
+</Model>

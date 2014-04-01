@@ -104,6 +104,8 @@ void DownloadProjectDialog::OnClickDownload(bool checked)
     if (items.isEmpty())
         return;
 
+    //clear the cache
+    modelNameList.clear();
     //get the name of project
     QString fileName = items[0]->text(0);
     QStringList strSplit = fileName.split('.');
