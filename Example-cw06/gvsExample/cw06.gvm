@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Model name="cw06">
+    <Point visible="1">Ar2c1.vtk</Point>
+    <Line visible="1">Ar2c2.vtk</Line>
+    <Point visible="1">Ar2d1.vtk</Point>
+    <Point visible="1">bj.vtk</Point>
+    <Surface visible="1">dem.vtk</Surface>
+    <Point visible="1">di.vtk</Point>
+    <Point visible="1">Ej-m2.vtk</Point>
+    <Point visible="1">Eoy-l2.vtk</Point>
+    <Point visible="1">Ez-cm2.vtk</Point>
+    <Surface visible="1">F1.vtk</Surface>
+    <Surface visible="1">F2.vtk</Surface>
+    <Line visible="1">F3.vtk</Line>
+    <Point visible="1">F4.vtk</Point>
+    <Point visible="1">F5.vtk</Point>
+    <Line visible="1">Om2.vtk</Line>
+    <Line visible="1">Qnd1.vtk</Line>
+</Model>
