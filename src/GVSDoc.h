@@ -22,9 +22,9 @@ public slots:
     bool OnOpenProject();
 
 private:
-    void LoadDocsNameOfProject(std::string gvpFullFileName);
-    void LoadProjectFile(std::string gvpFullFileName);
-    void parseProjectObject(std::string gvpFullFileName);
+    bool LoadDocsNameOfProject(std::string gvpFullFileName);
+    bool LoadProjectFile(std::string gvpFullFileName);
+    bool parseProjectObject(std::string gvpFullFileName);
     std::string getProjectPath();
 private:
     MainWindow* m_pMainWindow;

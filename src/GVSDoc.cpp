@@ -26,8 +26,7 @@ bool GVSDoc::OnOpenProject()
     m_gvpFullFileName = path;
     m_objectsManager.ClearObjectsTable();
     m_objectsManager.m_docsNameVector.clear();
-    LoadProjectFile(m_gvpFullFileName);
-    return true;
+    return LoadProjectFile(m_gvpFullFileName);
 }
 
 void GVSDoc::OnCloseDocument()
@@ -35,24 +34,28 @@ void GVSDoc::OnCloseDocument()
     m_objectsManager.ClearObjectsTable();
 }
 
-void GVSDoc::LoadProjectFile(std::string gvpFullFileName)
+bool GVSDoc::LoadProjectFile(std::string gvpFullFileName)
 {
-    LoadDocsNameOfProject(gvpFullFileName);
-
-    m_objectsManager.ReadAllDocsIntoReaders();
+    if (!LoadDocsNameOfProject(gvpFullFileName))
+    {
+        return false;
+    }
+    m_objectsManager.ReadObjectNames();
     m_objectsManager.UpdateAllReaders();
     m_objectsManager.ComputeBounds();
+    return true;
 }
 
-void GVSDoc::LoadDocsNameOfProject( std::string gvpFullFileName )
+bool GVSDoc::LoadDocsNameOfProject( std::string gvpFullFileName )
 {
     m_objectsManager.m_docsNameVector.clear();
-    parseProjectObject(gvpFullFileName);
+    bool ret = parseProjectObject(gvpFullFileName);
 
     m_numOfObjects=m_objectsManager.m_docsNameVector.size();
+    return ret;
 }
 
-void GVSDoc::parseProjectObject( std::string gvpFullFileName )
+bool GVSDoc::parseProjectObject( std::string gvpFullFileName )
 {
     //Locate the model files dir of project.
     QString strProjectFileFullPath(gvpFullFileName.c_str());
@@ -65,12 +68,12 @@ void GVSDoc::parseProjectObject( std::string gvpFullFileName )
 
     //parse xml, get the model file name and combine with modelFilesDir
     if(gvpFullFileName.empty())
-        return;
+        return false;
 
     QFile file(gvpFullFileName.c_str());
     if( !file.open(QFile::ReadOnly | QFile::Text) ) {
         QMessageBox::information(NULL, tr("打开项目失败"), file.errorString());
-        return;
+        return false;
     }
 
     QDomDocument domDoc;
@@ -79,13 +82,13 @@ void GVSDoc::parseProjectObject( std::string gvpFullFileName )
     if( !domDoc.setContent(&file, false, &strError, &errLine, &errCol) ) {
         QMessageBox::information(NULL, tr("打开项目失败"), tr("非法项目文件"));
         file.close();
-        return;
+        return false;
     }
 
     if( domDoc.isNull() ) {
         QMessageBox::information(NULL, tr("打开项目失败"), tr("项目为空"));
         file.close();
-        return;
+        return false;
     }
 
     //get the root of file
@@ -130,7 +133,7 @@ void GVSDoc::parseProjectObject( std::string gvpFullFileName )
     }
     file.close();
 
-    return;
+    return true;
 }
 
 std::string GVSDoc::getProjectPath()

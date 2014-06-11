@@ -39,7 +39,7 @@ public:
     vector<ObjectRecord>::iterator FindObjectRecord(string fileName);
     void RemoveObjectRecord(string fileName);
     void ClearObjectsTable();
-    void ReadAllDocsIntoReaders();
+    void ReadObjectNames();
     void UpdateAllReaders();
     void DeleteAllReaders();
     vector<ObjectRecord>* GetObjectsTable();

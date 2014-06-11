@@ -14,7 +14,7 @@ ObjectsManager::~ObjectsManager(void)
     m_objectsTable.clear();
 }
 
-void ObjectsManager::ReadAllDocsIntoReaders()
+void ObjectsManager::ReadObjectNames()
 {
     vector<string>::const_iterator iter_docs = m_docsNameVector.begin();
     for (; iter_docs != m_docsNameVector.end(); iter_docs++)
