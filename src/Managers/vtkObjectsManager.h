@@ -3,8 +3,8 @@
 #include "String"
 #include <vector>
 
-#define GEO_OBJECT_TYPE_POINT    100
-#define GEO_OBJECT_TYPE_LINE    200
+#define GEO_OBJECT_TYPE_POINT       100
+#define GEO_OBJECT_TYPE_LINE        200
 #define GEO_OBJECT_TYPE_SURFACE     300
 
 using namespace std;
@@ -30,25 +30,33 @@ public:
     string getName() {return fileName;};
     bool getVisibility() {return visibility;};
     void setVisibility(bool vis) {visibility = vis;};
-} GeoObject ;
+} GeoObject;
 
-class ObjectsManager
+typedef struct Model
 {
 public:
-    ObjectsManager(void);
-    ~ObjectsManager(void);
-    void InsertGeoObject(string fileName);
-    void ClearObjectsTable();
-    void ReadObjectNames();
+    string modelName;
+    vector<GeoObject> vecOfGeoObjs;
+} Model;
+
+class ObjectManager
+{
+public:
+    friend class GVSDoc;
+    friend class MainWindow;
+    ObjectManager(void);
+    ~ObjectManager(void);
+    void ClearObjTree();
+    void InsertObjectsByNames();
     void UpdateAllReaders();
     void DeleteAllReaders();
     vector<GeoObject>* GetObjectsTable();
 private:
     double* ComputeBounds();
-
 public:
-    vector<string> m_docsNameVector;
-    double m_bounds[6];
+    vector<Model> treeOfGeoObjs;
 private:
-    vector<GeoObject> m_objectsTable;
+    double m_bounds[6];
+    //vector<string> m_docsNameVector;
+    //vector<GeoObject> m_objectsTable;
 };

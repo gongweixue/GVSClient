@@ -23,33 +23,29 @@ bool GVSDoc::OnOpenProject()
         return false;
     }
     m_gvpFullFileName = path;
-    m_objectsManager.ClearObjectsTable();
-    m_objectsManager.m_docsNameVector.clear();
-    return LoadProjectFile(m_gvpFullFileName);
+    m_objectsManager.ClearObjTree();
+    return LoadProject(m_gvpFullFileName);
 }
 
 void GVSDoc::OnCloseDocument()
 {
-    m_objectsManager.ClearObjectsTable();
+    m_objectsManager.ClearObjTree();
 }
 
-bool GVSDoc::LoadProjectFile(std::string gvpFullFileName)
+bool GVSDoc::LoadProject(std::string gvpFullFileName)
 {
-    if (!LoadDocsNameOfProject(gvpFullFileName))
+    if (!LoadGeoObjNames(gvpFullFileName))
     {
         return false;
     }
-    m_objectsManager.ReadObjectNames();
+    m_objectsManager.InsertObjectsByNames();
     m_objectsManager.UpdateAllReaders();
     return true;
 }
 
-bool GVSDoc::LoadDocsNameOfProject( std::string gvpFullFileName )
+bool GVSDoc::LoadGeoObjNames( std::string gvpFullFileName )
 {
-    m_objectsManager.m_docsNameVector.clear();
-    bool ret = parseProjectObject(gvpFullFileName);
-
-    return ret;
+    return parseProjectObject(gvpFullFileName);
 }
 
 //parse the project file and put the names of the objects into data structure.

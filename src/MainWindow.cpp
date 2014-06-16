@@ -355,7 +355,7 @@ void MainWindow::RenderOriginal()
         m_sceneManager.SetSceneBounds(getDocument()->GetObjectsManager()->m_bounds);
         vector<GeoObject>::iterator iter_ObRcd=
                 getDocument()->GetObjectsManager()->GetObjectsTable()->begin();
-        ObjectsManager* manager = getDocument()->GetObjectsManager();
+        ObjectManager* manager = getDocument()->GetObjectsManager();
         for (; iter_ObRcd != manager->GetObjectsTable()->end(); iter_ObRcd++)
         {
             vtkActor* tempActor = MappingDataSetToActor(iter_ObRcd->reader->GetOutput());
@@ -376,7 +376,7 @@ void MainWindow::RenderPlaneClip()
     {
         vtkSmartPointer<vtkAppendFilter> apdFilter=
                 vtkSmartPointer<vtkAppendFilter>::New();
-        ObjectsManager* manager = getDocument()->GetObjectsManager();
+        ObjectManager* manager = getDocument()->GetObjectsManager();
         vector<GeoObject>::iterator iter_ObRcd= manager->GetObjectsTable()->begin();
         for ( ; iter_ObRcd != manager->GetObjectsTable()->end(); iter_ObRcd++)
         {
@@ -432,7 +432,7 @@ void MainWindow::RenderStdExplode()
 {
     //append object data which visible=1.
     vtkSmartPointer<vtkAppendFilter> apdFilter = vtkSmartPointer<vtkAppendFilter>::New();
-    ObjectsManager* manager = getDocument()->GetObjectsManager();
+    ObjectManager* manager = getDocument()->GetObjectsManager();
     vector<GeoObject>::iterator iter_ObRcd= manager->GetObjectsTable()->begin();
     for ( ; iter_ObRcd!=manager->GetObjectsTable()->end(); iter_ObRcd++)
     {
@@ -569,7 +569,7 @@ void MainWindow::RenderPrismClip()
         //append the object data which visible=1.
         vtkSmartPointer<vtkAppendFilter> source=
                 vtkSmartPointer<vtkAppendFilter>::New();
-        ObjectsManager* manager = getDocument()->GetObjectsManager();
+        ObjectManager* manager = getDocument()->GetObjectsManager();
         vector<GeoObject>::iterator iter_ObRcd = manager->GetObjectsTable()->begin();
         for ( ; iter_ObRcd!=manager->GetObjectsTable()->end(); iter_ObRcd++)
         {
@@ -718,7 +718,7 @@ void MainWindow::RenderBoxClip()
     {
         vtkSmartPointer<vtkAppendFilter> apdOriginFilter=
                 vtkSmartPointer<vtkAppendFilter>::New();
-        ObjectsManager* manager = getDocument()->GetObjectsManager();
+        ObjectManager* manager = getDocument()->GetObjectsManager();
         vector<GeoObject>::iterator iter_ObRcd = manager->GetObjectsTable()->begin();
         for ( ; iter_ObRcd != manager->GetObjectsTable()->end(); iter_ObRcd++)
         {

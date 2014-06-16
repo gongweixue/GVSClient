@@ -1,29 +1,48 @@
 #include "Utils/vtkTotallyInclude.h"
 #include "vtkObjectsManager.h"
 
-ObjectsManager::ObjectsManager(void)
+ObjectManager::ObjectManager(void)
 {
-    m_docsNameVector.clear();
-    m_objectsTable.clear();
+    //m_docsNameVector.clear();
+    //m_objectsTable.clear();
+    vector<Model>::iterator iter = treeOfGeoObjs.begin();
+    for (; iter != treeOfGeoObjs.end(); ++iter)
+    {
+        iter->vecOfGeoObjs.clear();
+    }
+    treeOfGeoObjs.clear();
 }
 
-ObjectsManager::~ObjectsManager(void)
+ObjectManager::~ObjectManager(void)
 {
     DeleteAllReaders();
-    m_docsNameVector.clear();
-    m_objectsTable.clear();
+    //m_docsNameVector.clear();
+    //m_objectsTable.clear();
+    vector<Model>::iterator iter = treeOfGeoObjs.begin();
+    for (; iter != treeOfGeoObjs.end(); ++iter)
+    {
+        iter->vecOfGeoObjs.clear();
+    }
+    treeOfGeoObjs.clear();
 }
 
-void ObjectsManager::ReadObjectNames()
+void ObjectManager::InsertObjectsByNames()
 {
     vector<string>::const_iterator iter_docs = m_docsNameVector.begin();
     for (; iter_docs != m_docsNameVector.end(); iter_docs++)
     {
-        InsertGeoObject((*iter_docs));
+        //InsertGeoObjectByName((*iter_docs));
+        //create a Reader.
+        vtkDataSetReader* tempReader = vtkDataSetReader::New();
+        tempReader->SetFileName((*iter_docs).c_str());
+        tempReader->Update();
+        //insert the record into the table.
+        GeoObject tempObjectRecord((*iter_docs), GEO_OBJECT_TYPE_SURFACE, tempReader);
+        m_objectsTable.push_back(tempObjectRecord);
     }
 }
 
-void ObjectsManager::UpdateAllReaders()
+void ObjectManager::UpdateAllReaders()
 {
     //update every record's reader.
     vector<GeoObject>::iterator iter_ObjectsTable = m_objectsTable.begin();
@@ -34,18 +53,8 @@ void ObjectsManager::UpdateAllReaders()
     ComputeBounds();
 }
 
-void ObjectsManager::InsertGeoObject(string fileName)
-{
-    //create a Reader.
-    vtkDataSetReader* tempReader = vtkDataSetReader::New();
-    tempReader->SetFileName(fileName.c_str());
-    tempReader->Update();
-    //insert the record into the table.
-    GeoObject tempObjectRecord(fileName, GEO_OBJECT_TYPE_SURFACE, tempReader);
-    m_objectsTable.push_back(tempObjectRecord);
-}
 
-void ObjectsManager::DeleteAllReaders()
+void ObjectManager::DeleteAllReaders()
 {
     vector<GeoObject>::iterator iter_ObjectsTable = m_objectsTable.begin();
     for (; iter_ObjectsTable != m_objectsTable.end(); iter_ObjectsTable++)
@@ -54,18 +63,22 @@ void ObjectsManager::DeleteAllReaders()
     }
 }
 
-vector<GeoObject>* ObjectsManager::GetObjectsTable()
+vector<GeoObject>* ObjectManager::GetObjectsTable()
 {
     return &m_objectsTable;
 }
 
-void ObjectsManager::ClearObjectsTable()
+void ObjectManager::ClearObjTree()
 {
     DeleteAllReaders();
-    m_objectsTable.clear();
+    vector<Model>::iterator iter = treeOfGeoObjs.begin();
+    for (; iter != treeOfGeoObjs.end(); ++iter)
+    {
+        iter->vecOfGeoObjs.clear();
+    }
 }
 
-double* ObjectsManager::ComputeBounds()
+double* ObjectManager::ComputeBounds()
 {
     vtkAppendFilter* apdFilter = vtkAppendFilter::New();
     vector<GeoObject>::iterator iter_ObRcd = m_objectsTable.begin();
