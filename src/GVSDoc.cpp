@@ -8,7 +8,6 @@ GVSDoc::GVSDoc(MainWindow* mainWindow, QObject *parent)
     : QObject(parent)
 {
     m_pMainWindow = m_pMainWindow;
-    m_numOfObjects = 0;
     m_gvpFullFileName = "";
 }
 
@@ -18,7 +17,7 @@ GVSDoc::~GVSDoc()
 
 bool GVSDoc::OnOpenProject()
 {
-    string path = getProjectPath();
+    string path = getProjectPathByDlg();
     if (path.empty() || !path.compare(m_gvpFullFileName))
     {
         return false;
@@ -42,7 +41,6 @@ bool GVSDoc::LoadProjectFile(std::string gvpFullFileName)
     }
     m_objectsManager.ReadObjectNames();
     m_objectsManager.UpdateAllReaders();
-    m_objectsManager.ComputeBounds();
     return true;
 }
 
@@ -51,10 +49,10 @@ bool GVSDoc::LoadDocsNameOfProject( std::string gvpFullFileName )
     m_objectsManager.m_docsNameVector.clear();
     bool ret = parseProjectObject(gvpFullFileName);
 
-    m_numOfObjects=m_objectsManager.m_docsNameVector.size();
     return ret;
 }
 
+//parse the project file and put the names of the objects into data structure.
 bool GVSDoc::parseProjectObject( std::string gvpFullFileName )
 {
     //Locate the model files dir of project.
@@ -136,7 +134,7 @@ bool GVSDoc::parseProjectObject( std::string gvpFullFileName )
     return true;
 }
 
-std::string GVSDoc::getProjectPath()
+std::string GVSDoc::getProjectPathByDlg()
 {
     QString fileName = QFileDialog::getOpenFileName(
                                0,

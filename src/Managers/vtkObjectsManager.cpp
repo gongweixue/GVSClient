@@ -19,41 +19,42 @@ void ObjectsManager::ReadObjectNames()
     vector<string>::const_iterator iter_docs = m_docsNameVector.begin();
     for (; iter_docs != m_docsNameVector.end(); iter_docs++)
     {
-        InsertObjectRecord((*iter_docs));
+        InsertGeoObject((*iter_docs));
     }
 }
 
 void ObjectsManager::UpdateAllReaders()
 {
     //update every record's reader.
-    vector<ObjectRecord>::iterator iter_ObjectsTable = m_objectsTable.begin();
+    vector<GeoObject>::iterator iter_ObjectsTable = m_objectsTable.begin();
     for (; iter_ObjectsTable != m_objectsTable.end(); iter_ObjectsTable++)
     {
         iter_ObjectsTable->reader->Update();
     }
+    ComputeBounds();
 }
 
-void ObjectsManager::InsertObjectRecord(string fileName)
+void ObjectsManager::InsertGeoObject(string fileName)
 {
     //create a Reader.
     vtkDataSetReader* tempReader = vtkDataSetReader::New();
     tempReader->SetFileName(fileName.c_str());
     tempReader->Update();
     //insert the record into the table.
-    ObjectRecord tempObjectRecord(fileName, tempReader);
+    GeoObject tempObjectRecord(fileName, GEO_OBJECT_TYPE_SURFACE, tempReader);
     m_objectsTable.push_back(tempObjectRecord);
 }
 
 void ObjectsManager::DeleteAllReaders()
 {
-    vector<ObjectRecord>::iterator iter_ObjectsTable = m_objectsTable.begin();
+    vector<GeoObject>::iterator iter_ObjectsTable = m_objectsTable.begin();
     for (; iter_ObjectsTable != m_objectsTable.end(); iter_ObjectsTable++)
     {
         DeleteVTKPointer(iter_ObjectsTable->reader);
     }
 }
 
-vector<ObjectRecord>* ObjectsManager::GetObjectsTable()
+vector<GeoObject>* ObjectsManager::GetObjectsTable()
 {
     return &m_objectsTable;
 }
@@ -67,8 +68,8 @@ void ObjectsManager::ClearObjectsTable()
 double* ObjectsManager::ComputeBounds()
 {
     vtkAppendFilter* apdFilter = vtkAppendFilter::New();
-    vector<ObjectRecord>::iterator iter_ObRcd = m_objectsTable.begin();
-    for ( ; iter_ObRcd != m_objectsTable.end()&&iter_ObRcd->visible ; iter_ObRcd++)
+    vector<GeoObject>::iterator iter_ObRcd = m_objectsTable.begin();
+    for ( ; iter_ObRcd != m_objectsTable.end()&&iter_ObRcd->getVisibility(); iter_ObRcd++)
     {
         apdFilter->AddInput(iter_ObRcd->reader->GetOutput());
     }

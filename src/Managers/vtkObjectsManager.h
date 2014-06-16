@@ -3,50 +3,52 @@
 #include "String"
 #include <vector>
 
-#define OBJECT_TYPE_POINTSET    100
-#define OBJECT_TYPE_POLYLINE    200
-#define OBJECT_TYPE_SURFACE     300
-#define OBJECT_TYPE_VOLUME      400
+#define GEO_OBJECT_TYPE_POINT    100
+#define GEO_OBJECT_TYPE_LINE    200
+#define GEO_OBJECT_TYPE_SURFACE     300
 
 using namespace std;
 
-typedef struct ObjectRecord
+typedef struct GeoObject
 {
 public:
-    string fileName;
+    int type;
     vtkDataSetReader* reader;
-    bool visible;
+private:
+    string fileName;
+    bool visibility;
 public:
-    ObjectRecord(string fname, vtkDataSetReader* rder, bool vsble=1)
+    GeoObject(string fname, int type, vtkDataSetReader* rder, bool vis=1)
     {
         fileName=fname;
         reader=rder;
-        visible=vsble;
+        visibility=vis;
     };
-    ~ObjectRecord()
+    ~GeoObject()
     {
     }
-} ObjectRecord ;
+    string getName() {return fileName;};
+    bool getVisibility() {return visibility;};
+    void setVisibility(bool vis) {visibility = vis;};
+} GeoObject ;
 
 class ObjectsManager
 {
 public:
     ObjectsManager(void);
     ~ObjectsManager(void);
-
-    void InsertObjectRecord(string fileName);
-    int GetObjectType(string fileName);
-    vector<ObjectRecord>::iterator FindObjectRecord(string fileName);
-    void RemoveObjectRecord(string fileName);
+    void InsertGeoObject(string fileName);
     void ClearObjectsTable();
     void ReadObjectNames();
     void UpdateAllReaders();
     void DeleteAllReaders();
-    vector<ObjectRecord>* GetObjectsTable();
+    vector<GeoObject>* GetObjectsTable();
+private:
     double* ComputeBounds();
 
+public:
     vector<string> m_docsNameVector;
     double m_bounds[6];
 private:
-    vector<ObjectRecord> m_objectsTable;
+    vector<GeoObject> m_objectsTable;
 };

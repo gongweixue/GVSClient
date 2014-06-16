@@ -25,11 +25,10 @@ private:
     bool LoadDocsNameOfProject(std::string gvpFullFileName);
     bool LoadProjectFile(std::string gvpFullFileName);
     bool parseProjectObject(std::string gvpFullFileName);
-    std::string getProjectPath();
+    std::string getProjectPathByDlg();
 private:
     MainWindow* m_pMainWindow;
     ObjectsManager m_objectsManager;
-    int m_numOfObjects;
     std::string m_gvpFullFileName;
 };
 

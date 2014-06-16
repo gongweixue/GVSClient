@@ -353,14 +353,14 @@ void MainWindow::RenderOriginal()
     if (getDocument()->GetObjectsManager()->GetObjectsTable()->size() != 0)
     {
         m_sceneManager.SetSceneBounds(getDocument()->GetObjectsManager()->m_bounds);
-        vector<ObjectRecord>::iterator iter_ObRcd=
+        vector<GeoObject>::iterator iter_ObRcd=
                 getDocument()->GetObjectsManager()->GetObjectsTable()->begin();
         ObjectsManager* manager = getDocument()->GetObjectsManager();
         for (; iter_ObRcd != manager->GetObjectsTable()->end(); iter_ObRcd++)
         {
             vtkActor* tempActor = MappingDataSetToActor(iter_ObRcd->reader->GetOutput());
             m_sceneManager.InsertActorRecord(tempActor,
-                                             iter_ObRcd->fileName,
+                                             iter_ObRcd->getName(),
                                              SCENE_STATE_ORIGINAL,
                                              1);
         }
@@ -377,10 +377,10 @@ void MainWindow::RenderPlaneClip()
         vtkSmartPointer<vtkAppendFilter> apdFilter=
                 vtkSmartPointer<vtkAppendFilter>::New();
         ObjectsManager* manager = getDocument()->GetObjectsManager();
-        vector<ObjectRecord>::iterator iter_ObRcd= manager->GetObjectsTable()->begin();
+        vector<GeoObject>::iterator iter_ObRcd= manager->GetObjectsTable()->begin();
         for ( ; iter_ObRcd != manager->GetObjectsTable()->end(); iter_ObRcd++)
         {
-            if(iter_ObRcd->visible)
+            if(iter_ObRcd->getVisibility())
             {
                 iter_ObRcd->reader->Update();
                 apdFilter->AddInput(iter_ObRcd->reader->GetOutput());
@@ -433,10 +433,10 @@ void MainWindow::RenderStdExplode()
     //append object data which visible=1.
     vtkSmartPointer<vtkAppendFilter> apdFilter = vtkSmartPointer<vtkAppendFilter>::New();
     ObjectsManager* manager = getDocument()->GetObjectsManager();
-    vector<ObjectRecord>::iterator iter_ObRcd= manager->GetObjectsTable()->begin();
+    vector<GeoObject>::iterator iter_ObRcd= manager->GetObjectsTable()->begin();
     for ( ; iter_ObRcd!=manager->GetObjectsTable()->end(); iter_ObRcd++)
     {
-        if(iter_ObRcd->visible)
+        if(iter_ObRcd->getVisibility())
         {
             iter_ObRcd->reader->Update();
             apdFilter->AddInput(iter_ObRcd->reader->GetOutput());
@@ -570,10 +570,10 @@ void MainWindow::RenderPrismClip()
         vtkSmartPointer<vtkAppendFilter> source=
                 vtkSmartPointer<vtkAppendFilter>::New();
         ObjectsManager* manager = getDocument()->GetObjectsManager();
-        vector<ObjectRecord>::iterator iter_ObRcd = manager->GetObjectsTable()->begin();
+        vector<GeoObject>::iterator iter_ObRcd = manager->GetObjectsTable()->begin();
         for ( ; iter_ObRcd!=manager->GetObjectsTable()->end(); iter_ObRcd++)
         {
-            if(iter_ObRcd->visible)
+            if(iter_ObRcd->getVisibility())
             {
                 iter_ObRcd->reader->Update();
                 source->AddInput(iter_ObRcd->reader->GetOutput());
@@ -719,10 +719,10 @@ void MainWindow::RenderBoxClip()
         vtkSmartPointer<vtkAppendFilter> apdOriginFilter=
                 vtkSmartPointer<vtkAppendFilter>::New();
         ObjectsManager* manager = getDocument()->GetObjectsManager();
-        vector<ObjectRecord>::iterator iter_ObRcd = manager->GetObjectsTable()->begin();
+        vector<GeoObject>::iterator iter_ObRcd = manager->GetObjectsTable()->begin();
         for ( ; iter_ObRcd != manager->GetObjectsTable()->end(); iter_ObRcd++)
         {
-            if(iter_ObRcd->visible)
+            if(iter_ObRcd->getVisibility())
             {
                 iter_ObRcd->reader->Update();
                 apdOriginFilter->AddInput(iter_ObRcd->reader->GetOutput());
