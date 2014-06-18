@@ -1,6 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Project name="gvsExample">
     <Model>cw06</Model>
+    <Model>cw07</Model>
+    <Model>cw08</Model>
     <ColorLegendItems>
         <legend_item id="1">
             <name>±ê±¾</name>

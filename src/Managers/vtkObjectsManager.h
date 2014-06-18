@@ -1,6 +1,7 @@
 #pragma once
 #include "Utils/vtkTotallyInclude.h"
 #include "String"
+#include "QString"
 #include <vector>
 
 #define GEO_OBJECT_TYPE_POINT       100
@@ -35,7 +36,7 @@ public:
 typedef struct Model
 {
 public:
-    string modelName;
+    QString modelName;
     vector<GeoObject> vecOfGeoObjs;
 } Model;
 
@@ -57,6 +58,6 @@ public:
     vector<Model> treeOfGeoObjs;
 private:
     double m_bounds[6];
-    //vector<string> m_docsNameVector;
-    //vector<GeoObject> m_objectsTable;
+    vector<string> m_docsNameVector;
+    vector<GeoObject> m_objectsTable;
 };

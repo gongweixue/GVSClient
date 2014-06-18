@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Model name="cw06">
+    <Surface visible="1">F1.vtk</Surface>
+    <Surface visible="1">F2.vtk</Surface>
+    <Line visible="1">F3.vtk</Line>
+    <Point visible="1">F4.vtk</Point>
+</Model>

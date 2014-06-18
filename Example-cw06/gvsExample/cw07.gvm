@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Model name="cw06">
+    <Point visible="1">Ar2c1.vtk</Point>
+    <Line visible="1">Ar2c2.vtk</Line>
+    <Point visible="1">Ar2d1.vtk</Point>
+    <Point visible="1">bj.vtk</Point>
+</Model>
