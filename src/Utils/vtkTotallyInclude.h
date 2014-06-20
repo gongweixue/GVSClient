@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VTK_TOTALLY_INCLUDE_H
+#define VTK_TOTALLY_INCLUDE_H
 
 #include "vtkActor.h"
 #include "vtkAppendFilter.h"
@@ -33,8 +34,8 @@
 #include "vtkUnstructuredGrid.h"
 #include "vtkWindowToImageFilter.h"
 
-const int evenRowLMT=5;
-const int evenColLMT=5;
+const int evenRowLMT = 5;
+const int evenColLMT = 5;
 
 template<typename T>
 bool DeleteVTKPointer(T& pointer)
@@ -42,8 +43,10 @@ bool DeleteVTKPointer(T& pointer)
     if (pointer!=0)
     {
         pointer->Delete();
-        pointer=0;
+        pointer = 0;
         return true;
     }
     return false;
 };
+
+#endif

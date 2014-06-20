@@ -1,5 +1,5 @@
-#ifndef TRANSPORTATIONMANAGER_H
-#define TRANSPORTATIONMANAGER_H
+#ifndef TRANSPORTATION_MANAGER_H
+#define TRANSPORTATION_MANAGER_H
 
 #include <QObject>
 #include <vector>
@@ -15,7 +15,7 @@ class TransportationManager : public QObject
     Q_OBJECT
 
 public:
-    TransportationManager(MainWindow* window, QObject *parent = 0);
+    TransportationManager(MainWindow* window, QObject* parent = 0);
     ~TransportationManager();
 
 private slots:
@@ -26,7 +26,7 @@ private slots:
     void ftpCmdFinished(int id, bool error);
 
 private:
-    TransportationManager(QObject *parent);//not impelement.
+    TransportationManager(QObject* parent);//not impelement.
     void connectSignalSlots();
     void initServerList();
 private:
@@ -35,4 +35,4 @@ private:
     QFtp* ftp;
 };
 
-#endif // TRANSPORTATIONMANAGER_H
+#endif // TRANSPORTATION_MANAGER_H

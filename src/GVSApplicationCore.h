@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GVS_APLLICATIONS_CORE_H
+#define GVS_APLLICATIONS_CORE_H
 
 class GVSSettings;
 class QString;
@@ -12,7 +13,9 @@ public:
     GVSSettings* getSettings();
 
     // load the xml or json or txt files to config the env of gvs.
-    void loadConfiguration( const QString& fileName );
+    void loadConfiguration(const QString& fileName);
 protected:
     GVSSettings* settings;
 };
+
+#endif

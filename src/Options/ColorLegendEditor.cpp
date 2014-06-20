@@ -2,7 +2,7 @@
 #include "Options/LegendItemAddtion.h"
 #include <QMessageBox>
 
-ColorLegendEditor::ColorLegendEditor(QWidget *parent)
+ColorLegendEditor::ColorLegendEditor(QWidget* parent)
     : QDialog(parent)
 {
     ui.setupUi(this);
@@ -30,7 +30,8 @@ void ColorLegendEditor::initUpdate()
     fillListWidget();
 }
 
-void ColorLegendEditor::fillListWidget() {
+void ColorLegendEditor::fillListWidget()
+{
     vector<LegendRecord>* vecRecord = m_manager->getVecPtrOfRecord();
     if (vecRecord->empty())
     {

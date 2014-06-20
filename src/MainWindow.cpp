@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     splash->setPixmap(QPixmap(":/Resources/startup.jpg"));
     splash->show();
     Qt::Alignment topRight = Qt::AlignRight | Qt::AlignTop;
-    splash->showMessage(QObject::tr("对象初始化"), topRight,Qt::red);
+    splash->showMessage(QObject::tr("对象初始化"), topRight, Qt::red);
     Sleep(1000);
 #endif
 
@@ -104,11 +104,11 @@ void MainWindow::initStatusBarMembers()
 //     statusBartipLabel = new QLabel(QObject::tr("ready"), statBar);
 //     statusBartipLabel->setAlignment(Qt::AlignHCenter);
 //     statusBartipLabel->setMinimumSize(statusBartipLabel->sizeHint());
-// 
+//
 //     statusBartipLabel2 = new QLabel(QObject::tr("second tip"), statBar);
 //     statusBartipLabel2->setIndent(3);
-// 
-// 
+//
+//
 //     statBar->addWidget(statusBartipLabel);
 //     statBar->addWidget(statusBartipLabel2);
 }
@@ -154,13 +154,13 @@ void MainWindow::initCommonMembers()
     m_sceneLightUp->SetLightTypeToSceneLight();
     m_sceneLightUp->SetSwitch(1);
     m_sceneLightUp->SetIntensity(1);
-    m_sceneLightUp->SetPosition(1,1,1);
+    m_sceneLightUp->SetPosition(1, 1, 1);
     m_mainRenderer->AddLight(m_sceneLightUp);
     m_sceneLightDown = vtkOpenGLLight::New();
     m_sceneLightDown->SetLightTypeToSceneLight();
     m_sceneLightDown->SetSwitch(1);
     m_sceneLightDown->SetIntensity(1);
-    m_sceneLightDown->SetPosition(-1,-1,-1);
+    m_sceneLightDown->SetPosition(-1, -1, -1);
     m_mainRenderer->AddLight(m_sceneLightDown);
 
     m_cubeAxesActor = vtkCubeAxesActor::New();
@@ -273,7 +273,8 @@ void MainWindow::onInitialUpdate()
         showOrientationMarker();
         processRenderRequest(m_sceneManager.GetSceneState());
     }
-    if (qvtkWidget->GetRenderWindow()) {
+    if (qvtkWidget->GetRenderWindow())
+    {
         qvtkWidget->GetRenderWindow()->Render();
     }
 }
@@ -387,7 +388,7 @@ void MainWindow::RenderPlaneClip()
             }
         }
         apdFilter->Update();
-        vtkDataSet* mergedDataSet=apdFilter->GetOutput();
+        vtkDataSet* mergedDataSet = apdFilter->GetOutput();
 
         m_clipPlane->SetNormal(1, 0, 0);
         vtkSmartPointer<vtkTableBasedClipDataSet> clipper =
@@ -414,8 +415,8 @@ void MainWindow::RenderPlaneClip()
                                   (tmpBounds[5]+tmpBounds[4]) / 2);
         m_clipPlaneRep->DrawPlaneOff();
 
-        m_clipCallback->Plane=m_clipPlane;
-        m_clipCallback->Actor=clipActor;
+        m_clipCallback->Plane = m_clipPlane;
+        m_clipCallback->Actor = clipActor;
 
         m_clipPlaneWidget->SetInteractor(this->qvtkWidget->GetInteractor());
         m_clipPlaneWidget->SetRepresentation(m_clipPlaneRep);
@@ -433,7 +434,7 @@ void MainWindow::RenderStdExplode()
     //append object data which visible=1.
     vtkSmartPointer<vtkAppendFilter> apdFilter = vtkSmartPointer<vtkAppendFilter>::New();
     ObjectManager* manager = getDocument()->GetObjectsManager();
-    vector<GeoObject>::iterator iter_ObRcd= manager->GetObjectsTable()->begin();
+    vector<GeoObject>::iterator iter_ObRcd = manager->GetObjectsTable()->begin();
     for ( ; iter_ObRcd!=manager->GetObjectsTable()->end(); iter_ObRcd++)
     {
         if(iter_ObRcd->getVisibility())
@@ -443,12 +444,12 @@ void MainWindow::RenderStdExplode()
         }
     }
     apdFilter->Update();
-    vtkDataSet* mergedDataSet=apdFilter->GetOutput();
+    vtkDataSet* mergedDataSet = apdFilter->GetOutput();
     //bounds
     double bounds[6];
     mergedDataSet->GetBounds(bounds);
     //gap size
-    double explodeGap=m_evenExplodeGapRatio*(bounds[5] - bounds[4]);
+    double explodeGap = m_evenExplodeGapRatio*(bounds[5] - bounds[4]);
 
     //--------------------------------horizon cut-------------------------------
     //temp var to store clipper, trans,etc.
@@ -460,9 +461,9 @@ void MainWindow::RenderStdExplode()
     //temp var to be process in next loop.
     vtkSmartPointer<vtkDataSet> inputData=mergedDataSet;
     // horizon cut begin
-    for (int i = 0; i  <m_evenExplodeRow - 1; i++)
+    for (int i = 0; i < (m_evenExplodeRow - 1); i++)
     {
-        hPlane[i]=vtkSmartPointer<vtkPlane>::New();
+        hPlane[i] = vtkSmartPointer<vtkPlane>::New();
         hPlane[i]->SetNormal(0, 1, 0);
         hPlane[i]->SetOrigin(0,
                 (bounds[3] -
@@ -478,7 +479,7 @@ void MainWindow::RenderStdExplode()
         hClipper[i][0]->Update();
         //transFilter
         hTrans[i] = vtkSmartPointer<vtkTransform>::New();
-        hTrans[i]->Translate(0, (m_evenExplodeRow - i - 1)*explodeGap, 0);
+        hTrans[i]->Translate(0, (m_evenExplodeRow - i - 1) * explodeGap, 0);
         hTransFilter[i] = vtkSmartPointer<vtkTransformFilter>::New();
         hTransFilter[i]->SetInputConnection(hClipper[i][0]->GetOutputPort());
         hTransFilter[i]->SetTransform(hTrans[i]);
@@ -505,12 +506,12 @@ void MainWindow::RenderStdExplode()
     vtkSmartPointer<vtkTransformFilter> vTransFilter[evenRowLMT][evenColLMT - 1];
     vtkSmartPointer<vtkDataSet> resultData[evenRowLMT][evenColLMT];
     //vertical cut begin
-    for (int i = 0; i < m_evenExplodeRow;i++)
+    for (int i = 0; i < m_evenExplodeRow; i++)
     {
-        inputData=hResultData[i];//for every horizon result data.
-        for (int j = 0; j < m_evenExplodeCol - 1; j++)
+        inputData = hResultData[i];//for every horizon result data.
+        for (int j = 0; j < (m_evenExplodeCol - 1); j++)
         {
-            vPlane[i][j]=vtkSmartPointer<vtkPlane>::New();
+            vPlane[i][j] = vtkSmartPointer<vtkPlane>::New();
             vPlane[i][j]->SetNormal(1, 0, 0);
             vPlane[i][j]->SetOrigin((bounds[1] - (j + 1) * (bounds[1] - bounds[0]) /
                                     m_evenExplodeCol),
@@ -524,7 +525,7 @@ void MainWindow::RenderStdExplode()
             vClipper[i][j][0]->Update();
             //transFilter
             vTrans[i][j] = vtkSmartPointer<vtkTransform>::New();
-            vTrans[i][j]->Translate( (m_evenExplodeCol - j - 1)*explodeGap, 0, 0);
+            vTrans[i][j]->Translate((m_evenExplodeCol - j - 1) * explodeGap, 0, 0);
             vTransFilter[i][j] = vtkSmartPointer<vtkTransformFilter>::New();
             vTransFilter[i][j]->SetInputConnection(vClipper[i][j][0]->GetOutputPort());
             vTransFilter[i][j]->SetTransform(vTrans[i][j]);
@@ -548,7 +549,7 @@ void MainWindow::RenderStdExplode()
     {
         for (int j = 0; j < m_evenExplodeCol; j++)
         {
-            vtkActor* tmpActor=MappingDataSetToActor(resultData[i][j]);
+            vtkActor* tmpActor = MappingDataSetToActor(resultData[i][j]);
             m_sceneManager.InsertActorRecord(tmpActor,
                                              "_StdExplodeResult",
                                              SCENE_STATE_STD_EXPLODE,
@@ -556,7 +557,7 @@ void MainWindow::RenderStdExplode()
         }
     }
     //add all actor which state=stdExplode
-    m_sceneManager.AddActorsByState(m_mainRenderer,SCENE_STATE_STD_EXPLODE);
+    m_sceneManager.AddActorsByState(m_mainRenderer, SCENE_STATE_STD_EXPLODE);
     //render it.
     m_mainRenderer->ResetCamera();
     m_mainRenderer->Render();
@@ -567,11 +568,11 @@ void MainWindow::RenderPrismClip()
     if (getDocument()->GetObjectsManager()->GetObjectsTable()->size() != 0)
     {
         //append the object data which visible=1.
-        vtkSmartPointer<vtkAppendFilter> source=
+        vtkSmartPointer<vtkAppendFilter> source =
                 vtkSmartPointer<vtkAppendFilter>::New();
         ObjectManager* manager = getDocument()->GetObjectsManager();
         vector<GeoObject>::iterator iter_ObRcd = manager->GetObjectsTable()->begin();
-        for ( ; iter_ObRcd!=manager->GetObjectsTable()->end(); iter_ObRcd++)
+        for ( ; iter_ObRcd != manager->GetObjectsTable()->end(); iter_ObRcd++)
         {
             if(iter_ObRcd->getVisibility())
             {
@@ -587,10 +588,10 @@ void MainWindow::RenderPrismClip()
         dataToClip->GetBounds(bounds);
         for (int i = 0; i < 5; i++)
         {
-            bounds[i]*=1.1;
+            bounds[i] *= 1.1;
         }
         m_prismClipPlane[0]->SetOrigin(source->GetOutput()->GetCenter());
-        m_prismClipPlane[0]->SetNormal(0,0,1);
+        m_prismClipPlane[0]->SetNormal(0, 0, 1);
         vtkSmartPointer<vtkTableBasedClipDataSet> clipper11=
                 vtkSmartPointer<vtkTableBasedClipDataSet>::New();
         clipper11->SetClipFunction(m_prismClipPlane[0]);
@@ -598,7 +599,7 @@ void MainWindow::RenderPrismClip()
         clipper11->InsideOutOn();
         clipper11->Update();
         apdResult->AddInput(clipper11->GetOutput());
-        vtkTableBasedClipDataSet* clipper12=vtkTableBasedClipDataSet::New();
+        vtkTableBasedClipDataSet* clipper12 = vtkTableBasedClipDataSet::New();
         clipper12->SetClipFunction(m_prismClipPlane[0]);
         clipper12->SetInput(dataToClip);
         clipper12->InsideOutOff();
@@ -633,7 +634,7 @@ void MainWindow::RenderPrismClip()
         apdResult->AddInput(clipper31->GetOutput());
         apdResult->Update();
 
-        vtkActor* tmpActor=MappingDataSetToActor(apdResult->GetOutput() );
+        vtkActor* tmpActor = MappingDataSetToActor(apdResult->GetOutput() );
         m_sceneManager.InsertActorRecord(tmpActor,
                                          "_PrismClipResult",
                                          SCENE_STATE_PRISM_CLIP,
@@ -655,7 +656,7 @@ void MainWindow::RenderPrismClip()
         m_prismClipRep[1]->GetOutlineProperty()->SetOpacity(0);
         m_prismClipRep[1]->GetSelectedOutlineProperty()->SetOpacity(0);
         //callback 2
-        m_prismClipCallback[1]->Plane=m_prismClipPlane[1];
+        m_prismClipCallback[1]->Plane = m_prismClipPlane[1];
         //widget2
         m_prismClipWidget[1]->SetInteractor(qvtkWidget->GetInteractor());
         m_prismClipWidget[1]->SetRepresentation(m_prismClipRep[1]);
@@ -677,7 +678,7 @@ void MainWindow::RenderPrismClip()
         m_prismClipRep[2]->GetOutlineProperty()->SetOpacity(0);
         m_prismClipRep[2]->GetSelectedOutlineProperty()->SetOpacity(0);
         //callback2
-        m_prismClipCallback[2]->Plane=m_prismClipPlane[2];
+        m_prismClipCallback[2]->Plane = m_prismClipPlane[2];
         //widget2
         m_prismClipWidget[2]->SetInteractor(qvtkWidget->GetInteractor());
         m_prismClipWidget[2]->SetRepresentation(m_prismClipRep[2]);
@@ -789,8 +790,8 @@ void MainWindow::RenderBoxClip()
         m_boxClipCallback->boxWidget = m_boxClipWidget;
         m_boxClipWidget->AddObserver(vtkCommand::EndInteractionEvent, m_boxClipCallback);
         //insert record
-        vtkActor* tmpActor=MappingDataSetToActor(apdResult->GetOutput());
-        m_sceneManager.InsertActorRecord(tmpActor,"_BoxClipActor", SCENE_STATE_BOX_CLIP,1);
+        vtkActor* tmpActor = MappingDataSetToActor(apdResult->GetOutput());
+        m_sceneManager.InsertActorRecord(tmpActor, "_BoxClipActor", SCENE_STATE_BOX_CLIP, 1);
         //add actor to renderer
         m_mainRenderer->AddActor(tmpActor);
         //widget on
@@ -813,7 +814,7 @@ void MainWindow::TurnCubeAxesOnOff(int isOn, int xGridOn, int yGridOn)
 {
     if (getDocument()->GetObjectsManager()->GetObjectsTable()->size() != 0)
     {
-        if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL)
+        if (SCENE_STATE_ORIGINAL == m_sceneManager.GetSceneState())
         {
             m_cubeAxesActor->SetVisibility(isOn);
             m_cubeAxesActor->SetDrawXGridlines(xGridOn);
@@ -873,12 +874,12 @@ void MainWindow::OnOpenProject()
                                                       m_pDoc->getProjectPathName());
         m_ColorLegendManager->initOrUpdateLegend(m_pDoc->getProjectPathName());
     }
-    
+
 }
 
 void MainWindow::OnRenderClip()
 {
-    if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL)
+    if (SCENE_STATE_ORIGINAL == m_sceneManager.GetSceneState())
     {
         m_sceneManager.SetSceneState(SCENE_STATE_PLANE_CLIP);
         m_mainRenderer->RemoveAllViewProps();
@@ -889,22 +890,22 @@ void MainWindow::OnRenderClip()
 
 void MainWindow::OnCrossExplode()
 {
-    if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL)
+    if (SCENE_STATE_ORIGINAL == m_sceneManager.GetSceneState())
     {
         m_sceneManager.SetSceneState(SCENE_STATE_STD_EXPLODE);
         m_mainRenderer->RemoveAllViewProps();
         m_sceneManager.ClearActorTable();
 
-        m_evenExplodeRow=2;
-        m_evenExplodeCol=2;
-        m_evenExplodeGapRatio=1;
+        m_evenExplodeRow = 2;
+        m_evenExplodeCol = 2;
+        m_evenExplodeGapRatio = 1;
         processRenderRequest(SCENE_STATE_STD_EXPLODE);
     }
 }
 
 void MainWindow::OnRenderBoxClip()
 {
-    if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL)
+    if (SCENE_STATE_ORIGINAL == m_sceneManager.GetSceneState())
     {
         m_sceneManager.SetSceneState(SCENE_STATE_BOX_CLIP);
         m_mainRenderer->RemoveAllViewProps();
@@ -915,7 +916,7 @@ void MainWindow::OnRenderBoxClip()
 
 void MainWindow::OnBoxClipWidgetOnOff()
 {
-    if (m_sceneManager.GetSceneState() == SCENE_STATE_BOX_CLIP)
+    if (SCENE_STATE_BOX_CLIP == m_sceneManager.GetSceneState())
     {
         int isEnable = m_boxClipWidget->GetEnabled();
         m_boxClipWidget->SetEnabled(!isEnable);
@@ -933,7 +934,7 @@ void MainWindow::OnBoxClipWidgetOnOff()
 
 void MainWindow::OnPrismClip()
 {
-    if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL)
+    if (SCENE_STATE_ORIGINAL == m_sceneManager.GetSceneState())
     {
         m_sceneManager.SetSceneState(SCENE_STATE_PRISM_CLIP);
         m_mainRenderer->RemoveAllViewProps();
@@ -944,7 +945,7 @@ void MainWindow::OnPrismClip()
 
 void MainWindow::OnPrismClipWidgetOnOff()
 {
-    if (m_sceneManager.GetSceneState() == SCENE_STATE_PRISM_CLIP)
+    if (SCENE_STATE_PRISM_CLIP == m_sceneManager.GetSceneState())
     {
         int isWidgetsOn = m_prismClipWidget[0]->GetEnabled();
         for (int i = 0; i < 3; i++)
@@ -1029,10 +1030,10 @@ void MainWindow::OnOrientationOnOff()
 
 void MainWindow::OnTurnCubeAxesOnOff()
 {
-    int isOn = !m_cubeAxesActor->GetVisibility();
+    int isOn = !(m_cubeAxesActor->GetVisibility());
     int xGridOn = m_cubeAxesActor->GetDrawXGridlines();
     int yGridOn = m_cubeAxesActor->GetDrawYGridlines();
-    TurnCubeAxesOnOff(isOn,xGridOn, yGridOn);
+    TurnCubeAxesOnOff(isOn, xGridOn, yGridOn);
 }
 
 void MainWindow::OnLightOption()
@@ -1042,7 +1043,7 @@ void MainWindow::OnLightOption()
     LightOption lightOptionDLG(m_camLight->GetSwitch(),
                                m_camLight->GetIntensity(),
                                m_sceneLightUp->GetSwitch()
-                               &&m_sceneLightDown->GetSwitch(), 
+                               &&m_sceneLightDown->GetSwitch(),
                                m_sceneLightUp->GetIntensity(),
                                sceneLightPos,
                                this);
@@ -1091,25 +1092,26 @@ void MainWindow::OnStdExplode()
     stdExplodeDLG.setWindowModality(Qt::WindowModal);
     stdExplodeDLG.exec();
 
-    if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL)
+    if (SCENE_STATE_ORIGINAL == m_sceneManager.GetSceneState())
     {
         m_sceneManager.SetSceneState(SCENE_STATE_STD_EXPLODE);
         m_mainRenderer->RemoveAllViewProps();
         m_sceneManager.ClearActorTable();
         //cross explode
-        if (stdExplodeDLG.m_RadioCrossExplodeChecked == 1)
+        if (1 == stdExplodeDLG.m_RadioCrossExplodeChecked)
         {
             m_evenExplodeRow = 2;
             m_evenExplodeCol = 2;
             m_evenExplodeGapRatio = 1;
             processRenderRequest(SCENE_STATE_STD_EXPLODE);
-        } else if (stdExplodeDLG.m_RadioEvenExplodeChecked == 1)
+        } else if (1 == stdExplodeDLG.m_RadioEvenExplodeChecked)
         {
             m_evenExplodeRow = stdExplodeDLG.m_evenRow;
             m_evenExplodeCol = stdExplodeDLG.m_evenCol;
             m_evenExplodeGapRatio = stdExplodeDLG.m_gapRatio;
             processRenderRequest(SCENE_STATE_STD_EXPLODE);
-        } else {
+        } else
+        {
             m_sceneManager.SetSceneState(SCENE_STATE_ORIGINAL);
             processRenderRequest(SCENE_STATE_ORIGINAL);
         }
@@ -1121,7 +1123,8 @@ void MainWindow::OnShowColorLegend()
     if (ui.dockColorLegend->isHidden())
     {
         ui.dockColorLegend->show();
-    } else {
+    } else
+    {
         ui.dockColorLegend->hide();
     }
 }
@@ -1131,7 +1134,8 @@ void MainWindow::OnProjectExplorer()
     if (m_ProjectExplorer->isHidden())
     {
         m_ProjectExplorer->show();
-    } else {
+    } else
+    {
         m_ProjectExplorer->hide();
     }
 }

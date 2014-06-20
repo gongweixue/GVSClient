@@ -3,14 +3,14 @@
 #include <QFileDialog>
 #include <QDir>
 
-DownloadProjectDialog::DownloadProjectDialog(QWidget *parent)
+DownloadProjectDialog::DownloadProjectDialog(QWidget* parent)
     : QDialog(parent)
 {
     ui.setupUi(this);
     throw std::exception("The method or operation is not implemented.");
 }
 
-DownloadProjectDialog::DownloadProjectDialog( QFtp* pFtp, QWidget *parent)
+DownloadProjectDialog::DownloadProjectDialog(QFtp* pFtp, QWidget *parent)
 {
     ui.setupUi(this);
     ftp = pFtp;
@@ -28,7 +28,8 @@ DownloadProjectDialog::~DownloadProjectDialog()
 
 void DownloadProjectDialog::init()
 {
-    if (NULL == ftp || ftp->state() != QFtp::LoggedIn) {
+    if (NULL == ftp || ftp->state() != QFtp::LoggedIn)
+    {
         QMessageBox::information(0, tr("提示"), tr("您未处于登录状态,请先登录。"));
         ui.downLoadBtn->setEnabled(false);
         return;
@@ -50,7 +51,8 @@ void DownloadProjectDialog::initSignalSlots()
 
 void DownloadProjectDialog::ftpCmdFinished(int id, bool error)
 {
-    if (error) {
+    if (error)
+    {
         QMessageBox::information(0, "", ftp->errorString());
         ftp->cd("/");
         ftp->abort();
@@ -72,7 +74,8 @@ void DownloadProjectDialog::ftpCmdFinished(int id, bool error)
 
             QFile* pFile = new QFile(pathModel + modelNameList[i]);
             modelFileList.push_back(pFile);
-            if (!pFile->open(QIODevice::ReadWrite)) {
+            if (!pFile->open(QIODevice::ReadWrite))
+            {
                 QMessageBox::information(this, tr("错误"), ftp->errorString());
                 ftp->abort();
                 ftp->cd("/");
@@ -141,8 +144,10 @@ void DownloadProjectDialog::clearQFiles()
         delete projectFile;
         projectFile = NULL;
     }
-    for (int i = 0; i < modelFileList.count(); ++i) {
-        if (modelFileList[i]) {
+    for (int i = 0; i < modelFileList.count(); ++i)
+    {
+        if (modelFileList[i])
+        {
             modelFileList[i]->close();
             delete modelFileList[i];
             modelFileList[i] = NULL;
@@ -152,7 +157,8 @@ void DownloadProjectDialog::clearQFiles()
 
 void DownloadProjectDialog::OnDone(bool err)
 {
-    if (err) {
+    if (err)
+    {
         QMessageBox::information(this, tr("出错啦"), ftp->errorString());
         ftp->cd("/");
         ftp->abort();
@@ -163,7 +169,7 @@ void DownloadProjectDialog::OnDone(bool err)
     ui.downLoadBtn->setEnabled(true);
 }
 
-void DownloadProjectDialog::downLoadFiles( QString fileName, QString pathToStore )
+void DownloadProjectDialog::downLoadFiles(QString fileName, QString pathToStore)
 {
     strLocalPath = pathToStore;
     strProjectFileName = fileName;
@@ -176,7 +182,8 @@ void DownloadProjectDialog::downLoadFiles( QString fileName, QString pathToStore
     }
     //down project file
     projectFile = new QFile(pathToStore + fileName);
-    if (!projectFile->open(QIODevice::ReadWrite)) {
+    if (!projectFile->open(QIODevice::ReadWrite))
+    {
         QMessageBox::information(this, tr("错误"), tr("无法创建项目") + projectName);
         ftp->abort();
         return;

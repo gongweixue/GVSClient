@@ -1,5 +1,5 @@
-#ifndef STDEXPLODE_H
-#define STDEXPLODE_H
+#ifndef STD_EXPLODE_H
+#define STD_EXPLODE_H
 
 #include <QDialog>
 #include "ui_StdExplode.h"

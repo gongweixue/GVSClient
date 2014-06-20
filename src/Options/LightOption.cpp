@@ -30,25 +30,25 @@ void LightOption::initDialogCtrls()
     //cam light ctrls
     ui.CamLightCheckBoxCtrl->setChecked(isCamLightOn);
     ui.IntencityOfCamLightCtrl->setRange(0, 10);
-    ui.IntencityOfCamLightCtrl->setValue(intencityCamLight*10);
+    ui.IntencityOfCamLightCtrl->setValue(intencityCamLight * 10);
     ui.IntencityOfCamLightCtrl->setEnabled(isCamLightOn);
 
     //scene light check box ctrls
     ui.SceneLightCheckBoxCtrl->setChecked(isSceneLightOn);
     ui.IntencityOfSceneLightCtrl->setRange(0, 10);
-    ui.IntencityOfSceneLightCtrl->setValue(intencitySceneLight*10);
+    ui.IntencityOfSceneLightCtrl->setValue(intencitySceneLight * 10);
     ui.IntencityOfSceneLightCtrl->setEnabled(isSceneLightOn);
 
     ui.XofSceneLightCtrl->setRange(0,10);
-    ui.XofSceneLightCtrl->setValue(xSceneLight*10);
+    ui.XofSceneLightCtrl->setValue(xSceneLight * 10);
     ui.XofSceneLightCtrl->setEnabled(isSceneLightOn);
 
     ui.YofSceneLightCtrl->setRange(0,10);
-    ui.YofSceneLightCtrl->setValue(ySceneLight*10);
+    ui.YofSceneLightCtrl->setValue(ySceneLight * 10);
     ui.YofSceneLightCtrl->setEnabled(isSceneLightOn);
 
     ui.ZofSceneLightCtrl->setRange(0,10);
-    ui.ZofSceneLightCtrl->setValue(zSceneLight*10);
+    ui.ZofSceneLightCtrl->setValue(zSceneLight * 10);
     ui.ZofSceneLightCtrl->setEnabled(isSceneLightOn);
 }
 

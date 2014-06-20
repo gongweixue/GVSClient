@@ -16,7 +16,8 @@ int main(int argc, char *argv[])
     QApplication qtapp(argc, argv);
 
     GVSInitializer gvsInitializer;
-    if (!gvsInitializer.Initialize()) {
+    if (!gvsInitializer.Initialize())
+    {
         return 1;
     }
 

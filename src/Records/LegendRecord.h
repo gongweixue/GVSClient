@@ -1,12 +1,13 @@
-#ifndef LEGENDRECORD_H
-#define LEGENDRECORD_H
+#ifndef LEGEND_RECORD_H
+#define LEGEND_RECORD_H
 
 #include <string>
 #include <QColor>
 
 using namespace std;
 
-class LegendRecord{
+class LegendRecord
+{
 public:
     int id;
     string name;
@@ -15,7 +16,5 @@ public:
     LegendRecord(int lrID, string lrName, QColor lrRGB, string lrDesc);
     LegendRecord();
 };
-
-
 
 #endif

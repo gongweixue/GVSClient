@@ -29,7 +29,8 @@ bool GVSInitializer::Initialize()
 {
     //create a splash and show before main window created.
     bool show_splash = false;//gvsApp->getSettings()->isShowSplash();
-    if (show_splash) {
+    if (show_splash)
+    {
         QPixmap splashImage(":/Resources/startup.jpg");
         this->splash = new QSplashScreen(splashImage, Qt::WindowStaysOnTopHint);
         this->splash->setMask(

@@ -10,7 +10,7 @@ void vtkBoxClipCallback::Execute(vtkObject *caller, unsigned long, void*)
     DeleteVTKPointer(planes);
     planes=vtkPlanes::New();
     vtkBoxWidget* boxWidget = reinterpret_cast<vtkBoxWidget*>(caller);
-    for (int i=0;i<6;i++)
+    for (int i = 0; i < 6; i++)
     {
         boxWidget->GetPlanes(planes);
         planes->GetPlane(i, boxPlaneArray[i]);

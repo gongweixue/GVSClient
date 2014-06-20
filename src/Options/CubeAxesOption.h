@@ -1,5 +1,5 @@
-#ifndef CUBEAXESOPTION_H
-#define CUBEAXESOPTION_H
+#ifndef CUBE_AXES_OPTION_H
+#define CUBE_AXES_OPTION_H
 
 #include <QWidget>
 #include <QDialog>
@@ -10,7 +10,7 @@ class CubeAxesOption : public QDialog
     Q_OBJECT
 
 public:
-    CubeAxesOption(QWidget *parent = 0);
+    CubeAxesOption(QWidget* parent = 0);
     CubeAxesOption(int cubeAxesOn, int xGridOn, int yGridOn, QWidget *parent = 0);
     ~CubeAxesOption();
 

@@ -2,7 +2,7 @@
 #include <QLineEdit>
 #include <QMessageBox>
 
-LegendItemAddtion::LegendItemAddtion(QWidget *parent)
+LegendItemAddtion::LegendItemAddtion(QWidget* parent)
     : QDialog(parent)
 {
     ui.setupUi(this);

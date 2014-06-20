@@ -1,5 +1,5 @@
-#ifndef COLORLEGENDEDITOR_H
-#define COLORLEGENDEDITOR_H
+#ifndef COLOR_LEGEND_EDITOR_H
+#define COLOR_LEGEND_EDITOR_H
 
 #include <QDialog>
 #include <vector>
@@ -11,11 +11,11 @@ class ColorLegendEditor : public QDialog
     Q_OBJECT
 
 public:
-    ColorLegendEditor(ColorLegendManager* manager, QWidget *parent = 0);
+    ColorLegendEditor(ColorLegendManager* manager, QWidget* parent = 0);
     ~ColorLegendEditor();
 
 private:
-    ColorLegendEditor(QWidget *parent = 0);
+    ColorLegendEditor(QWidget* parent = 0);
     void initUpdate();
     void fillListWidget();
     void connectSignalSlots();
@@ -32,4 +32,4 @@ private:
 
 };
 
-#endif // COLORLEGENDEDITOR_H
+#endif // COLOR_LEGEND_EDITOR_H

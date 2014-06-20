@@ -1,5 +1,5 @@
-#ifndef GVSDOC_H
-#define GVSDOC_H
+#ifndef GVS_DOC_H
+#define GVS_DOC_H
 
 #include <QObject>
 #include <string>
@@ -15,7 +15,7 @@ public:
     GVSDoc(MainWindow* mainWindow, QObject *parent = 0);
     ~GVSDoc();
     void OnCloseDocument();
-    ObjectManager* GetObjectsManager(){return &m_objManager;}
+    ObjectManager* GetObjectsManager(){ return &m_objManager; }
     string getProjectPathName() { return m_gvpFullFileName; }
 
 public slots:
@@ -32,4 +32,4 @@ private:
     std::string m_gvpFullFileName;
 };
 
-#endif // GVSDOC_H
+#endif // GVS_DOC_H

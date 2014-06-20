@@ -1,5 +1,5 @@
-#ifndef DOWNLOADPROJECTDIALOG_H
-#define DOWNLOADPROJECTDIALOG_H
+#ifndef DOWNLOAD_PROJECT_DIALOG_H
+#define DOWNLOAD_PROJECT_DIALOG_H
 
 #include <QDialog>
 #include "ui_DownloadProjectDialog.h"
@@ -13,13 +13,13 @@ class DownloadProjectDialog : public QDialog
     Q_OBJECT
 
 public:
-    DownloadProjectDialog(QFtp* pFtp, QWidget *parent = 0);
+    DownloadProjectDialog(QFtp* pFtp, QWidget* parent = 0);
     ~DownloadProjectDialog();
 
 private:
     void init();
     void clearQFiles();
-    DownloadProjectDialog(QWidget *parent = 0);
+    DownloadProjectDialog(QWidget* parent = 0);
     void downLoadFiles(QString, QString);
 
 private slots:
@@ -42,4 +42,4 @@ private:
     QString strProjectFileName;
 };
 
-#endif // DOWNLOADPROJECTDIALOG_H
+#endif // DOWNLOAD_PROJECT_DIALOG_H

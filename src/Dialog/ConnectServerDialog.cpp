@@ -4,7 +4,7 @@
 
 using namespace std;
 
-ConnectServerDialog::ConnectServerDialog(QWidget *parent)
+ConnectServerDialog::ConnectServerDialog(QWidget* parent)
     : QDialog(parent)
 {
     ui.setupUi(this);
@@ -67,7 +67,8 @@ void ConnectServerDialog::init()
     //init the list widget of servers
     vector<ConnectionRecord>::const_iterator iterConRcrd;
     int id = 0;
-    for (iterConRcrd = pSvrList->begin(); iterConRcrd != pSvrList->end(); iterConRcrd++) {
+    for (iterConRcrd = pSvrList->begin(); iterConRcrd != pSvrList->end(); iterConRcrd++)
+    {
         QString itemName(QString::number(id) + ". ");
         itemName.append(iterConRcrd->ip.c_str());
         itemName.append(":");

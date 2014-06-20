@@ -1,5 +1,5 @@
-#ifndef UPLOADPROJECTDIALOG_H
-#define UPLOADPROJECTDIALOG_H
+#ifndef UPLOAD_PROJECT_DIALOG_H
+#define UPLOAD_PROJECT_DIALOG_H
 
 #include <QDialog>
 #include "ui_UploadProjectDialog.h"
@@ -11,11 +11,11 @@ class UploadProjectDialog : public QDialog
     Q_OBJECT
 
 public:
-    UploadProjectDialog(QFtp* pFtp, QWidget *parent = 0);
+    UploadProjectDialog(QFtp* pFtp, QWidget* parent = 0);
     ~UploadProjectDialog();
 
 private:
-    UploadProjectDialog(QWidget *parent = 0);
+    UploadProjectDialog(QWidget* parent = 0);
     void init();
     void clearQFiles();
 
@@ -32,4 +32,4 @@ private:
     QFile* projectFile;
 };
 
-#endif // UPLOADPROJECTDIALOG_H
+#endif // UPLOAD_PROJECT_DIALOG_H

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef VTK_SCENE_MANAGER_H
+#define VTK_SCENE_MANAGER_H
+
 #include "Utils/vtkTotallyInclude.h"
 #include "String"
 #include <vector>
@@ -23,14 +25,14 @@ public:
     vtkActor* actor;
 public:
     ActorRecord(vtkActor* paraAct,
-                string dsName="",
-                int paraStatebelong=SCENE_STATE_ORIGINAL,
-                bool paraVisible=1)
+                string dsName = "",
+                int paraStatebelong = SCENE_STATE_ORIGINAL,
+                bool paraVisible = 1)
     {
-        actor=paraAct;
-        name=dsName;
-        isVisible=paraVisible;
-        sceneStateBelong=paraStatebelong;
+        actor = paraAct;
+        name = dsName;
+        isVisible = paraVisible;
+        sceneStateBelong = paraStatebelong;
     };
     ~ActorRecord()
     {
@@ -42,9 +44,9 @@ class SceneManager
 public:
     SceneManager(void);
     ~SceneManager(void);
-    void InsertActorRecord(vtkActor* actor, string dataSetName="",
-                           int sceneStateBelong=SCENE_STATE_ORIGINAL,
-                           bool visible=1);
+    void InsertActorRecord(vtkActor* actor, string dataSetName = "",
+                           int sceneStateBelong = SCENE_STATE_ORIGINAL,
+                           bool visible = 1);
     void AddCrrtStatActrToRnder(vtkRenderer* renderer);
     void AddActorsByState(vtkRenderer* renderer, int state);
     void RemoveActorsByState(vtkRenderer* renderer, int state);
@@ -76,3 +78,5 @@ private:
     double m_SceneCenter[3];
     vtkLookupTable* m_lut;
 };
+
+#endif

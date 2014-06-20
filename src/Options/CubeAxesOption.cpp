@@ -1,7 +1,7 @@
 #include "CubeAxesOption.h"
 
 
-CubeAxesOption::CubeAxesOption(int cubeAxesOn, int xGridOn, int yGridOn, QWidget *parent)
+CubeAxesOption::CubeAxesOption(int cubeAxesOn, int xGridOn, int yGridOn, QWidget* parent)
 {
     ui.setupUi(this);
     m_isCubeAxesOn = cubeAxesOn;

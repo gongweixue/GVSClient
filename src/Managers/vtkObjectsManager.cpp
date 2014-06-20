@@ -72,7 +72,7 @@ void ObjectManager::ClearObjTree()
 {
     DeleteAllReaders();
     vector<Model>::iterator iter = treeOfGeoObjs.begin();
-    for (; iter != treeOfGeoObjs.end(); ++iter)
+    for ( ; iter != treeOfGeoObjs.end(); ++iter)
     {
         iter->vecOfGeoObjs.clear();
     }

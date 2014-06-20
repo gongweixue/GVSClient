@@ -1,4 +1,6 @@
-#pragma once
+#ifndef VTK_OBJECTS_MANAGER_H
+#define VTK_OBJECTS_MANAGER_H
+
 #include "Utils/vtkTotallyInclude.h"
 #include "String"
 #include "QString"
@@ -61,3 +63,5 @@ private:
     vector<string> m_docsNameVector;
     vector<GeoObject> m_objectsTable;
 };
+
+#endif //VTK_OBJECTS_MANAGER_H

@@ -4,7 +4,7 @@
 #include <QDomDocument>
 #include <QDomElement>
 
-GVSDoc::GVSDoc(MainWindow* mainWindow, QObject *parent)
+GVSDoc::GVSDoc(MainWindow* mainWindow, QObject* parent)
     : QObject(parent)
 {
     m_pMainWindow = m_pMainWindow;
@@ -18,7 +18,7 @@ GVSDoc::~GVSDoc()
 bool GVSDoc::OnOpenProject()
 {
     string path = getProjectPathByDlg();
-    if (path.empty() || !path.compare(m_gvpFullFileName))
+    if (path.empty() || !(path.compare(m_gvpFullFileName)))
     {
         return false;
     }
@@ -38,7 +38,7 @@ bool GVSDoc::LoadProject(std::string gvpFullFileName)
 }
 
 
-bool GVSDoc::parseProjectByFileName( std::string gvpFullPath )
+bool GVSDoc::parseProjectByFileName(std::string gvpFullPath)
 {
     QFileInfo gvpFileInfo(gvpFullPath.c_str());
     QString currentDir(gvpFileInfo.absolutePath() + "/");
@@ -48,7 +48,8 @@ bool GVSDoc::parseProjectByFileName( std::string gvpFullPath )
         return false;
 
     QFile gvpFile(gvpFullPath.c_str());
-    if( !gvpFile.open(QFile::ReadOnly | QFile::Text) ) {
+    if( !gvpFile.open(QFile::ReadOnly | QFile::Text) )
+    {
         QMessageBox::information(NULL, tr("打开项目失败"), gvpFile.errorString());
         return false;
     }
@@ -56,13 +57,15 @@ bool GVSDoc::parseProjectByFileName( std::string gvpFullPath )
     QDomDocument domDocOfGVP;
     QString strError;
     int errLine = 0, errCol = 0;
-    if( !domDocOfGVP.setContent(&gvpFile, false, &strError, &errLine, &errCol) ) {
+    if(!domDocOfGVP.setContent(&gvpFile, false, &strError, &errLine, &errCol))
+    {
         QMessageBox::information(NULL, tr("打开项目失败"), tr("非法项目文件"));
         gvpFile.close();
         return false;
     }
 
-    if( domDocOfGVP.isNull() ) {
+    if(domDocOfGVP.isNull())
+    {
         QMessageBox::information(NULL, tr("打开项目失败"), tr("项目为空"));
         gvpFile.close();
         return false;
@@ -105,7 +108,7 @@ bool GVSDoc::parseProjectByFileName( std::string gvpFullPath )
     return true;
 }
 
-bool GVSDoc::parseAndLoadModel( std::string gvmFullPath )
+bool GVSDoc::parseAndLoadModel(std::string gvmFullPath)
 {
     if (gvmFullPath.empty())
         return false;
@@ -115,7 +118,7 @@ bool GVSDoc::parseAndLoadModel( std::string gvmFullPath )
     QString modelDataDir(currentDir + gvmFileInfo.baseName() + "/");
 
     QFile gvmFile(gvmFullPath.c_str());
-    if( !gvmFile.open(QFile::ReadOnly | QFile::Text) )
+    if(!gvmFile.open(QFile::ReadOnly | QFile::Text))
     {
         return false;
     }
@@ -125,18 +128,20 @@ bool GVSDoc::parseAndLoadModel( std::string gvmFullPath )
     int errLine = 0, errCol = 0;
 
     QDomDocument domDocOfGVM;
-    if( !domDocOfGVM.setContent(&gvmFile, false, &strError, &errLine, &errCol) ) {
+    if( !domDocOfGVM.setContent(&gvmFile, false, &strError, &errLine, &errCol) )
+    {
         gvmFile.close();
         return false;
     }
 
-    if( domDocOfGVM.isNull() ) {
+    if( domDocOfGVM.isNull() )
+    {
         gvmFile.close();
         return false;
     }
 
     vector<Model>::iterator iter_model = m_objManager.treeOfGeoObjs.begin();
-    for (; iter_model != m_objManager.treeOfGeoObjs.end(); iter_model++)
+    for ( ; iter_model != m_objManager.treeOfGeoObjs.end(); iter_model++)
     {
         if (0 == iter_model->modelName.compare(gvmFileInfo.baseName()))
         {
@@ -206,7 +211,7 @@ std::string GVSDoc::getProjectPathByDlg()
     QString fileName = QFileDialog::getOpenFileName(
                                0,
                                tr("打开项目文件"),
-                               tr("D:\\vtkModel\\pieces"),
+                               tr("D:\\"),
                                tr("所有文件(*.*);;GVP项目文件(*.gvp)"),
                                &tr("GVP项目文件(*.gvp)"));
 

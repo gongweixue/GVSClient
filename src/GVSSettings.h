@@ -1,4 +1,6 @@
-#pragma once
+#ifndef GVS_SETTINGS_H
+#define GVS_SETTINGS_H
+
 class GVSSettings
 {
 public:
@@ -10,3 +12,5 @@ public:
 public:
     bool showSplash;
 };
+
+#endif

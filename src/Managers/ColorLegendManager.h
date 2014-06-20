@@ -1,5 +1,5 @@
-#ifndef COLORLEGENDMANAGER_H
-#define COLORLEGENDMANAGER_H
+#ifndef COLOR_LEGEND_MANAGER_H
+#define COLOR_LEGEND_MANAGER_H
 
 #include <QObject>
 #include <QDockWidget>
@@ -40,4 +40,4 @@ private:
     string projectFilePath;
 };
 
-#endif // COLORLEGENDMANAGER_H
+#endif // COLOR_LEGEND_MANAGER_H

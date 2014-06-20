@@ -3,14 +3,14 @@
 #include <QMessageBox>
 #include <vector>
 
-UploadProjectDialog::UploadProjectDialog(QWidget *parent)
+UploadProjectDialog::UploadProjectDialog(QWidget* parent)
     : QDialog(parent)
 {
     ui.setupUi(this);
     throw std::exception("The method or operation is not implemented.");
 }
 
-UploadProjectDialog::UploadProjectDialog(QFtp* pFtp, QWidget *parent)
+UploadProjectDialog::UploadProjectDialog(QFtp* pFtp, QWidget* parent)
     : QDialog(parent)
 {
     ui.setupUi(this);
@@ -42,7 +42,8 @@ void UploadProjectDialog::init()
 void UploadProjectDialog::OnBrowse()
 {
     QString projectName = QFileDialog::getOpenFileName(this,
-                                  tr("选择上传的项目"), tr("D:/"),
+                                  tr("选择上传的项目"),
+                                  tr("D:/"),
                                   tr("GVP项目文件(*.gvp)"),
                                   &tr("GVP项目文件(*.gvp)"));
     this->ui.pathEdit->setText(projectName);
@@ -52,11 +53,13 @@ void UploadProjectDialog::OnUpload()
 {
     //project file
     QString projectFullName = ui.pathEdit->text();
-    if (ui.pathEdit->text().isEmpty()) {
+    if (ui.pathEdit->text().isEmpty())
+    {
         return;
     }
     projectFile = new QFile(projectFullName);
-    if (!projectFile->open(QIODevice::ReadOnly)) {
+    if (!projectFile->open(QIODevice::ReadOnly))
+    {
         QMessageBox::information(this, tr("错误"), tr("无法打开项目") + projectFullName);
         ftp->abort();
         return;
@@ -76,10 +79,12 @@ void UploadProjectDialog::OnUpload()
     ftp->mkdir(strBaseName);
     ftp->cd(tr("/").append(strBaseName));
     modelFileList.clear();
-    for (int i = 0; i < modelNameList.count(); ++i) {
+    for (int i = 0; i < modelNameList.count(); ++i)
+    {
         QFile* pFile = new QFile(strModelFilesDir + modelNameList[i]);
         modelFileList.push_back(pFile);
-        if (!pFile->open(QIODevice::ReadOnly)) {
+        if (!pFile->open(QIODevice::ReadOnly))
+        {
             QMessageBox::information(this, tr("错误"), tr("无法打开文件") + modelNameList[i]);
             ftp->abort();
             ftp->cd("/");
@@ -97,8 +102,11 @@ void UploadProjectDialog::OnUpload()
 
 void UploadProjectDialog::OnDone(bool err)
 {
-    if (err) {
-        QMessageBox::information(this, tr("出错啦"), tr("文件上传失败。").append(ftp->errorString()));
+    if (err)
+    {
+        QMessageBox::information(this,
+                                 tr("出错啦"),
+                                 tr("文件上传失败。").append(ftp->errorString()));
     }
     ui.browseBtn->setEnabled(true);
     ui.upLoadBtn->setEnabled(true);
@@ -108,7 +116,7 @@ void UploadProjectDialog::OnDone(bool err)
 
 void UploadProjectDialog::OnCmdFinished(int id, bool err)
 {
-    if (ftp->currentCommand() == QFtp::Put)
+    if (QFtp::Put == ftp->currentCommand())
     {
         ui.progressBar->setValue(ui.progressBar->value());
     }
@@ -122,8 +130,10 @@ void UploadProjectDialog::clearQFiles()
         delete projectFile;
         projectFile = NULL;
     }
-    for (int i = 0; i < modelFileList.count(); ++i) {
-        if (modelFileList[i]) {
+    for (int i = 0; i < modelFileList.count(); ++i)
+    {
+        if (modelFileList[i])
+        {
             modelFileList[i]->close();
             delete modelFileList[i];
             modelFileList[i] = NULL;
@@ -131,7 +141,7 @@ void UploadProjectDialog::clearQFiles()
     }
 }
 
-void UploadProjectDialog::EnableUploadBtn( const QString& text )
+void UploadProjectDialog::EnableUploadBtn(const QString& text)
 {
     if (text.isEmpty())
     {

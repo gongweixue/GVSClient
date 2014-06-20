@@ -7,7 +7,7 @@
 #include <sstream>
 #include <QTextStream>
 
-ColorLegendManager::ColorLegendManager(QObject *parent)
+ColorLegendManager::ColorLegendManager(QObject* parent)
     : QObject(parent)
 {
     throw std::exception("ColorLegendManage's Default constructor is not implement.");
@@ -47,10 +47,11 @@ void ColorLegendManager::initOrUpdateLegend(string gvpFullFileName)
 void ColorLegendManager::parseLegendNames(string gvpFullFileName)
 {
     if(gvpFullFileName.empty())
-        return;  
+        return;
 
     QFile file(gvpFullFileName.c_str());
-    if( !file.open(QFile::ReadOnly | QFile::Text) ) {
+    if( !file.open(QFile::ReadOnly | QFile::Text) )
+    {
         QMessageBox::information(NULL, tr("加载图例失败"), file.errorString());
         return;
     }
@@ -58,13 +59,15 @@ void ColorLegendManager::parseLegendNames(string gvpFullFileName)
     QDomDocument domDoc;
     QString strError;
     int errLine = 0, errCol = 0;
-    if( !domDoc.setContent(&file, false, &strError, &errLine, &errCol) ) {
+    if( !domDoc.setContent(&file, false, &strError, &errLine, &errCol) )
+    {
         QMessageBox::information(NULL, tr("加载图例失败"), tr("文件格式不正确"));
         file.close();
         return;
     }
 
-    if( domDoc.isNull() ) {
+    if( domDoc.isNull() )
+    {
         file.close();
         return;
     }
@@ -82,7 +85,7 @@ void ColorLegendManager::parseLegendNames(string gvpFullFileName)
         {
             continue;
         }
-        else 
+        else
         {
             QDomNodeList nodeListOfItems = childOfProject.childNodes();
             int countItems = nodeListOfItems.count();
@@ -131,13 +134,13 @@ void ColorLegendManager::genericItems()
         QListWidgetItem item(itemName);
 
         item.setBackgroundColor(iter->rgb);
-        QColor textColor((128 + iter->rgb.red()) % 256, 
-                         (128 + iter->rgb.green()) % 256, 
+        QColor textColor((128 + iter->rgb.red()) % 256,
+                         (128 + iter->rgb.green()) % 256,
                          (128 + iter->rgb.blue()) % 256);
         item.setTextColor(textColor);
         item.setTextAlignment(Qt::AlignHCenter);
 
-        //TODO set the font size, 
+        //TODO set the font size,
 
         item.setToolTip(tr(iter->description.c_str()));
         vecOfLegendItem.push_back(item);
@@ -159,7 +162,7 @@ void ColorLegendManager::fillLegendDock()
 bool ColorLegendManager::insertItemToFile( string name, QColor rgb, string description )
 {
     if(projectFilePath.empty())
-        return false;  
+        return false;
 
     QFile file(projectFilePath.c_str());
     if( !file.open(QIODevice::ReadOnly) ) {

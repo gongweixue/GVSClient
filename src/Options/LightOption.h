@@ -1,5 +1,5 @@
-#ifndef LIGHTOPTION_H
-#define LIGHTOPTION_H
+#ifndef LIGHT_OPTION_H
+#define LIGHT_OPTION_H
 
 #include <QWidget>
 #include <QDialog>
@@ -12,7 +12,7 @@ class LightOption : public QDialog
 public:
     LightOption(int camLightOn, double IntencityOfCamLight,
                 int sceneLightOn, double IntencityOfSceneLight,
-                double XYZ[3],QWidget* pParent = 0);
+                double XYZ[3], QWidget* pParent = 0);
     ~LightOption();
 
 public slots:
@@ -22,7 +22,7 @@ public slots:
     void OnClickSceneLightCheckbox();
 
 private:
-    LightOption(QWidget *parent = 0);
+    LightOption(QWidget* parent = 0);
     void initDialogCtrls();
     void bindingSlots();
 private:

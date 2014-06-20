@@ -7,7 +7,7 @@ StdExplode::StdExplode(QWidget *parent)
 
     //init the member values
     m_RadioCrossExplodeChecked = 0;
-    m_RadioEvenExplodeChecked  =0;
+    m_RadioEvenExplodeChecked = 0;
     m_evenRow = 2;
     m_evenCol = 2;
     m_gapRatio = 1;
@@ -51,7 +51,8 @@ void StdExplode::OnBnClickedOk()
     m_RadioCrossExplodeChecked = ui.m_Radio_Cross_Explode->isChecked();
     m_RadioEvenExplodeChecked = ui.m_Radio_Even_Explode->isChecked();
 
-    if ((!m_RadioCrossExplodeChecked) && (!m_RadioEvenExplodeChecked)) {
+    if ((!m_RadioCrossExplodeChecked) && (!m_RadioEvenExplodeChecked))
+    {
         return;
     }
 

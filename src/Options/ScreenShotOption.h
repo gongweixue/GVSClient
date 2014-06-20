@@ -1,5 +1,5 @@
-#ifndef SCREENSHOTOPTION_H
-#define SCREENSHOTOPTION_H
+#ifndef SCREEN_SHOT_OPTION_H
+#define SCREEN_SHOT_OPTION_H
 
 #include <QDialog>
 #include "ui_ScreenShotOption.h"

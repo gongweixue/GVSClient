@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAIN_WINDOW_H
+#define MAIN_WINDOW_H
 
 #include <QLabel>
 #include <QSplitter>
@@ -26,7 +26,7 @@ public:
     ~MainWindow();
     void welcomeYou();
     GVSDoc* getDocument();
-    vtkRenderer* getRenderer() { return m_mainRenderer; }
+    vtkRenderer* getRenderer() {return m_mainRenderer;}
     void removeAllActorsOfRenderer(vtkRenderer* renderer);
     SceneManager* getSceneManager(){return &m_sceneManager;}
 

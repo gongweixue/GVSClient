@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GVS_INITIALIZER_H
+#define GVS_INITIALIZER_H
 
 class MainWindow;
 class GVSApplicationCore;
@@ -19,3 +20,5 @@ private:
     GVSApplicationCore* gvsApp;
     QSplashScreen* splash;
 };
+
+#endif

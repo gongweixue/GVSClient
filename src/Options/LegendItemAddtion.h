@@ -1,5 +1,5 @@
-#ifndef LEGENDITEMADDTION_H
-#define LEGENDITEMADDTION_H
+#ifndef LEGEND_ITEM_ADDTION_H
+#define LEGEND_ITEM_ADDTION_H
 
 #include <QDialog>
 #include "ui_LegendItemAddtion.h"
@@ -9,7 +9,7 @@ class LegendItemAddtion : public QDialog
     Q_OBJECT
 
 public:
-    LegendItemAddtion(QWidget *parent = 0);
+    LegendItemAddtion(QWidget* parent = 0);
     ~LegendItemAddtion();
     bool getAddConfirm() {return isAdd;}
 
