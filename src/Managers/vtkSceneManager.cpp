@@ -140,7 +140,7 @@ void SceneManager::AddCrrtStatActrToRnder( vtkRenderer* renderer )
 void SceneManager::AddActorsByState(vtkRenderer* renderer, int state)
 {
     vector<ActorRecord>::iterator iter_actorRecord = m_ActorRecordTable.begin();
-    for ( ; iter_actorRecord! = m_ActorRecordTable.end(); iter_actorRecord++)
+    for ( ; iter_actorRecord != m_ActorRecordTable.end(); iter_actorRecord++)
     {
         if(iter_actorRecord->sceneStateBelong==state && iter_actorRecord->isVisible)
         {
