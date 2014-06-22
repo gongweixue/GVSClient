@@ -8,6 +8,7 @@ ConnectServerDialog::ConnectServerDialog(QWidget* parent)
     : QDialog(parent)
 {
     ui.setupUi(this);
+    throw std::exception("The method should not be used normally.");
 }
 
 ConnectServerDialog::ConnectServerDialog(vector<ConnectionRecord>* connList,

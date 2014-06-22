@@ -267,7 +267,7 @@ void MainWindow::onInitialUpdate()
     m_sceneManager.ClearActorTable();
     m_mainRenderer->Render();
     //////////////////////
-    if (m_pDoc->GetObjectsManager()->GetObjectsTable()->size())
+    if (m_pDoc->GetObjectsManager()->getNumOfObjsInTree() != 0)
     {
         m_sceneManager.SetSceneState(SCENE_STATE_ORIGINAL);
         showOrientationMarker();
@@ -319,7 +319,7 @@ void MainWindow::processRenderRequest(int state)
         return;
     else
     {
-        if (pDoc->GetObjectsManager()->GetObjectsTable()->size() != 0)
+        if (pDoc->GetObjectsManager()->getNumOfObjsInTree() != 0)
         {
             switch (state)
             {
@@ -351,13 +351,13 @@ void MainWindow::processRenderRequest(int state)
 
 void MainWindow::RenderOriginal()
 {
-    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size() != 0)
+    if (getDocument()->GetObjectsManager()->getNumOfObjsInTree() != 0)
     {
         m_sceneManager.SetSceneBounds(getDocument()->GetObjectsManager()->m_bounds);
         vector<GeoObject>::iterator iter_ObRcd=
                 getDocument()->GetObjectsManager()->GetObjectsTable()->begin();
-        ObjectManager* manager = getDocument()->GetObjectsManager();
-        for (; iter_ObRcd != manager->GetObjectsTable()->end(); iter_ObRcd++)
+        ObjectManager* pObjManager = getDocument()->GetObjectsManager();
+        for (; iter_ObRcd != pObjManager->GetObjectsTable()->end(); iter_ObRcd++)
         {
             vtkActor* tempActor = MappingDataSetToActor(iter_ObRcd->reader->GetOutput());
             m_sceneManager.InsertActorRecord(tempActor,
@@ -373,7 +373,7 @@ void MainWindow::RenderOriginal()
 
 void MainWindow::RenderPlaneClip()
 {
-    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size() != 0)
+    if (getDocument()->GetObjectsManager()->getNumOfObjsInTree() != 0)
     {
         vtkSmartPointer<vtkAppendFilter> apdFilter=
                 vtkSmartPointer<vtkAppendFilter>::New();
@@ -565,7 +565,7 @@ void MainWindow::RenderStdExplode()
 
 void MainWindow::RenderPrismClip()
 {
-    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size() != 0)
+    if (getDocument()->GetObjectsManager()->getNumOfObjsInTree() != 0)
     {
         //append the object data which visible=1.
         vtkSmartPointer<vtkAppendFilter> source =
@@ -715,7 +715,7 @@ void MainWindow::RenderPrismClip()
 
 void MainWindow::RenderBoxClip()
 {
-    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size() != 0)
+    if (getDocument()->GetObjectsManager()->getNumOfObjsInTree() != 0)
     {
         vtkSmartPointer<vtkAppendFilter> apdOriginFilter=
                 vtkSmartPointer<vtkAppendFilter>::New();
@@ -812,7 +812,7 @@ vtkActor* MainWindow::MappingDataSetToActor(vtkDataSet* ds)
 
 void MainWindow::TurnCubeAxesOnOff(int isOn, int xGridOn, int yGridOn)
 {
-    if (getDocument()->GetObjectsManager()->GetObjectsTable()->size() != 0)
+    if (getDocument()->GetObjectsManager()->getNumOfObjsInTree() != 0)
     {
         if (SCENE_STATE_ORIGINAL == m_sceneManager.GetSceneState())
         {

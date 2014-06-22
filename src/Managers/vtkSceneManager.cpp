@@ -1,4 +1,5 @@
 #include "Utils/vtkTotallyInclude.h"
+#include "Utils/GVSUtils.h"
 #include "vtkSceneManager.h"
 
 SceneManager::SceneManager(void)

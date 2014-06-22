@@ -21,9 +21,10 @@ private:
     string fileName;
     bool visibility;
 public:
-    GeoObject(string fname, int type, vtkDataSetReader* rder, bool vis=1)
+    GeoObject(string fname, int ty, vtkDataSetReader* rder, bool vis)
     {
         fileName=fname;
+        this->type = ty;
         reader=rder;
         visibility=vis;
     };
@@ -50,18 +51,16 @@ public:
     ObjectManager(void);
     ~ObjectManager(void);
     void ClearObjTree();
-    void InsertObjectsByNames();
     void UpdateAllReaders();
-    void DeleteAllReaders();
+    void DelAllRdrsInGeoObj();
     vector<GeoObject>* GetObjectsTable();
+
 private:
-    double* ComputeBounds();
-public:
-    vector<Model> treeOfGeoObjs;
+    double* computeObjTreeBound();
+    int getNumOfObjsInTree();
 private:
     double m_bounds[6];
-    vector<string> m_docsNameVector;
-    vector<GeoObject> m_objectsTable;
+    vector<Model> treeOfGeoObjs;
 };
 
 #endif //VTK_OBJECTS_MANAGER_H

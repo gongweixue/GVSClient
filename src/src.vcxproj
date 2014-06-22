@@ -353,6 +353,7 @@
     </CustomBuild>
     <ClInclude Include="Records\ConnectionRecord.h" />
     <ClInclude Include="Records\LegendRecord.h" />
+    <ClInclude Include="Utils\GVSUtils.h" />
     <ClInclude Include="Utils\vtkTotallyInclude.h" />
   </ItemGroup>
   <ItemGroup>

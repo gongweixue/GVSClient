@@ -11,7 +11,7 @@
     <Point visible="1">Ez-cm2.vtk</Point>
     <Surface visible="1">F1.vtk</Surface>
     <Surface visible="1">F2.vtk</Surface>
-    <Line visible="1">F3.vtk</Line>
+    <Line visible="0">F3.vtk</Line>
     <Point visible="1">F4.vtk</Point>
     <Point visible="1">F5.vtk</Point>
     <Line visible="1">Om2.vtk</Line>

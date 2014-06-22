@@ -354,5 +354,8 @@
     <ClInclude Include="..\build\Qt\GeneratedFiles\ui_UploadProjectDialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\GVSUtils.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

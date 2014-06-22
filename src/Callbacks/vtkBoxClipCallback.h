@@ -2,6 +2,7 @@
 #define VTK_BOX_CLIP_CALLBACK_H
 
 #include "Utils/vtkTotallyInclude.h"
+#include "Utils/GVSUtils.h"
 #include "vtkCommand.h"
 #include "vtkPlane.h"
 

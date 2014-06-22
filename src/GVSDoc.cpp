@@ -22,7 +22,9 @@ bool GVSDoc::OnOpenProject()
     {
         return false;
     }
+    //Store path to be used.
     m_gvpFullFileName = path;
+
     m_objManager.ClearObjTree();
     return LoadProject(m_gvpFullFileName);
 }
@@ -48,13 +50,14 @@ bool GVSDoc::parseProjectByFileName(std::string gvpFullPath)
         return false;
 
     QFile gvpFile(gvpFullPath.c_str());
+    QDomDocument domDocOfGVP;
+
     if( !gvpFile.open(QFile::ReadOnly | QFile::Text) )
     {
         QMessageBox::information(NULL, tr("打开项目失败"), gvpFile.errorString());
         return false;
     }
 
-    QDomDocument domDocOfGVP;
     QString strError;
     int errLine = 0, errCol = 0;
     if(!domDocOfGVP.setContent(&gvpFile, false, &strError, &errLine, &errCol))
@@ -102,8 +105,7 @@ bool GVSDoc::parseProjectByFileName(std::string gvpFullPath)
             continue;
         }
     }
-
-    throw std::exception("readers should be update!!!!!!!!");
+    m_objManager.UpdateAllReaders();
 
     return true;
 }
@@ -159,8 +161,8 @@ bool GVSDoc::parseAndLoadModel(std::string gvmFullPath)
 
         //if not object tag
         if (0 != typeTag.compare("Point") &&
-                0 != typeTag.compare("Line") &&
-                0 != typeTag.compare("Surface"))
+            0 != typeTag.compare("Line") &&
+            0 != typeTag.compare("Surface"))
         {
             continue;
         }
