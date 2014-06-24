@@ -6,7 +6,7 @@
 build/
 
 #项目关闭时候，在项目根目录保存的打开文件状态记录
-#GVSClient.suo
+GVSClient.suo
 
 #ipch项目生成文件
 ipch/

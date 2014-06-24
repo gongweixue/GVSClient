@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <vtkSmartPointer.h>
 #include <vtkActor.h>
+#include <vtkConeSource.h>
 #include <vtkCubeSource.h>
 #include <vtkInteractorStyleTrackballCamera.h>
 #include <vtkPolyData.h>
@@ -269,28 +270,91 @@ void MainWindow::onInitialUpdate()
 
 void MainWindow::showOrientationMarker()
 {
-    vtkSmartPointer<vtkAxesActor> axesActor = vtkSmartPointer<vtkAxesActor>::New();
-    axesActor->SetYAxisLabelText("N");
-    axesActor->SetXAxisLabelText("E");
-    axesActor->SetZAxisLabelText("UP");
-    axesActor->GetXAxisShaftProperty()->SetColor(0, 0, 1);
-    axesActor->GetYAxisShaftProperty()->SetColor(0, 1, 0);
-    axesActor->GetZAxisShaftProperty()->SetColor(1, 0, 0);
-    axesActor->GetXAxisTipProperty()->SetColor(0, 0, 1);
-    axesActor->GetYAxisTipProperty()->SetColor(0, 1, 0);
-    axesActor->GetZAxisTipProperty()->SetColor(1, 0, 0);
-    axesActor->SetTotalLength(1, 1, 1);
+    vtkSmartPointer<vtkConeSource> NN = vtkSmartPointer<vtkConeSource>::New();
+    vtkSmartPointer<vtkConeSource> SS = vtkSmartPointer<vtkConeSource>::New();
+    vtkSmartPointer<vtkConeSource> EE = vtkSmartPointer<vtkConeSource>::New();
+    vtkSmartPointer<vtkConeSource> WW = vtkSmartPointer<vtkConeSource>::New();
+    vtkSmartPointer<vtkConeSource> NE = vtkSmartPointer<vtkConeSource>::New();
+    vtkSmartPointer<vtkConeSource> NW = vtkSmartPointer<vtkConeSource>::New();
+    vtkSmartPointer<vtkConeSource> SE = vtkSmartPointer<vtkConeSource>::New();
+    vtkSmartPointer<vtkConeSource> SW = vtkSmartPointer<vtkConeSource>::New();
+
+    NN->SetHeight(10);
+    NN->SetRadius(2);
+    NN->SetCenter(0, 5, 0);
+    NN->SetDirection(0, 1, 0);
+    NN->SetResolution(4);
+
+    SS->SetHeight(6);
+    SS->SetRadius(2);
+    SS->SetCenter(0, -3, 0);
+    SS->SetDirection(0, -1, 0);
+    SS->SetResolution(4);
+
+    EE->SetHeight(6);
+    EE->SetRadius(2);
+    EE->SetCenter(3, 0, 0);
+    EE->SetDirection(1, 0, 0);
+    EE->SetResolution(4);
+
+    WW->SetHeight(6);
+    WW->SetRadius(2);
+    WW->SetCenter(-3, 0, 0);
+    WW->SetDirection(-1, 0, 0);
+    WW->SetResolution(4);
+
+    NE->SetHeight(5);
+    NE->SetRadius(1.6);
+    NE->SetCenter(2, 2, 0);
+    NE->SetDirection(1, 1, 0);
+    NE->SetResolution(4);
+
+    NW->SetHeight(5);
+    NW->SetRadius(1.6);
+    NW->SetCenter(-2, 2, 0);
+    NW->SetDirection(-1, 1, 0);
+    NW->SetResolution(4);
+
+    SW->SetHeight(5);
+    SW->SetRadius(1.6);
+    SW->SetCenter(-2, -2, 0);
+    SW->SetDirection(-1, -1, 0);
+    SW->SetResolution(4);
+
+    SE->SetHeight(5);
+    SE->SetRadius(1.6);
+    SE->SetCenter(2, -2, 0);
+    SE->SetDirection(1, -1, 0);
+    SE->SetResolution(4);
+
+    vtkSmartPointer<vtkAppendFilter> append = vtkSmartPointer<vtkAppendFilter>::New();
+    append->AddInput(NN->GetOutput());
+    append->AddInput(SS->GetOutput());
+    append->AddInput(EE->GetOutput());
+    append->AddInput(WW->GetOutput());
+    append->AddInput(NE->GetOutput());
+    append->AddInput(NW->GetOutput());
+    append->AddInput(SW->GetOutput());
+    append->AddInput(SE->GetOutput());
+
+    vtkSmartPointer<vtkDataSetMapper> mapper = vtkSmartPointer<vtkDataSetMapper>::New();
+    mapper->SetInput(append->GetOutput());
+    vtkSmartPointer<vtkActor> compassActor = vtkSmartPointer<vtkActor>::New();
+    compassActor->SetMapper(mapper);
+    compassActor->GetProperty()->SetColor(1, 0.32, 0);
+    compassActor->GetProperty()->SetAmbient(0.2);
+    compassActor->GetProperty()->SetDiffuse(1);
+    compassActor->GetProperty()->SetSpecular(0.5);
 
     double backColor[3];
     m_mainRenderer->GetBackground(backColor);
     m_OrientationMarker->SetOutlineColor(backColor[0], backColor[1], backColor[2]);
-    m_OrientationMarker->SetOrientationMarker( axesActor );
-    m_OrientationMarker->SetInteractor(this->qvtkWidget->GetInteractor());
-    m_OrientationMarker->SetOutlineColor(1, 1, 1);
+    m_OrientationMarker->SetOrientationMarker(compassActor);
+    m_OrientationMarker->SetInteractor(qvtkWidget->GetInteractor());
     m_OrientationMarker->SetEnabled(1);
-    m_OrientationMarker->SetViewport(0.0, 1-0.2, 0.2, 1);
+    m_OrientationMarker->SetViewport(1-0.15, 0.1, 1, 0.25);
     m_OrientationMarker->KeyPressActivationOff();
-    m_OrientationMarker->InteractiveOn();
+    m_OrientationMarker->InteractiveOff();
 }
 
 void MainWindow::removeAllActorsOfRenderer(vtkRenderer* renderer)
