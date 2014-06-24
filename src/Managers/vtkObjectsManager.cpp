@@ -14,7 +14,7 @@ ObjectManager::ObjectManager(void)
 
 ObjectManager::~ObjectManager(void)
 {
-    DelAllRdrsInGeoObj();
+    DelAllRdrsInObjTree();
     vector<Model>::iterator iter = treeOfGeoObjs.begin();
     for (; iter != treeOfGeoObjs.end(); ++iter)
     {
@@ -38,28 +38,24 @@ void ObjectManager::UpdateAllReaders()
 }
 
 
-void ObjectManager::DelAllRdrsInGeoObj()
+void ObjectManager::DelAllRdrsInObjTree()
 {
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
     {
         vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
-        DeleteVTKPointer(obj_iter->reader);
+        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
+        {
+            DeleteVTKPointer(obj_iter->reader);
+        }
+        model_iter->vecOfGeoObjs.clear();
     }
     computeObjTreeBound();
 }
 
-vector<GeoObject>* ObjectManager::GetObjectsTable()
-{
-    throw std::exception("GetObjectsTable function should be \
-                         replaced by something else since the data \
-                         stored in the new tree structure...");
-    return NULL;
-}
-
 void ObjectManager::ClearObjTree()
 {
-    DelAllRdrsInGeoObj();
+    DelAllRdrsInObjTree();
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
     {
@@ -78,26 +74,20 @@ double* ObjectManager::computeObjTreeBound()
     for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
     {
         vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
-        double tmpBnds[6];
-        obj_iter->reader->GetOutput()->GetBounds(tmpBnds);
+        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
+        {
+            double tmpBnds[6];
+            obj_iter->reader->GetOutput()->GetBounds(tmpBnds);
 
-        m_bounds[0] = (tmpBnds[0] < m_bounds[0])? tmpBnds[0] : m_bounds[0];
-        m_bounds[1] = (tmpBnds[1] > m_bounds[1])? tmpBnds[1] : m_bounds[1];
-        m_bounds[2] = (tmpBnds[2] < m_bounds[2])? tmpBnds[2] : m_bounds[2];
-        m_bounds[3] = (tmpBnds[3] > m_bounds[3])? tmpBnds[3] : m_bounds[3];
-        m_bounds[4] = (tmpBnds[4] < m_bounds[4])? tmpBnds[4] : m_bounds[4];
-        m_bounds[5] = (tmpBnds[5] > m_bounds[5])? tmpBnds[5] : m_bounds[5];
+            m_bounds[0] = (tmpBnds[0] < m_bounds[0])? tmpBnds[0] : m_bounds[0];
+            m_bounds[1] = (tmpBnds[1] > m_bounds[1])? tmpBnds[1] : m_bounds[1];
+            m_bounds[2] = (tmpBnds[2] < m_bounds[2])? tmpBnds[2] : m_bounds[2];
+            m_bounds[3] = (tmpBnds[3] > m_bounds[3])? tmpBnds[3] : m_bounds[3];
+            m_bounds[4] = (tmpBnds[4] < m_bounds[4])? tmpBnds[4] : m_bounds[4];
+            m_bounds[5] = (tmpBnds[5] > m_bounds[5])? tmpBnds[5] : m_bounds[5];
+        }
+    }
 
-    }
-    /*vtkAppendFilter* apdFilter = vtkAppendFilter::New();
-    vector<GeoObject>::iterator iter_ObRcd = m_objectsTable.begin();
-    for ( ; iter_ObRcd != m_objectsTable.end()&&iter_ObRcd->getVisibility(); iter_ObRcd++)
-    {
-        apdFilter->AddInput(iter_ObRcd->reader->GetOutput());
-    }
-    apdFilter->Update();
-    apdFilter->GetOutput()->GetBounds(m_bounds);
-    apdFilter->Delete();*/
     return m_bounds;
 }
 

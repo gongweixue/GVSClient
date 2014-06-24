@@ -52,8 +52,7 @@ public:
     ~ObjectManager(void);
     void ClearObjTree();
     void UpdateAllReaders();
-    void DelAllRdrsInGeoObj();
-    vector<GeoObject>* GetObjectsTable();
+    void DelAllRdrsInObjTree();
 
 private:
     double* computeObjTreeBound();

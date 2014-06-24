@@ -255,7 +255,7 @@ void MainWindow::onInitialUpdate()
     m_sceneManager.ClearActorTable();
     m_mainRenderer->Render();
     //////////////////////
-    if (m_pDoc->GetObjectsManager()->getNumOfObjsInTree() != 0)
+    if (m_pDoc->GetObjManager()->getNumOfObjsInTree() != 0)
     {
         m_sceneManager.SetSceneState(SCENE_STATE_ORIGINAL);
         showOrientationMarker();
@@ -307,7 +307,7 @@ void MainWindow::processRenderRequest(int state)
         return;
     else
     {
-        if (pDoc->GetObjectsManager()->getNumOfObjsInTree() != 0)
+        if (pDoc->GetObjManager()->getNumOfObjsInTree() != 0)
         {
             switch (state)
             {
@@ -339,23 +339,26 @@ void MainWindow::processRenderRequest(int state)
 
 void MainWindow::RenderOriginal()
 {
-    if (0 == getDocument()->GetObjectsManager()->getNumOfObjsInTree())
+    if (0 == getDocument()->GetObjManager()->getNumOfObjsInTree())
     {
         return;
     }
 
-    m_sceneManager.SetSceneBounds(getDocument()->GetObjectsManager()->m_bounds);
-    vector<GeoObject>::iterator iter_ObRcd=
-            getDocument()->GetObjectsManager()->GetObjectsTable()->begin();
-    ObjectManager* pObjManager = getDocument()->GetObjectsManager();
-    for (; iter_ObRcd != pObjManager->GetObjectsTable()->end(); iter_ObRcd++)
+    m_sceneManager.SetSceneBounds(getDocument()->GetObjManager()->m_bounds);
+    vector<Model>::iterator model_iter =
+            m_pDoc->GetObjManager()->treeOfGeoObjs.begin();
+    for ( ; model_iter != m_pDoc->GetObjManager()->treeOfGeoObjs.end(); model_iter++)
     {
-        vtkActor* tempActor = MappingDataSetToActor(iter_ObRcd->reader->GetOutput());
-        m_sceneManager.InsertActorRecord(tempActor,
-                                         iter_ObRcd->getName(),
-                                         SCENE_STATE_ORIGINAL,
-                                         1);
+        vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
+        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
+        {
+            m_sceneManager.InsertActorRcrd(MapToActor(obj_iter->reader->GetOutput()),
+                                          obj_iter->getName(),
+                                          SCENE_STATE_ORIGINAL,
+                                          obj_iter->getVisibility());
+        }
     }
+
     m_sceneManager.AddCrrtStatActrToRnder(m_mainRenderer);
     m_mainRenderer->ResetCamera();
     m_mainRenderer->Render();
@@ -363,23 +366,28 @@ void MainWindow::RenderOriginal()
 
 void MainWindow::RenderPlaneClip()
 {
-    if (0 == getDocument()->GetObjectsManager()->getNumOfObjsInTree())
+    if (0 == this->m_pDoc->GetObjManager()->getNumOfObjsInTree())
     {
         return;
     }
 
     vtkSmartPointer<vtkAppendFilter> apdFilter=
             vtkSmartPointer<vtkAppendFilter>::New();
-    ObjectManager* manager = getDocument()->GetObjectsManager();
-    vector<GeoObject>::iterator iter_ObRcd= manager->GetObjectsTable()->begin();
-    for ( ; iter_ObRcd != manager->GetObjectsTable()->end(); iter_ObRcd++)
+
+    vector<Model>::iterator model_iter = m_pDoc->GetObjManager()->treeOfGeoObjs.begin();
+    for ( ; model_iter != m_pDoc->GetObjManager()->treeOfGeoObjs.end(); model_iter++)
     {
-        if(iter_ObRcd->getVisibility())
+        vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
+        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
         {
-            iter_ObRcd->reader->Update();
-            apdFilter->AddInput(iter_ObRcd->reader->GetOutput());
+            if (obj_iter->getVisibility())
+            {
+                obj_iter->reader->Update();
+                apdFilter->AddInput(obj_iter->reader->GetOutput());
+            }
         }
     }
+
     apdFilter->Update();
     vtkDataSet* mergedDataSet = apdFilter->GetOutput();
 
@@ -391,8 +399,8 @@ void MainWindow::RenderPlaneClip()
     clipper->SetInput(mergedDataSet);
     clipper->Update();
 
-    vtkActor* clipActor = MappingDataSetToActor(clipper->GetOutput());
-    m_sceneManager.InsertActorRecord(clipActor,
+    vtkActor* clipActor = MapToActor(clipper->GetOutput());
+    m_sceneManager.InsertActorRcrd(clipActor,
                                      "_TempClipResult",
                                      SCENE_STATE_PLANE_CLIP,
                                      1);
@@ -425,16 +433,20 @@ void MainWindow::RenderStdExplode()
 {
     //append object data which visible=1.
     vtkSmartPointer<vtkAppendFilter> apdFilter = vtkSmartPointer<vtkAppendFilter>::New();
-    ObjectManager* manager = getDocument()->GetObjectsManager();
-    vector<GeoObject>::iterator iter_ObRcd = manager->GetObjectsTable()->begin();
-    for ( ; iter_ObRcd!=manager->GetObjectsTable()->end(); iter_ObRcd++)
+    vector<Model>::iterator model_iter = m_pDoc->GetObjManager()->treeOfGeoObjs.begin();
+    for ( ; model_iter != m_pDoc->GetObjManager()->treeOfGeoObjs.end(); model_iter++)
     {
-        if(iter_ObRcd->getVisibility())
+        vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
+        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
         {
-            iter_ObRcd->reader->Update();
-            apdFilter->AddInput(iter_ObRcd->reader->GetOutput());
+            if (obj_iter->getVisibility())
+            {
+                obj_iter->reader->Update();
+                apdFilter->AddInput(obj_iter->reader->GetOutput());
+            }
         }
     }
+
     apdFilter->Update();
     vtkDataSet* mergedDataSet = apdFilter->GetOutput();
     //bounds
@@ -539,8 +551,8 @@ void MainWindow::RenderStdExplode()
     {
         for (int j = 0; j < m_evenExplodeCol; j++)
         {
-            vtkActor* tmpActor = MappingDataSetToActor(resultData[i][j]);
-            m_sceneManager.InsertActorRecord(tmpActor,
+            vtkActor* tmpActor = MapToActor(resultData[i][j]);
+            m_sceneManager.InsertActorRcrd(tmpActor,
                                              "_StdExplodeResult",
                                              SCENE_STATE_STD_EXPLODE,
                                              true);
@@ -555,35 +567,38 @@ void MainWindow::RenderStdExplode()
 
 void MainWindow::RenderPrismClip()
 {
-    if (0 == getDocument()->GetObjectsManager()->getNumOfObjsInTree())
+    if (0 == getDocument()->GetObjManager()->getNumOfObjsInTree())
     {
         return;
     }
 
     //append the object data which visible=1.
-    vtkSmartPointer<vtkAppendFilter> source =
-            vtkSmartPointer<vtkAppendFilter>::New();
-    ObjectManager* manager = getDocument()->GetObjectsManager();
-    vector<GeoObject>::iterator iter_ObRcd = manager->GetObjectsTable()->begin();
-    for ( ; iter_ObRcd != manager->GetObjectsTable()->end(); iter_ObRcd++)
+    vtkSmartPointer<vtkAppendFilter> apdFilter = vtkSmartPointer<vtkAppendFilter>::New();
+    vector<Model>::iterator model_iter = m_pDoc->GetObjManager()->treeOfGeoObjs.begin();
+    for ( ; model_iter != m_pDoc->GetObjManager()->treeOfGeoObjs.end(); model_iter++)
     {
-        if(iter_ObRcd->getVisibility())
+        vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
+        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
         {
-            iter_ObRcd->reader->Update();
-            source->AddInput(iter_ObRcd->reader->GetOutput());
+            if (obj_iter->getVisibility())
+            {
+                obj_iter->reader->Update();
+                apdFilter->AddInput(obj_iter->reader->GetOutput());
+            }
         }
     }
-    source->Update();
+
+    apdFilter->Update();
     vtkSmartPointer<vtkAppendFilter> apdResult=
             vtkSmartPointer<vtkAppendFilter>::New();
-    vtkDataSet* dataToClip = source->GetOutput();//appended result
+    vtkDataSet* dataToClip = apdFilter->GetOutput();//appended result
     double bounds[6];
     dataToClip->GetBounds(bounds);
     for (int i = 0; i < 5; i++)
     {
         bounds[i] *= 1.1;
     }
-    m_prismClipPlane[0]->SetOrigin(source->GetOutput()->GetCenter());
+    m_prismClipPlane[0]->SetOrigin(apdFilter->GetOutput()->GetCenter());
     m_prismClipPlane[0]->SetNormal(0, 0, 1);
     vtkSmartPointer<vtkTableBasedClipDataSet> clipper11=
             vtkSmartPointer<vtkTableBasedClipDataSet>::New();
@@ -600,7 +615,7 @@ void MainWindow::RenderPrismClip()
     dataToClip = clipper12->GetOutput();
 
 
-    m_prismClipPlane[1]->SetOrigin(source->GetOutput()->GetCenter());
+    m_prismClipPlane[1]->SetOrigin(apdFilter->GetOutput()->GetCenter());
     m_prismClipPlane[1]->SetNormal(1, -1, 0);
     vtkTableBasedClipDataSet* clipper21 = vtkTableBasedClipDataSet::New();
     clipper21->SetClipFunction(m_prismClipPlane[1]);
@@ -617,7 +632,7 @@ void MainWindow::RenderPrismClip()
     dataToClip=clipper22->GetOutput();
 
 
-    m_prismClipPlane[2]->SetOrigin(source->GetOutput()->GetCenter());
+    m_prismClipPlane[2]->SetOrigin(apdFilter->GetOutput()->GetCenter());
     m_prismClipPlane[2]->SetNormal(-1, -1, 0);
     vtkTableBasedClipDataSet* clipper31 = vtkTableBasedClipDataSet::New();
     clipper31->SetClipFunction(m_prismClipPlane[2]);
@@ -627,8 +642,8 @@ void MainWindow::RenderPrismClip()
     apdResult->AddInput(clipper31->GetOutput());
     apdResult->Update();
 
-    vtkActor* tmpActor = MappingDataSetToActor(apdResult->GetOutput() );
-    m_sceneManager.InsertActorRecord(tmpActor,
+    vtkActor* tmpActor = MapToActor(apdResult->GetOutput() );
+    m_sceneManager.InsertActorRcrd(tmpActor,
                                      "_PrismClipResult",
                                      SCENE_STATE_PRISM_CLIP,
                                      1);
@@ -707,32 +722,36 @@ void MainWindow::RenderPrismClip()
 
 void MainWindow::RenderBoxClip()
 {
-    if (0 == getDocument()->GetObjectsManager()->getNumOfObjsInTree())
+    if (0 == getDocument()->GetObjManager()->getNumOfObjsInTree())
     {
         return;
     }
 
-    vtkSmartPointer<vtkAppendFilter> apdOriginFilter=
-            vtkSmartPointer<vtkAppendFilter>::New();
-    ObjectManager* manager = getDocument()->GetObjectsManager();
-    vector<GeoObject>::iterator iter_ObRcd = manager->GetObjectsTable()->begin();
-    for ( ; iter_ObRcd != manager->GetObjectsTable()->end(); iter_ObRcd++)
+    vtkSmartPointer<vtkAppendFilter> apdFilter= vtkSmartPointer<vtkAppendFilter>::New();
+
+    vector<Model>::iterator model_iter = m_pDoc->GetObjManager()->treeOfGeoObjs.begin();
+    for ( ; model_iter != m_pDoc->GetObjManager()->treeOfGeoObjs.end(); model_iter++)
     {
-        if(iter_ObRcd->getVisibility())
+        vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
+        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
         {
-            iter_ObRcd->reader->Update();
-            apdOriginFilter->AddInput(iter_ObRcd->reader->GetOutput());
+            if (obj_iter->getVisibility())
+            {
+                obj_iter->reader->Update();
+                apdFilter->AddInput(obj_iter->reader->GetOutput());
+            }
         }
     }
-    apdOriginFilter->Update();
+
+    apdFilter->Update();
     double bounds[6];
-    apdOriginFilter->GetOutput()->GetBounds(bounds);
+    apdFilter->GetOutput()->GetBounds(bounds);
 
     //box widget
     //m_boxClipWidget=vtkBoxWidget::New();
     m_boxClipWidget->SetInteractor(qvtkWidget->GetInteractor());
     m_boxClipWidget->SetPlaceFactor(1);
-    m_boxClipWidget->SetInput(apdOriginFilter->GetOutput());
+    m_boxClipWidget->SetInput(apdFilter->GetOutput());
     m_boxClipWidget->PlaceWidget(bounds[0],
                                  (bounds[0] + (bounds[1]-bounds[0]) / 4),
                                  bounds[2],
@@ -753,7 +772,7 @@ void MainWindow::RenderBoxClip()
     //box clip result
     vtkSmartPointer<vtkDataSet> result[6];
     vtkSmartPointer<vtkTableBasedClipDataSet> clipper[6][2];
-    vtkDataSet* dataToClip = apdOriginFilter->GetOutput();
+    vtkDataSet* dataToClip = apdFilter->GetOutput();
     //clip with 6 planes
     for (int i = 0; i < 6; i++)
     {
@@ -783,8 +802,8 @@ void MainWindow::RenderBoxClip()
     m_boxClipCallback->boxWidget = m_boxClipWidget;
     m_boxClipWidget->AddObserver(vtkCommand::EndInteractionEvent, m_boxClipCallback);
     //insert record
-    vtkActor* tmpActor = MappingDataSetToActor(apdResult->GetOutput());
-    m_sceneManager.InsertActorRecord(tmpActor, "_BoxClipActor", SCENE_STATE_BOX_CLIP, 1);
+    vtkActor* tmpActor = MapToActor(apdResult->GetOutput());
+    m_sceneManager.InsertActorRcrd(tmpActor, "_BoxClipActor", SCENE_STATE_BOX_CLIP, 1);
     //add actor to renderer
     m_mainRenderer->AddActor(tmpActor);
     //widget on
@@ -792,7 +811,7 @@ void MainWindow::RenderBoxClip()
     m_boxClipWidget->EnabledOn();
 }
 
-vtkActor* MainWindow::MappingDataSetToActor(vtkDataSet* ds)
+vtkActor* MainWindow::MapToActor(vtkDataSet* ds)
 {
     vtkSmartPointer<vtkDataSetMapper> mapper = vtkSmartPointer<vtkDataSetMapper>::New();
     mapper->SetInput(ds);
@@ -804,7 +823,7 @@ vtkActor* MainWindow::MappingDataSetToActor(vtkDataSet* ds)
 
 void MainWindow::TurnCubeAxesOnOff(int isOn, int xGridOn, int yGridOn)
 {
-    if (0 == getDocument()->GetObjectsManager()->getNumOfObjsInTree())
+    if (0 == getDocument()->GetObjManager()->getNumOfObjsInTree())
     {
         return;
     }

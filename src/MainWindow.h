@@ -54,7 +54,7 @@ private:
     void RenderStdExplode();
     void RenderBoxClip();
     void RenderPrismClip();
-    vtkActor* MappingDataSetToActor(vtkDataSet* ds);
+    vtkActor* MapToActor(vtkDataSet* ds);
     void TurnCubeAxesOnOff(int isOn, int xGridOn, int yGridOn);
 
 public slots:

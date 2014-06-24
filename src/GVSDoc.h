@@ -15,7 +15,7 @@ public:
     GVSDoc(MainWindow* mainWindow, QObject *parent = 0);
     ~GVSDoc();
     void OnCloseDocument();
-    ObjectManager* GetObjectsManager(){ return &m_objManager; }
+    ObjectManager* GetObjManager(){ return &m_objManager; }
     string getProjectPathName() { return m_gvpFullFileName; }
 
 public slots:

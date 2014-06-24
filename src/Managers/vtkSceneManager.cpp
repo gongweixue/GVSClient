@@ -27,7 +27,7 @@ SceneManager::~SceneManager(void)
     ClearActorTable();
 }
 
-void SceneManager::InsertActorRecord(vtkActor* actor,
+void SceneManager::InsertActorRcrd(vtkActor* actor,
                                      string dataSetName,
                                      int sceneStateBelong,
                                      bool visible )
@@ -131,8 +131,8 @@ void SceneManager::AddCrrtStatActrToRnder( vtkRenderer* renderer )
     vector<ActorRecord>::iterator iter_actorRecord = m_ActorRecordTable.begin();
     for ( ; iter_actorRecord != m_ActorRecordTable.end(); iter_actorRecord++)
     {
-        if(iter_actorRecord->sceneStateBelong == m_CurrentSceneState
-                && iter_actorRecord->isVisible){
+        if(iter_actorRecord->sceneStateBelong == m_CurrentSceneState){
+            iter_actorRecord->actor->SetVisibility(iter_actorRecord->isVisible);
             renderer->AddActor(iter_actorRecord->actor);
         }
     }
@@ -155,21 +155,8 @@ void SceneManager::RemoveActorsByState(vtkRenderer* renderer, int state)
     vector<ActorRecord>::iterator iter_actorRecord = m_ActorRecordTable.begin();
     for ( ; iter_actorRecord != m_ActorRecordTable.end(); iter_actorRecord++)
     {
-        if(iter_actorRecord->sceneStateBelong == state && iter_actorRecord->isVisible)
+        if(iter_actorRecord->sceneStateBelong == state)
             renderer->RemoveActor(iter_actorRecord->actor);
     }
 }
 
-void SceneManager::RemoveAllLabelActorRecord()
-{
-    vector<ActorRecord>::iterator iter_actorRecord = m_ActorRecordTable.begin();
-    for ( ; iter_actorRecord != m_ActorRecordTable.end(); iter_actorRecord++)
-    {
-        if (iter_actorRecord->sceneStateBelong == SCENE_STATE_SHOW_LABEL)
-        {
-            DeleteVTKPointer(iter_actorRecord->actor);
-            m_ActorRecordTable.erase(iter_actorRecord);
-            iter_actorRecord = m_ActorRecordTable.begin();
-        }
-    }
-}

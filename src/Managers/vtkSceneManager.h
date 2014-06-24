@@ -44,13 +44,12 @@ class SceneManager
 public:
     SceneManager(void);
     ~SceneManager(void);
-    void InsertActorRecord(vtkActor* actor, string dataSetName = "",
+    void InsertActorRcrd(vtkActor* actor, string dataSetName = "",
                            int sceneStateBelong = SCENE_STATE_ORIGINAL,
                            bool visible = 1);
     void AddCrrtStatActrToRnder(vtkRenderer* renderer);
     void AddActorsByState(vtkRenderer* renderer, int state);
     void RemoveActorsByState(vtkRenderer* renderer, int state);
-    void RemoveAllLabelActorRecord();
     void SetActorVisibleByName(const char* name, bool visible);
 
     vector<ActorRecord>* GetActorRecordTable();
