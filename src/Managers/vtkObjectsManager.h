@@ -3,7 +3,8 @@
 
 #include "Utils/vtkTotallyInclude.h"
 #include "String"
-#include "QString"
+#include <QObject>
+#include <QString>
 #include <vector>
 
 #define GEO_OBJECT_TYPE_POINT       100
@@ -43,7 +44,7 @@ public:
     vector<GeoObject> vecOfGeoObjs;
 } Model;
 
-class ObjectManager
+class ObjectManager : public QObject
 {
 public:
     friend class GVSDoc;
@@ -51,12 +52,12 @@ public:
     ObjectManager(void);
     ~ObjectManager(void);
     void ClearObjTree();
-    void UpdateAllReaders();
+    void LoadDataForReadersInTree();
     void DelAllRdrsInObjTree();
+    int getNumOfObjsInTree();
 
 private:
     double* computeObjTreeBound();
-    int getNumOfObjsInTree();
 private:
     double m_bounds[6];
     vector<Model> treeOfGeoObjs;

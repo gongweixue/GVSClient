@@ -1,8 +1,8 @@
 #include "GVSDoc.h"
-#include <QFileDialog>
-#include <QMessageBox>
 #include <QDomDocument>
 #include <QDomElement>
+#include <QFileDialog>
+#include <QMessageBox>
 
 GVSDoc::GVSDoc(MainWindow* mainWindow, QObject* parent)
     : QObject(parent)
@@ -38,7 +38,6 @@ bool GVSDoc::LoadProject(std::string gvpFullFileName)
 {
     return parseProjectByFileName(gvpFullFileName);
 }
-
 
 bool GVSDoc::parseProjectByFileName(std::string gvpFullPath)
 {
@@ -105,7 +104,10 @@ bool GVSDoc::parseProjectByFileName(std::string gvpFullPath)
             continue;
         }
     }
-    m_objManager.UpdateAllReaders();
+
+    //Now we just put the file names of the object in disk into the tree.
+    //Then we need to load all of these object into readers(by update).
+    m_objManager.LoadDataForReadersInTree();
 
     return true;
 }
@@ -181,7 +183,7 @@ bool GVSDoc::parseAndLoadModel(std::string gvmFullPath)
         //reader
         vtkDataSetReader* reader = vtkDataSetReader::New();
         reader->SetFileName((modelDataDir + objFileName).toStdString().c_str());
-        reader->Update();
+        //reader->Update();
 
         //type
         int objFileTy;
@@ -219,5 +221,4 @@ std::string GVSDoc::getProjectPathByDlg()
 
     return fileName.toStdString();
 }
-
 

@@ -288,7 +288,7 @@ void MainWindow::showOrientationMarker()
     vtkSmartPointer<vtkFloatArray> NNscalars = vtkSmartPointer<vtkFloatArray>::New();
     for (int i = 0; i < 5; i++)
     {
-        //just the direction of NORTH is 0(the rgb is {0.2, 0.83, 1} in lookup table).
+        //just NORTH is different(rgb is {0.2, 0.83, 1} in lut).
         NNscalars->InsertNextValue(0);
     }
     NN->SetHeight(10);
@@ -389,6 +389,7 @@ void MainWindow::showOrientationMarker()
     compassActor->SetMapper(mapper);
     compassActor->GetProperty()->SetAmbient(0.2);
     compassActor->GetProperty()->SetDiffuse(1);
+    //compassActor->GetProperty()->SetSpecular(0.5);
 
     m_OrientationMarker->SetInteractor(qvtkWidget->GetInteractor());
     m_OrientationMarker->SetOrientationMarker(compassActor);
@@ -396,6 +397,22 @@ void MainWindow::showOrientationMarker()
     m_OrientationMarker->SetViewport(1-0.2, 0, 1, 0.2);
     m_OrientationMarker->KeyPressActivationOff();
     m_OrientationMarker->InteractiveOff();
+
+    //{// set captions of compass
+    //    vtkRenderWindow* rWin = m_OrientationMarker->GetInteractor()->GetRenderWindow();
+    //    vtkRenderer* rnder = rWin->GetRenderers()->GetNextItem();
+    //    // Create an actor for the text
+    //    vtkSmartPointer<vtkCaptionActor2D> northCap = vtkSmartPointer<vtkCaptionActor2D>::New();
+    //    northCap->SetCaption("N");
+    //    double northAttachPoint[3] = {0, 10, 0};
+    //    northCap->SetAttachmentPoint(northAttachPoint);
+    //    northCap->BorderOff();
+    //    northCap->GetCaptionTextProperty()->BoldOff();
+    //    northCap->GetCaptionTextProperty()->ItalicOff();
+    //    northCap->GetCaptionTextProperty()->ShadowOff();
+    //    northCap->ThreeDimensionalLeaderOff();
+    //    //m_OrientationMarker->GetCurrentRenderer()->AddActor(northCap);
+    //}
 
     double backColor[3];
     m_mainRenderer->GetBackground(backColor);
@@ -458,11 +475,22 @@ void MainWindow::RenderOriginal()
             m_pDoc->GetObjManager()->treeOfGeoObjs.begin();
     for ( ; model_iter != m_pDoc->GetObjManager()->treeOfGeoObjs.end(); model_iter++)
     {
+        string modelName = model_iter->modelName.toStdString();
         vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
         for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
         {
+            //in case of the name including more than 1 '.', like "abc.def.vtk".
+            string objName = obj_iter->getName();
+            QStringList spltList = QString(objName.c_str()).split('.');
+            string actorName = modelName + "/";
+            for (int i = 0; i < (spltList.size() - 2); ++i)
+            {
+                actorName.append(spltList[i].toStdString() + ".");
+            }
+            actorName.append(spltList[spltList.size()-2].toStdString());
+
             m_sceneManager.InsertActorRcrd(MapToActor(obj_iter->reader->GetOutput()),
-                                          obj_iter->getName(),
+                                          actorName,
                                           SCENE_STATE_ORIGINAL,
                                           obj_iter->getVisibility());
         }

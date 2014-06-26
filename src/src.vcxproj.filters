@@ -295,6 +295,9 @@
     <CustomBuild Include="Dialog\UploadProjectDialog.ui">
       <Filter>Form Files\Dialogs\Transportation</Filter>
     </CustomBuild>
+    <CustomBuild Include="Managers\vtkObjectsManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\build\Qt\GeneratedFiles\ui_MainWindow.h">
@@ -311,9 +314,6 @@
     </ClInclude>
     <ClInclude Include="Utils\vtkTotallyInclude.h">
       <Filter>Header Files\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Managers\vtkObjectsManager.h">
-      <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Managers\vtkSceneManager.h">
       <Filter>Header Files\Managers</Filter>

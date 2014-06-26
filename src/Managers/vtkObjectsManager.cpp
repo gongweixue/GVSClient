@@ -1,6 +1,7 @@
 #include "Utils/vtkTotallyInclude.h"
 #include "Utils/GVSUtils.h"
 #include "vtkObjectsManager.h"
+#include <QProgressDialog.h>
 
 ObjectManager::ObjectManager(void)
 {
@@ -23,20 +24,33 @@ ObjectManager::~ObjectManager(void)
     treeOfGeoObjs.clear();
 }
 
-
-void ObjectManager::UpdateAllReaders()
+void ObjectManager::LoadDataForReadersInTree()
 {
+    ////progress to show the process of loading objects.
+    QProgressDialog progressDlg;
+    int progressValue = 0;
+    progressDlg.setWindowModality(Qt::ApplicationModal);
+    progressDlg.setMinimumDuration(5);
+    progressDlg.setWindowTitle(tr("请稍候"));
+    progressDlg.setLabelText(tr("正在加载模型文件......      "));
+    progressDlg.setCancelButtonText(tr("取消"));
+    progressDlg.setRange(0,getNumOfObjsInTree());
+    progressDlg.setCancelButton(0);
+
     //update every record's reader.
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
     {
         vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
-        obj_iter->reader->Update();
+        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
+        {
+            obj_iter->reader->Update();
+            progressDlg.setValue(progressValue++);
+        }
     }
 
     computeObjTreeBound();
 }
-
 
 void ObjectManager::DelAllRdrsInObjTree()
 {
