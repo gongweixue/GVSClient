@@ -183,7 +183,6 @@ bool GVSDoc::parseAndLoadModel(std::string gvmFullPath)
         //reader
         vtkDataSetReader* reader = vtkDataSetReader::New();
         reader->SetFileName((modelDataDir + objFileName).toStdString().c_str());
-        //reader->Update();
 
         //type
         int objFileTy;
