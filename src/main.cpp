@@ -1,7 +1,8 @@
-#include "MainWindow.h"
+#include <QTextCodec>
 #include <QtGui/QApplication>
 #include "GVSInitializer.h"
-#include <QTextCodec>
+#include "MainWindow.h"
+
 
 int main(int argc, char *argv[])
 {

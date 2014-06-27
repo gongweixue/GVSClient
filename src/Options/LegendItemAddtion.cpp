@@ -1,6 +1,6 @@
-#include "LegendItemAddtion.h"
 #include <QLineEdit>
 #include <QMessageBox>
+#include "LegendItemAddtion.h"
 
 LegendItemAddtion::LegendItemAddtion(QWidget* parent)
     : QDialog(parent)

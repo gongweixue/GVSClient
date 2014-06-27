@@ -3,16 +3,15 @@
 
 #include <QLabel>
 #include <QSplitter>
-#include <QtGui/QMainWindow>
 #include <QTabWidget>
 #include <QTreeView>
+#include <QtGui/QMainWindow>
 #include <QVTKWidget.h>
 #include "ui_MainWindow.h"
-
-#include "Managers/vtkSceneManager.h"
-#include "Managers/ColorLegendManager.h"
 #include "Callbacks/vtkBoxClipCallback.h"
 #include "Callbacks/vtkPlaneClipCallback.h"
+#include "Managers/ColorLegendManager.h"
+#include "Managers/vtkSceneManager.h"
 
 class GVSDoc;
 class TransportationManager;

@@ -1,8 +1,8 @@
 #ifndef COLOR_LEGEND_EDITOR_H
 #define COLOR_LEGEND_EDITOR_H
 
-#include <QDialog>
 #include <vector>
+#include <QDialog>
 #include "ui_ColorLegendEditor.h"
 #include "Managers/ColorLegendManager.h"
 

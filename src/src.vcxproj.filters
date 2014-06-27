@@ -122,9 +122,6 @@
     <ClCompile Include="Managers\vtkSceneManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Callbacks\vtkBoxClipCallback.cpp">
-      <Filter>Source Files\Callbacks</Filter>
-    </ClCompile>
     <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_CubeAxesOption.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -226,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="Dialog\UploadProjectDialog.cpp">
       <Filter>Source Files\Dialogs\Transportation</Filter>
+    </ClCompile>
+    <ClCompile Include="Callbacks\vtkBoxClipCallback.cpp">
+      <Filter>Source Files\Callbacks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

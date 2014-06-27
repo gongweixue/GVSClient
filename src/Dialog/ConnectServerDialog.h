@@ -1,13 +1,15 @@
 #ifndef CONNECT_SERVER_DIALOG_H
 #define CONNECT_SERVER_DIALOG_H
 
-#include <QDialog>
-#include "ui_ConnectServerDialog.h"
-
-#include "Records/ConnectionRecord.h"
 #include <vector>
+#include <QDialog>
 #include <QFtp>
 #include <QListWidgetItem>
+#include "ui_ConnectServerDialog.h"
+#include "Records/ConnectionRecord.h"
+
+
+
 
 using namespace std;
 

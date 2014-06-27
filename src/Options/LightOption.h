@@ -1,8 +1,8 @@
 #ifndef LIGHT_OPTION_H
 #define LIGHT_OPTION_H
 
-#include <QWidget>
 #include <QDialog>
+#include <QWidget>
 #include "ui_LightOption.h"
 
 class LightOption : public QDialog

@@ -1,9 +1,9 @@
 #ifndef VTK_SCENE_MANAGER_H
 #define VTK_SCENE_MANAGER_H
 
-#include "Utils/vtkTotallyInclude.h"
-#include "String"
+#include <String>
 #include <vector>
+#include "Utils/vtkTotallyInclude.h"
 
 using namespace std;
 

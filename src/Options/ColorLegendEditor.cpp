@@ -1,6 +1,7 @@
+#include <QMessageBox>
 #include "ColorLegendEditor.h"
 #include "Options/LegendItemAddtion.h"
-#include <QMessageBox>
+
 
 ColorLegendEditor::ColorLegendEditor(QWidget* parent)
     : QDialog(parent)

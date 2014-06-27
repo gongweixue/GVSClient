@@ -1,7 +1,7 @@
-#include "UploadProjectDialog.h"
+#include <vector>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <vector>
+#include "UploadProjectDialog.h"
 
 UploadProjectDialog::UploadProjectDialog(QWidget* parent)
     : QDialog(parent)

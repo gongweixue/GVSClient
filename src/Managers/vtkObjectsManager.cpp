@@ -1,7 +1,9 @@
-#include "Utils/vtkTotallyInclude.h"
-#include "Utils/GVSUtils.h"
 #include "vtkObjectsManager.h"
-#include <QProgressDialog.h>
+#include <QMessageBox>
+#include <QTime>
+#include "Utils/GVSUtils.h"
+#include "Utils/vtkTotallyInclude.h"
+
 
 ObjectManager::ObjectManager(void)
 {
@@ -37,6 +39,10 @@ void ObjectManager::LoadDataForReadersInTree()
     progressDlg.setRange(0,getNumOfObjsInTree());
     progressDlg.setCancelButton(0);
 
+    //Timer to show the performance.
+    QTime t;
+    t.start();
+
     //update every record's reader.
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
@@ -45,9 +51,15 @@ void ObjectManager::LoadDataForReadersInTree()
         for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
         {
             obj_iter->reader->Update();
-            progressDlg.setValue(progressValue++);
+            progressDlg.setValue(++progressValue);
         }
     }
+
+    //Show the time it takes.
+    int msc = t.elapsed();
+    char buf[4096];
+    sprintf(buf, "takes time: %d msc", msc);
+    QMessageBox::information(0, tr(""), QString(buf));
 
     computeObjTreeBound();
 }
@@ -116,3 +128,4 @@ int ObjectManager::getNumOfObjsInTree()
 
     return ret;
 }
+

@@ -1,14 +1,13 @@
 #ifndef COLOR_LEGEND_MANAGER_H
 #define COLOR_LEGEND_MANAGER_H
 
-#include <QObject>
-#include <QDockWidget>
 #include <string>
 #include <vector>
 #include <QColor>
-#include <QVBoxLayout>
+#include <QDockWidget>
 #include <QListWidgetItem>
-
+#include <QObject>
+#include <QVBoxLayout>
 #include "Records/LegendRecord.h"
 
 using namespace std;

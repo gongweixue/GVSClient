@@ -1,8 +1,8 @@
 #ifndef CUBE_AXES_OPTION_H
 #define CUBE_AXES_OPTION_H
 
-#include <QWidget>
 #include <QDialog>
+#include <QWidget>
 #include "ui_CubeAxesOption.h"
 
 class CubeAxesOption : public QDialog

@@ -1,10 +1,10 @@
-#include "TransportationManager.h"
-#include "MainWindow.h"
-#include "QMessageBox"
+#include <QMessageBox>
 #include "Dialog/ConnectServerDialog.h"
 #include "Dialog/DownloadProjectDialog.h"
 #include "Dialog/UploadProjectDialog.h"
+#include "MainWindow.h"
 #include "Records/ConnectionRecord.h"
+#include "TransportationManager.h"
 
 TransportationManager::TransportationManager(MainWindow* window, QObject* parent)
     : QObject(parent)

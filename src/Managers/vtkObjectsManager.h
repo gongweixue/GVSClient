@@ -1,11 +1,12 @@
 #ifndef VTK_OBJECTS_MANAGER_H
 #define VTK_OBJECTS_MANAGER_H
 
-#include "Utils/vtkTotallyInclude.h"
 #include "String"
-#include <QObject>
-#include <QString>
 #include <vector>
+#include <QObject>
+#include <QProgressDialog>
+#include <QString>
+#include "Utils/vtkTotallyInclude.h"
 
 #define GEO_OBJECT_TYPE_POINT       100
 #define GEO_OBJECT_TYPE_LINE        200
@@ -43,6 +44,7 @@ public:
     QString modelName;
     vector<GeoObject> vecOfGeoObjs;
 } Model;
+
 
 class ObjectManager : public QObject
 {

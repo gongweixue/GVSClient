@@ -2,9 +2,9 @@
 #define UPLOAD_PROJECT_DIALOG_H
 
 #include <QDialog>
-#include "ui_UploadProjectDialog.h"
-#include <QFtp>
 #include <QFile>
+#include <QFtp>
+#include "ui_UploadProjectDialog.h"
 
 class UploadProjectDialog : public QDialog
 {

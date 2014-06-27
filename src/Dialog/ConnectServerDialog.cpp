@@ -1,6 +1,6 @@
-#include "ConnectServerDialog.h"
 #include <QList>
 #include <QMessageBox>
+#include "ConnectServerDialog.h"
 
 using namespace std;
 

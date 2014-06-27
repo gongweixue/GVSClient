@@ -1,11 +1,10 @@
-#include "ColorLegendManager.h"
 #include <sstream>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QFile>
 #include <QMessageBox>
-#include <sstream>
 #include <QTextStream>
+#include "ColorLegendManager.h"
 
 ColorLegendManager::ColorLegendManager(QObject* parent)
     : QObject(parent)

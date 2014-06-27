@@ -1,8 +1,8 @@
-#include "GVSDoc.h"
 #include <QDomDocument>
 #include <QDomElement>
 #include <QFileDialog>
 #include <QMessageBox>
+#include "GVSDoc.h"
 
 GVSDoc::GVSDoc(MainWindow* mainWindow, QObject* parent)
     : QObject(parent)

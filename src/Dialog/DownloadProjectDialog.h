@@ -2,11 +2,11 @@
 #define DOWNLOAD_PROJECT_DIALOG_H
 
 #include <QDialog>
-#include "ui_DownloadProjectDialog.h"
+#include <QFile>
 #include <QFtp>
 #include <QList>
-#include <QFile>
 #include <QStringList>
+#include "ui_DownloadProjectDialog.h"
 
 class DownloadProjectDialog : public QDialog
 {

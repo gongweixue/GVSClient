@@ -1,11 +1,12 @@
 #ifndef TRANSPORTATION_MANAGER_H
 #define TRANSPORTATION_MANAGER_H
 
-#include <QObject>
 #include <vector>
 #include <QFtp>
-#include "Records/ConnectionRecord.h"
+#include <QObject>
 #include "Dialog/ConnectServerDialog.h"
+#include "Records/ConnectionRecord.h"
+
 using namespace std;
 
 class MainWindow;

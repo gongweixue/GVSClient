@@ -1,8 +1,8 @@
 #ifndef GVS_DOC_H
 #define GVS_DOC_H
 
-#include <QObject>
 #include <string>
+#include <QObject>
 #include <Managers/vtkObjectsManager.h>
 
 class MainWindow;

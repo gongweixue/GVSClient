@@ -1,11 +1,5 @@
-#include <QMessageBox>
-#include <QSplashScreen>
-#include <QTextCodec>
-#include <QTextEdit>
-#include <QVBoxLayout>
 #include <stdio.h>
 #include <stdlib.h>
-#include <vtkSmartPointer.h>
 #include <vtkActor.h>
 #include <vtkAppendPolyData.h>
 #include <vtkCaptionActor2D.h>
@@ -20,15 +14,20 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkRenderer.h>
+#include <vtkSmartPointer.h>
 #include <vtkTextProperty.h>
-#include <Windows.h>
-#include "MainWindow.h"
+#include <QMessageBox>
+#include <QSplashScreen>
+#include <QTextCodec>
+#include <QTextEdit>
+#include <QVBoxLayout>
 #include "GVSDoc.h"
-#include "Options/LightOption.h"
-#include "Options/CubeAxesOption.h"
-#include "Options/StdExplode.h"
-#include "Options/ColorLegendEditor.h"
 #include "Managers/TransportationManager.h"
+#include "MainWindow.h"
+#include "Options/ColorLegendEditor.h"
+#include "Options/CubeAxesOption.h"
+#include "Options/LightOption.h"
+#include "Options/StdExplode.h"
 
 //#define GVS_SHOW_SPLASH
 

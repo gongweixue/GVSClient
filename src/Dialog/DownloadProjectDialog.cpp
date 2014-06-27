@@ -1,7 +1,7 @@
-#include "DownloadProjectDialog.h"
-#include <QMessageBox>
-#include <QFileDialog>
 #include <QDir>
+#include <QFileDialog>
+#include <QMessageBox>
+#include "DownloadProjectDialog.h"
 
 DownloadProjectDialog::DownloadProjectDialog(QWidget* parent)
     : QDialog(parent)
