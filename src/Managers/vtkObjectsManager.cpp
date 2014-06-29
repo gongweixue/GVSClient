@@ -30,7 +30,6 @@ void ObjectManager::LoadDataForReadersInTree()
 {
     ////progress to show the process of loading objects.
     QProgressDialog progressDlg;
-    int progressValue = 0;
     progressDlg.setWindowModality(Qt::ApplicationModal);
     progressDlg.setMinimumDuration(5);
     progressDlg.setWindowTitle(tr("ÇëÉÔºò"));
@@ -47,7 +46,7 @@ void ObjectManager::LoadDataForReadersInTree()
         for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
         {
             obj_iter->reader->Update();
-            progressDlg.setValue(++progressValue);
+            progressDlg.setValue(progressDlg.value() + 1);
         }
     }
 
