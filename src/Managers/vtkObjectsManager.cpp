@@ -39,10 +39,6 @@ void ObjectManager::LoadDataForReadersInTree()
     progressDlg.setRange(0,getNumOfObjsInTree());
     progressDlg.setCancelButton(0);
 
-    //Timer to show the performance.
-    QTime t;
-    t.start();
-
     //update every record's reader.
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
@@ -54,12 +50,6 @@ void ObjectManager::LoadDataForReadersInTree()
             progressDlg.setValue(++progressValue);
         }
     }
-
-    //Show the time it takes.
-    int msc = t.elapsed();
-    char buf[4096];
-    sprintf(buf, "takes time: %d msc", msc);
-    QMessageBox::information(0, tr(""), QString(buf));
 
     computeObjTreeBound();
 }

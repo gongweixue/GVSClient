@@ -49,11 +49,12 @@
     <ClCompile>
       <PreprocessorDefinitions>UNICODE;WIN32;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_XML_LIB;QT_SQL_LIB;QT_NETWORK_LIB;QT_SCRIPT_LIB;QT_XMLPATTERNS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\VTK\VTK-debug\include\vtk-5.10;.;$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtScript;$(QTDIR)\include\QtXmlPatterns;$(QTDIR)\include\QtTest;.\..\build\Qt\GeneratedFiles\$(ConfigurationName);.\..\build\Qt\GeneratedFiles;.\Options;.\Managers;.\Widgets;.\Dialog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
-      <WarningLevel>Level1</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -169,6 +170,7 @@
     <ClCompile Include="Dialog\ConnectServerDialog.cpp" />
     <ClCompile Include="Dialog\DownloadProjectDialog.cpp" />
     <ClCompile Include="Dialog\UploadProjectDialog.cpp" />
+    <ClCompile Include="Extention\GVSCompassActor.cpp" />
     <ClCompile Include="GVSApplicationCore.cpp" />
     <ClCompile Include="GVSDoc.cpp" />
     <ClCompile Include="GVSInitializer.cpp" />
@@ -266,6 +268,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\build\Qt\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\build\Qt\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_XML_LIB -DQT_SQL_LIB -DQT_NETWORK_LIB -DQT_SCRIPT_LIB -DQT_XMLPATTERNS_LIB "-ID:\VTK\VTK-release\include\vtk-5.10" "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtXml" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtXmlPatterns" "-I$(QTDIR)\include\QtTest" "-I.\..\build\Qt\GeneratedFiles\$(ConfigurationName)\." "-I.\..\build\Qt\GeneratedFiles" "-I.\Options" "-I.\Managers" "-I.\Widgets" "-I.\Dialog"</Command>
     </CustomBuild>
+    <ClInclude Include="Extention\GVSCompassActor.h" />
     <ClInclude Include="GVSApplicationCore.h" />
     <CustomBuild Include="Options\ColorLegendEditor.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>

@@ -21,6 +21,7 @@
 #include <QTextCodec>
 #include <QTextEdit>
 #include <QVBoxLayout>
+#include "Extention/GVSCompassActor.h"
 #include "GVSDoc.h"
 #include "Managers/TransportationManager.h"
 #include "MainWindow.h"
@@ -67,7 +68,6 @@ MainWindow::~MainWindow()
 {
     destoryMembers();
 }
-
 
 int MainWindow::loadLocalConfig()
 {
@@ -276,142 +276,14 @@ void MainWindow::onInitialUpdate()
 
 void MainWindow::showOrientationMarker()
 {
-    vtkSmartPointer<vtkLookupTable> lut = vtkSmartPointer<vtkLookupTable>::New();
-    lut->SetNumberOfTableValues(3);
-    lut->Build();
-    lut->SetTableValue(0, 0.2, 0.83, 1, 1);
-    lut->SetTableValue(1, 1, 0.32, 0, 1);
-    lut->SetTableValue(2, 1, 1, 1, 1);
-
-    vtkSmartPointer<vtkConeSource> NN = vtkSmartPointer<vtkConeSource>::New();
-    vtkSmartPointer<vtkFloatArray> NNscalars = vtkSmartPointer<vtkFloatArray>::New();
-    for (int i = 0; i < 5; i++)
-    {
-        //just NORTH is different(rgb is {0.2, 0.83, 1} in lut).
-        NNscalars->InsertNextValue(0);
-    }
-    NN->SetHeight(10);
-    NN->SetRadius(1);
-    NN->SetCenter(0, 5, 0);
-    NN->SetDirection(0, 1, 0);
-    NN->SetResolution(4);
-    NN->Update();
-    NN->GetOutput()->GetCellData()->SetScalars(NNscalars);
-
-    //other 7 axes
-    vtkSmartPointer<vtkConeSource> SS = vtkSmartPointer<vtkConeSource>::New();
-    vtkSmartPointer<vtkConeSource> EE = vtkSmartPointer<vtkConeSource>::New();
-    vtkSmartPointer<vtkConeSource> WW = vtkSmartPointer<vtkConeSource>::New();
-    vtkSmartPointer<vtkConeSource> NE = vtkSmartPointer<vtkConeSource>::New();
-    vtkSmartPointer<vtkConeSource> NW = vtkSmartPointer<vtkConeSource>::New();
-    vtkSmartPointer<vtkConeSource> SE = vtkSmartPointer<vtkConeSource>::New();
-    vtkSmartPointer<vtkConeSource> SW = vtkSmartPointer<vtkConeSource>::New();
-    //scalars of other axes
-    vtkSmartPointer<vtkFloatArray> otherScalars = vtkSmartPointer<vtkFloatArray>::New();
-    for (int i = 0; i < 5; i++)
-    {
-        otherScalars->InsertNextValue(1);
-    }
-
-    SS->SetHeight(6);
-    SS->SetRadius(1);
-    SS->SetCenter(0, -3, 0);
-    SS->SetDirection(0, -1, 0);
-    SS->SetResolution(4);
-    SS->Update();
-    SS->GetOutput()->GetCellData()->SetScalars(otherScalars);
-
-    EE->SetHeight(6);
-    EE->SetRadius(1);
-    EE->SetCenter(3, 0, 0);
-    EE->SetDirection(1, 0, 0);
-    EE->SetResolution(4);
-    EE->Update();
-    EE->GetOutput()->GetCellData()->SetScalars(otherScalars);
-
-    WW->SetHeight(6);
-    WW->SetRadius(1);
-    WW->SetCenter(-3, 0, 0);
-    WW->SetDirection(-1, 0, 0);
-    WW->SetResolution(4);
-    WW->Update();
-    WW->GetOutput()->GetCellData()->SetScalars(otherScalars);
-
-    NE->SetHeight(4);
-    NE->SetRadius(1);
-    NE->SetCenter(1.5, 1.5, 0);
-    NE->SetDirection(1, 1, 0);
-    NE->SetResolution(4);
-    NE->Update();
-    NE->GetOutput()->GetCellData()->SetScalars(otherScalars);
-
-    NW->SetHeight(4);
-    NW->SetRadius(1);
-    NW->SetCenter(-1.5, 1.5, 0);
-    NW->SetDirection(-1, 1, 0);
-    NW->SetResolution(4);
-    NW->Update();
-    NW->GetOutput()->GetCellData()->SetScalars(otherScalars);
-
-    SW->SetHeight(4);
-    SW->SetRadius(1);
-    SW->SetCenter(-1.5, -1.5, 0);
-    SW->SetDirection(-1, -1, 0);
-    SW->SetResolution(4);
-    SW->Update();
-    SW->GetOutput()->GetCellData()->SetScalars(otherScalars);
-
-    SE->SetHeight(4);
-    SE->SetRadius(1);
-    SE->SetCenter(1.5, -1.5, 0);
-    SE->SetDirection(1, -1, 0);
-    SE->SetResolution(4);
-    SE->Update();
-    SE->GetOutput()->GetCellData()->SetScalars(otherScalars);
-
-    vtkSmartPointer<vtkAppendPolyData> append = vtkSmartPointer<vtkAppendPolyData>::New();
-
-    append->AddInput(SS->GetOutput());
-    append->AddInput(EE->GetOutput());
-    append->AddInput(WW->GetOutput());
-    append->AddInput(NE->GetOutput());
-    append->AddInput(NW->GetOutput());
-    append->AddInput(SW->GetOutput());
-    append->AddInput(SE->GetOutput());
-    append->AddInput(NN->GetOutput());
-
-    vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    mapper->SetInput(append->GetOutput());
-    mapper->SetScalarRange(0, 2);
-    mapper->SetLookupTable(lut);
-    vtkSmartPointer<vtkActor> compassActor = vtkSmartPointer<vtkActor>::New();
-    compassActor->SetMapper(mapper);
-    compassActor->GetProperty()->SetAmbient(0.2);
-    compassActor->GetProperty()->SetDiffuse(1);
-    //compassActor->GetProperty()->SetSpecular(0.5);
-
     m_OrientationMarker->SetInteractor(qvtkWidget->GetInteractor());
-    m_OrientationMarker->SetOrientationMarker(compassActor);
+
+    vtkSmartPointer<GVSCompassActor> gvsCompass = vtkSmartPointer<GVSCompassActor>::New();
+    m_OrientationMarker->SetOrientationMarker(gvsCompass);
     m_OrientationMarker->SetEnabled(1);
     m_OrientationMarker->SetViewport(1-0.2, 0, 1, 0.2);
     m_OrientationMarker->KeyPressActivationOff();
     m_OrientationMarker->InteractiveOff();
-
-    //{// set captions of compass
-    //    vtkRenderWindow* rWin = m_OrientationMarker->GetInteractor()->GetRenderWindow();
-    //    vtkRenderer* rnder = rWin->GetRenderers()->GetNextItem();
-    //    // Create an actor for the text
-    //    vtkSmartPointer<vtkCaptionActor2D> northCap = vtkSmartPointer<vtkCaptionActor2D>::New();
-    //    northCap->SetCaption("N");
-    //    double northAttachPoint[3] = {0, 10, 0};
-    //    northCap->SetAttachmentPoint(northAttachPoint);
-    //    northCap->BorderOff();
-    //    northCap->GetCaptionTextProperty()->BoldOff();
-    //    northCap->GetCaptionTextProperty()->ItalicOff();
-    //    northCap->GetCaptionTextProperty()->ShadowOff();
-    //    northCap->ThreeDimensionalLeaderOff();
-    //    //m_OrientationMarker->GetCurrentRenderer()->AddActor(northCap);
-    //}
 
     double backColor[3];
     m_mainRenderer->GetBackground(backColor);

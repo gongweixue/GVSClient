@@ -94,7 +94,7 @@ bool GVSDoc::parseProjectByFileName(std::string gvpFullPath)
     }
     gvpFile.close();
 
-    for (int i = 0; i < m_objManager.treeOfGeoObjs.size(); ++i)
+    for (int i = 0; i < (int)(m_objManager.treeOfGeoObjs.size()); ++i)
     {
         QString modelName = m_objManager.treeOfGeoObjs[i].modelName;
         QString gvmFullPath(prjDataDir + modelName + ".gvm");

@@ -90,6 +90,12 @@
     <Filter Include="Form Files\Dialogs\Transportation">
       <UniqueIdentifier>{5e98e223-8353-4ece-b692-92fa2ef88c55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Extention">
+      <UniqueIdentifier>{d20e7bc4-3a69-4a9b-9e97-78fbdd02f55d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Extention">
+      <UniqueIdentifier>{24d74c32-6d9b-4413-bb0d-2b02e8d47948}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -227,6 +233,9 @@
     <ClCompile Include="Callbacks\vtkBoxClipCallback.cpp">
       <Filter>Source Files\Callbacks</Filter>
     </ClCompile>
+    <ClCompile Include="Extention\GVSCompassActor.cpp">
+      <Filter>Source Files\Extention</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.h">
@@ -356,6 +365,9 @@
     </ClInclude>
     <ClInclude Include="Utils\GVSUtils.h">
       <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Extention\GVSCompassActor.h">
+      <Filter>Header Files\Extention</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
