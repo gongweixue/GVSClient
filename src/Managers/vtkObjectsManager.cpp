@@ -33,7 +33,7 @@ void ObjectManager::LoadDataForReadersInTree()
     progressDlg.setWindowModality(Qt::ApplicationModal);
     progressDlg.setMinimumDuration(5);
     progressDlg.setWindowTitle(tr("请稍候"));
-    progressDlg.setLabelText(tr("正在加载模型文件......      "));
+    progressDlg.setLabelText(QString());
     progressDlg.setCancelButtonText(tr("取消"));
     progressDlg.setRange(0,getNumOfObjsInTree());
     progressDlg.setCancelButton(0);
@@ -45,6 +45,9 @@ void ObjectManager::LoadDataForReadersInTree()
         vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
         for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
         {
+            QString loadingTip("正在加载模型：                \n");
+            loadingTip.append(model_iter->modelName + "/" + obj_iter->getName().c_str());
+            progressDlg.setLabelText(loadingTip);
             obj_iter->reader->Update();
             progressDlg.setValue(progressDlg.value() + 1);
         }
