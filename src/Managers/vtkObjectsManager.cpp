@@ -36,17 +36,6 @@ ObjectManager::~ObjectManager(void)
 void ObjectManager::LoadDataForReadersInTree()
 {
     ////progress to show the process of loading objects.
-<<<<<<< HEAD
-    QProgressDialog progressDlg;
-    progressDlg.setWindowModality(Qt::ApplicationModal);
-    progressDlg.setMinimumDuration(5);
-    progressDlg.setWindowTitle(tr("请稍候"));
-    progressDlg.setLabelText(QString());
-    progressDlg.setCancelButtonText(tr("取消"));
-    progressDlg.setRange(0,getNumOfObjsInTree());
-    progressDlg.setCancelButton(0);
-=======
-    
     pProgressDlg->setWindowModality(Qt::ApplicationModal);
     pProgressDlg->setMinimumDuration(5);
     pProgressDlg->setWindowTitle(tr("请稍候"));
@@ -54,7 +43,6 @@ void ObjectManager::LoadDataForReadersInTree()
     pProgressDlg->setCancelButtonText(tr("取消"));
     pProgressDlg->setRange(0,getNumOfObjsInTree());
     pProgressDlg->setCancelButton(0);
->>>>>>> GVSClient-23
 
     //update every record's reader.
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
@@ -65,12 +53,8 @@ void ObjectManager::LoadDataForReadersInTree()
         {
             QString loadingTip("正在加载模型：                \n");
             loadingTip.append(model_iter->modelName + "/" + obj_iter->getName().c_str());
-<<<<<<< HEAD
-            progressDlg.setLabelText(loadingTip);
-=======
             pProgressDlg->setLabelText(loadingTip);
 
->>>>>>> GVSClient-23
             obj_iter->reader->Update();
             pProgressDlg->setValue(pProgressDlg->value() + 1);
             /*ReaderUpdater updater(this, obj_iter->reader);
