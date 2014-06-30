@@ -4,8 +4,8 @@
 #include <QLabel>
 #include <QSplitter>
 #include <QTabWidget>
-#include <QTreeView>
 #include <QtGui/QMainWindow>
+#include <QTreeWidget>
 #include <QVTKWidget.h>
 #include "ui_MainWindow.h"
 #include "Callbacks/vtkBoxClipCallback.h"
@@ -41,6 +41,7 @@ private:
     void destoryStatusBarMembers();
     void destoryMainAreaMembers();
     void bindingActionsWithSlots();
+    void fillUpPrjExplorer();
 
     MainWindow(const MainWindow&); // Not implemented.
     void operator=(const MainWindow&); // Not implemented.
@@ -75,14 +76,15 @@ public slots:
     void OnShowColorLegend();
     void OnProjectExplorer();
     void OnEditColorLegend();
+
 public:
     Ui::MainWindowClass ui;
 
 private:
     QSplitter* splitterMain;
     QTabWidget* m_ProjectExplorer;
-    //QTreeView* treeTab1;
-    //QTreeView* treeTab2;
+    QTreeWidget* m_prjTreeWidget;
+
     QVTKWidget* qvtkWidget;
     GVSDoc* m_pDoc;
 

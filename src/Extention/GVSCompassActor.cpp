@@ -163,7 +163,7 @@ GVSCompassActor::GVSCompassActor()
     this->westLabel->ThreeDimensionalLeaderOff();
     this->westLabel->LeaderOff();
     this->westLabel->BorderOff();
-    this->westLabel->SetPosition(-15, 0);
+    this->westLabel->SetPosition(-10, 0);
     this->westLabel->GetCaptionTextProperty()->SetBold(false);
 
     this->eastLabel = vtkCaptionActor2D::New();

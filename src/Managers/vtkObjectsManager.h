@@ -48,6 +48,7 @@ public:
 
 class ObjectManager : public QObject
 {
+    Q_OBJECT
 public:
     friend class GVSDoc;
     friend class MainWindow;
@@ -58,11 +59,38 @@ public:
     void DelAllRdrsInObjTree();
     int getNumOfObjsInTree();
 
+public slots:
+    void OnObjUpdateFinished();
+
 private:
     double* computeObjTreeBound();
 private:
     double m_bounds[6];
     vector<Model> treeOfGeoObjs;
+    QProgressDialog* pProgressDlg;
+};
+
+
+#include <QThread>
+#include <QMutex>
+
+class ReaderUpdater : public QThread
+{
+    Q_OBJECT
+public:
+    ReaderUpdater(ObjectManager* sender, vtkDataSetReader* reader)
+        :m_reader(reader), m_sender(sender)
+    {connect(this, SIGNAL(UpdateFinished()), m_sender, SLOT(OnObjUpdateFinished()));};
+
+signals:
+    void UpdateFinished();
+
+protected:
+    virtual void run();
+
+private:
+    vtkDataSetReader* m_reader;
+    ObjectManager* m_sender;
 };
 
 #endif //VTK_OBJECTS_MANAGER_H

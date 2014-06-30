@@ -13,6 +13,8 @@ ObjectManager::ObjectManager(void)
         model_iter->vecOfGeoObjs.clear();
     }
     treeOfGeoObjs.clear();
+
+    this->pProgressDlg = new QProgressDialog();
 }
 
 ObjectManager::~ObjectManager(void)
@@ -24,11 +26,17 @@ ObjectManager::~ObjectManager(void)
         iter->vecOfGeoObjs.clear();
     }
     treeOfGeoObjs.clear();
+
+    if (pProgressDlg)
+    {
+        delete pProgressDlg;
+    }
 }
 
 void ObjectManager::LoadDataForReadersInTree()
 {
     ////progress to show the process of loading objects.
+<<<<<<< HEAD
     QProgressDialog progressDlg;
     progressDlg.setWindowModality(Qt::ApplicationModal);
     progressDlg.setMinimumDuration(5);
@@ -37,6 +45,16 @@ void ObjectManager::LoadDataForReadersInTree()
     progressDlg.setCancelButtonText(tr("取消"));
     progressDlg.setRange(0,getNumOfObjsInTree());
     progressDlg.setCancelButton(0);
+=======
+    
+    pProgressDlg->setWindowModality(Qt::ApplicationModal);
+    pProgressDlg->setMinimumDuration(5);
+    pProgressDlg->setWindowTitle(tr("请稍候"));
+    pProgressDlg->setLabelText(QString());
+    pProgressDlg->setCancelButtonText(tr("取消"));
+    pProgressDlg->setRange(0,getNumOfObjsInTree());
+    pProgressDlg->setCancelButton(0);
+>>>>>>> GVSClient-23
 
     //update every record's reader.
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
@@ -47,12 +65,21 @@ void ObjectManager::LoadDataForReadersInTree()
         {
             QString loadingTip("正在加载模型：                \n");
             loadingTip.append(model_iter->modelName + "/" + obj_iter->getName().c_str());
+<<<<<<< HEAD
             progressDlg.setLabelText(loadingTip);
+=======
+            pProgressDlg->setLabelText(loadingTip);
+
+>>>>>>> GVSClient-23
             obj_iter->reader->Update();
-            progressDlg.setValue(progressDlg.value() + 1);
+            pProgressDlg->setValue(pProgressDlg->value() + 1);
+            /*ReaderUpdater updater(this, obj_iter->reader);
+            updater.start();
+            updater.wait();*/
         }
     }
 
+    pProgressDlg->hide();
     computeObjTreeBound();
 }
 
@@ -119,5 +146,19 @@ int ObjectManager::getNumOfObjsInTree()
     }
 
     return ret;
+}
+
+QMutex progressValueMutex;
+void ObjectManager::OnObjUpdateFinished()
+{
+    progressValueMutex.lock();
+    this->pProgressDlg->setValue(this->pProgressDlg->value() + 1);
+    progressValueMutex.unlock();
+}
+
+void ReaderUpdater::run()
+{
+    m_reader->Update();
+    emit UpdateFinished();
 }
 

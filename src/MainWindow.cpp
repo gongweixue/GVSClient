@@ -16,6 +16,7 @@
 #include <vtkRenderer.h>
 #include <vtkSmartPointer.h>
 #include <vtkTextProperty.h>
+#include <QIcon>
 #include <QMessageBox>
 #include <QSplashScreen>
 #include <QTextCodec>
@@ -112,8 +113,12 @@ void MainWindow::initMainAreaMembers()
     splitterMain = new QSplitter(Qt::Horizontal);
     splitterMain->setParent(this);
 
-    //left init
+    //left obj explorer init
     m_ProjectExplorer = new QTabWidget(splitterMain);
+    m_prjTreeWidget = new QTreeWidget();
+    m_prjTreeWidget->setHeaderLabel(tr("无项目..."));
+    QIcon tabIcon(QString(":/Resources/PrjExplorer/TabIcon.png"));
+    m_ProjectExplorer->addTab(m_prjTreeWidget, tabIcon, QString(tr("对象浏览")));
 
     //right side init
     qvtkWidget = new QVTKWidget(splitterMain);
@@ -281,7 +286,7 @@ void MainWindow::showOrientationMarker()
     vtkSmartPointer<GVSCompassActor> gvsCompass = vtkSmartPointer<GVSCompassActor>::New();
     m_OrientationMarker->SetOrientationMarker(gvsCompass);
     m_OrientationMarker->SetEnabled(1);
-    m_OrientationMarker->SetViewport(1-0.2, 0, 1, 0.2);
+    m_OrientationMarker->SetViewport(1-0.23, 0, 1, 0.23);
     m_OrientationMarker->KeyPressActivationOff();
     m_OrientationMarker->InteractiveOff();
 
@@ -889,13 +894,13 @@ void MainWindow::OnOpenProject()
 {
     if (m_pDoc->OnOpenProject())
     {
+        fillUpPrjExplorer();
         onInitialUpdate();
         delete m_ColorLegendManager;
         m_ColorLegendManager = new ColorLegendManager(this->ui.legendItemList,
                                                       m_pDoc->getProjectPathName());
         m_ColorLegendManager->initOrUpdateLegend(m_pDoc->getProjectPathName());
     }
-
 }
 
 void MainWindow::OnRenderClip()
@@ -1166,5 +1171,16 @@ void MainWindow::OnEditColorLegend()
     ColorLegendEditor* editor = new ColorLegendEditor(m_ColorLegendManager, this);
     editor->exec();
     delete editor;
+}
+
+void MainWindow::fillUpPrjExplorer()
+{
+    //得到tree
+    //对tree的header命名为项目名称
+    //遍历tree，先将model的item加入到tree上，
+        //利用循环在每个model的节点上加入obj的item。
+        //设置每个节点的样式，比如点线面图标，checkbox
+        //另外要不要在这个时候将obj和model的全选关联上？
+    //throw std::exception("The method or operation is not implemented.");
 }
 
