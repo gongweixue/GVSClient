@@ -43,6 +43,7 @@ void ObjectManager::LoadDataForReadersInTree()
     pProgressDlg->setCancelButtonText(tr("È¡Ïû"));
     pProgressDlg->setRange(0,getNumOfObjsInTree());
     pProgressDlg->setCancelButton(0);
+    pProgressDlg->setWindowFlags(Qt::FramelessWindowHint);
 
     //update every record's reader.
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
