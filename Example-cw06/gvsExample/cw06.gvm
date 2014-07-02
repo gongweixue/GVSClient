@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Model name="cw06">
-    <Surface visible="1">d.e.m.vtk</Surface>
+    <Surface visible="0">d.e.m.vtk</Surface>
     <Point visible="1">di.vtk</Point>
     <Point visible="1">Ej-m2.vtk</Point>
     <Point visible="1">Eoy-l2.vtk</Point>

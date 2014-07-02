@@ -16,6 +16,7 @@
 #include <vtkRenderer.h>
 #include <vtkSmartPointer.h>
 #include <vtkTextProperty.h>
+#include <QFileInfo>
 #include <QIcon>
 #include <QMessageBox>
 #include <QSplashScreen>
@@ -1175,12 +1176,86 @@ void MainWindow::OnEditColorLegend()
 
 void MainWindow::fillUpPrjExplorer()
 {
-    //得到tree
-    //对tree的header命名为项目名称
-    //遍历tree，先将model的item加入到tree上，
-        //利用循环在每个model的节点上加入obj的item。
-        //设置每个节点的样式，比如点线面图标，checkbox
-        //另外要不要在这个时候将obj和model的全选关联上？
-    //throw std::exception("The method or operation is not implemented.");
+    QString prjFileName(m_pDoc->getProjectPathName().c_str());
+    QFileInfo gvpFileInfo(prjFileName.toStdString().c_str());
+    QString prjName(gvpFileInfo.baseName());
+    QString header(tr("项目 \"") + prjName + tr("\""));
+    m_prjTreeWidget->setHeaderLabel(header);
+
+    vector<Model>* objTree = m_pDoc->GetObjManager()->getObjTree();
+
+    vector<Model>::iterator model_iter = objTree->begin();
+    for ( ; model_iter != objTree->end(); model_iter++)
+    {
+        QStringList modelStr;
+        modelStr << model_iter->modelName;
+
+        QTreeWidgetItem* modelItem = new QTreeWidgetItem(m_prjTreeWidget, modelStr);
+        modelItem->setExpanded(true);
+        modelItem->setFlags(Qt::ItemIsUserCheckable |
+                            Qt::ItemIsEnabled |
+                            Qt::ItemIsSelectable);
+        bool isModelItemChecked = true;
+
+        vector<GeoObject>::iterator obj_Iter = model_iter->vecOfGeoObjs.begin();
+        for ( ; obj_Iter != model_iter->vecOfGeoObjs.end(); obj_Iter++)
+        {
+            QStringList objStr;
+            objStr << QString(obj_Iter->getName().c_str());
+
+            QTreeWidgetItem* objItem = new QTreeWidgetItem(modelItem, objStr);
+            objItem->setFlags(Qt::ItemIsUserCheckable |
+                              Qt::ItemIsEnabled |
+                              Qt::ItemIsSelectable);
+
+            bool isObjItemChecked = obj_Iter->getVisibility();
+            objItem->setCheckState(0, isObjItemChecked ? Qt::Checked : Qt::Unchecked);
+
+            QString iconFileName;
+            switch (obj_Iter->type)
+            {
+            case GEO_OBJECT_TYPE_POINT:
+                iconFileName = tr(":/Resources/PrjExplorer/PointObj.png");
+                break;
+            case GEO_OBJECT_TYPE_LINE:
+                iconFileName = tr(":/Resources/PrjExplorer/LineObj.png");
+                break;
+            case GEO_OBJECT_TYPE_SURFACE:
+                iconFileName = tr(":/Resources/PrjExplorer/SurfaceObj.png");
+                break;
+            }
+            objItem->setIcon(0, QIcon(iconFileName));
+
+            ///////////////////////////////////////////////////////////
+            /////////////////////set object click signal and slot///////
+            ///////////////////////////////////////////////////////////
+
+            isModelItemChecked = isModelItemChecked && isObjItemChecked;
+        }
+        modelItem->setCheckState(0, isModelItemChecked ? Qt::Checked : Qt::Unchecked);
+        ///////////////////////////////////////////////////////////
+        /////////////////////set model click signal and slot///////
+        ///////////////////////////////////////////////////////////
+    }
 }
+//
+//void MainWindow::OnObjItemClicked()
+//{
+//    //if checked
+//    //    if other are all checked
+//    //        turn this model checked.
+//    //    set visibal in render and set the flag to '1' in tree.
+//    //else if unchecked
+//    //    if model item checked
+//    //        turn this model unchecked.
+//    //    set unvisibal in render, set flag to '0' in the tree.
+//}
+//
+//void MainWindow::OnModelItemClicked()
+//{
+//        for (every obj Items)
+//        {
+//            set checked state and set visibal in render and set flag.
+//        }
+//}
 

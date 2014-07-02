@@ -44,6 +44,8 @@ void ObjectManager::LoadDataForReadersInTree()
     pProgressDlg->setRange(0,getNumOfObjsInTree());
     pProgressDlg->setCancelButton(0);
     pProgressDlg->setWindowFlags(Qt::FramelessWindowHint);
+    pProgressDlg->setMaximumWidth(400);
+    pProgressDlg->setMinimumWidth(400);
 
     //update every record's reader.
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();

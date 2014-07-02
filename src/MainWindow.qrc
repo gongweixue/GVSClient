@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="/">
+    <file>Resources/PrjExplorer/LineObj.png</file>
+    <file>Resources/PrjExplorer/PointObj.png</file>
+    <file>Resources/PrjExplorer/SurfaceObj.png</file>
     <file>Resources/ToolBar/LegendEditor.png</file>
     <file>Resources/PrjExplorer/TabIcon.png</file>
     <file>Resources/ToolBar/camLight.png</file>

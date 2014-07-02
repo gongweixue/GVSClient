@@ -8,9 +8,15 @@
 #include <QString>
 #include "Utils/vtkTotallyInclude.h"
 
-#define GEO_OBJECT_TYPE_POINT       100
-#define GEO_OBJECT_TYPE_LINE        200
-#define GEO_OBJECT_TYPE_SURFACE     300
+//#define GEO_OBJECT_TYPE_POINT       100
+//#define GEO_OBJECT_TYPE_LINE        200
+//#define GEO_OBJECT_TYPE_SURFACE     300
+
+typedef enum GVS_OBJ_TYPE {
+    GEO_OBJECT_TYPE_POINT,
+    GEO_OBJECT_TYPE_LINE,
+    GEO_OBJECT_TYPE_SURFACE
+} GVS_OBJ_TYPE;
 
 using namespace std;
 
@@ -58,6 +64,7 @@ public:
     void LoadDataForReadersInTree();
     void DelAllRdrsInObjTree();
     int getNumOfObjsInTree();
+    vector<Model>* getObjTree() {return &treeOfGeoObjs;};
 
 public slots:
     void OnObjUpdateFinished();
