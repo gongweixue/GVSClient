@@ -188,15 +188,15 @@ bool GVSDoc::parseAndLoadModel(std::string gvmFullPath)
         int objFileTy;
         if (0 == typeTag.compare("Point"))
         {
-            objFileTy = GVS_OBJ_TYPE::GEO_OBJECT_TYPE_POINT;
+            objFileTy = GEO_OBJECT_TYPE_POINT;
         }
         else if (0 == typeTag.compare("Line"))
         {
-            objFileTy = GVS_OBJ_TYPE::GEO_OBJECT_TYPE_LINE;
+            objFileTy = GEO_OBJECT_TYPE_LINE;
         }
         else if (0 == typeTag.compare("Surface"))
         {
-            objFileTy = GVS_OBJ_TYPE::GEO_OBJECT_TYPE_SURFACE;
+            objFileTy = GEO_OBJECT_TYPE_SURFACE;
         }
 
         GeoObject geoObj(objFileName.toStdString(), objFileTy, reader, vis);
