@@ -13,6 +13,6 @@ Rule to commit:
     4. Close the text editor and push the code upon BitBucket by using "$ git push origin GVSClient-105".
 
 To compile and link, you should add a env-path on your system:
-    Name: VTK
+    Name: VTKDIR
     Value: the path vtk installed on the system.
   If the path has not been set correctly, vs2010 could not find the header files and libraries.
