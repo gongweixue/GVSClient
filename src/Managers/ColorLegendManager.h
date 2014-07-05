@@ -22,6 +22,7 @@ public:
     string getFilePath() {return projectFilePath;}
     bool insertItemToFile(string name, QColor rgb, string description);
     bool editItemInFile(string name, QColor rgb, string description);
+    bool delItemFromFile(const char * name);
 
 public slots:
     //should be called after edit on the legend dock.

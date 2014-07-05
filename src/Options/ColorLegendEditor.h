@@ -24,6 +24,7 @@ public slots:
     void OnAddItem();
     void OnBtnClickedClose();
     void OnEditItem();
+    void OnDelItem();
 private:
     Ui::ColorLegendEditor ui;
     ColorLegendManager* m_manager;

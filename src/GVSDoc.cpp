@@ -75,7 +75,7 @@ bool GVSDoc::parseProjectByFileName(std::string gvpFullPath)
 
     //get the root of file
     QDomElement root = domDocOfGVP.documentElement();
-    QDomNodeList listOfRootNode = root.childNodes();
+    QDomNodeList listOfRootNode = domDocOfGVP.elementsByTagName("Model");
     int numOfRootNode = listOfRootNode.count();
     for (int i = 0; i < numOfRootNode; ++i)
     {

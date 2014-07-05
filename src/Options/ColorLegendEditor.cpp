@@ -73,6 +73,7 @@ void ColorLegendEditor::connectSignalSlots()
 {
     connect(ui.addButton, SIGNAL(clicked()), this, SLOT(OnAddItem()));
     connect(ui.editButton, SIGNAL(clicked()), this, SLOT(OnEditItem()));
+    connect(ui.deleteButton, SIGNAL(clicked()), this, SLOT(OnDelItem()));
     connect(ui.closeButton, SIGNAL(clicked()), this, SLOT(OnBtnClickedClose()));
 }
 
@@ -168,5 +169,53 @@ void ColorLegendEditor::OnEditItem()
 void ColorLegendEditor::OnBtnClickedClose()
 {
     this->hide();
+}
+
+void ColorLegendEditor::OnDelItem()
+{
+    if (0 == ui.listWidget->count())
+    {
+        return;
+    }
+    //get item name
+    string clickedItemName = ui.listWidget->currentItem()->text().toStdString();
+
+    vector<LegendRecord>* vecRecord = m_manager->getVecPtrOfRecord();
+    if (vecRecord->empty())
+    {
+        return;
+    }
+    //search item by name.
+    vector<LegendRecord>::iterator iterRecord;
+    for (iterRecord = vecRecord->begin(); iterRecord != vecRecord->end(); iterRecord++)
+    {
+        if (0 == iterRecord->name.compare(clickedItemName))
+        {
+            break;
+        }
+    }
+    //if not found the item info in vector.
+    if (iterRecord == vecRecord->end())
+    {
+        QMessageBox::information(this, "错误项", "没有指定删除的项");
+        return;
+    }
+
+    QMessageBox::StandardButton confirm = QMessageBox::question(NULL,
+                                                                "确认",
+                                                                "确定删除图例?(不可恢复)",
+                                                                QMessageBox::Yes |
+                                                                QMessageBox::No,
+                                                                QMessageBox::No);
+    if (QMessageBox::Yes == confirm)
+    {
+        //delete from file and update
+        if (m_manager->delItemFromFile(iterRecord->name.c_str()))
+        {
+            initUpdate();
+        }
+    }
+
+    ui.listWidget->setCurrentRow(0);
 }
 

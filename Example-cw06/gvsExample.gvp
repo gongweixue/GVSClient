@@ -5,4 +5,5 @@
     <Model>cw08</Model>
     <ColorLegendItem g="15" r="99" name="legend1" b="92">legend1描述 v2</ColorLegendItem>
     <ColorLegendItem g="116" r="92" name="legend2" b="74">图例2描述</ColorLegendItem>
+    <ColorLegendItem g="90" r="12" name="333" b="102">3333333333333</ColorLegendItem>
 </Project>

@@ -73,13 +73,15 @@ void ColorLegendManager::parseLegendNames(string gvpFullFileName)
 
     //get the root of file
     QDomElement root = domDoc.documentElement();
-    QDomNodeList list = root.childNodes();
+    QDomNodeList list = domDoc.elementsByTagName("ColorLegendItem");
     int countNodeOfProject = list.count();
     for (int i = 0; i < countNodeOfProject; ++i)
     {
         QDomNode node = list.item(i);
         QDomElement childOfProject = node.toElement();
         QString tagChild = childOfProject.tagName();
+
+        //Is this nesessary?
         if (0 != tagChild.compare("ColorLegendItem"))
         {
             continue;
@@ -169,7 +171,7 @@ bool ColorLegendManager::insertItemToFile(string name, QColor rgb, string descri
 
     //get the root of file
     QDomElement root = domDoc.documentElement();
-    QDomNodeList list = root.childNodes();
+    QDomNodeList list = domDoc.elementsByTagName("ColorLegendItem");
 
     //first, we should sure that there is no node
     //which has the same name with the node to be insert.
@@ -252,7 +254,7 @@ bool ColorLegendManager::editItemInFile(string name, QColor rgb, string descript
 
     //get the root of file
     QDomElement root = domDoc.documentElement();
-    QDomNodeList list = root.childNodes();
+    QDomNodeList list = domDoc.elementsByTagName("ColorLegendItem");
 
     //Find the item to be edit
     int countNodeOfProject = list.count();
@@ -267,7 +269,7 @@ bool ColorLegendManager::editItemInFile(string name, QColor rgb, string descript
         }
         else
         {
-            //if has the node with same name
+            //if has the nodeToDel with same name
             if ( 0 == childOfProject.attribute("name").compare(name.c_str()) )
             {
                 //Update the info of this legend.
@@ -286,6 +288,76 @@ bool ColorLegendManager::editItemInFile(string name, QColor rgb, string descript
                                              fileModify.errorString());
                     return false;
                 }
+                QTextStream out(&fileModify);
+                domDoc.save(out, 4);
+                fileModify.close();
+
+                return true;
+            }
+        }
+    }
+
+    QMessageBox::information(NULL, tr("´íÎó"),tr("Ã»ÓÐÕÒµ½Ö¸¶¨µÄÍ¼Àý¡£"));
+    return false;
+}
+
+bool ColorLegendManager::delItemFromFile(const char * name)
+{
+    if(projectFilePath.empty())
+        return false;
+
+    QFile file(projectFilePath.c_str());
+    if( !file.open(QIODevice::ReadOnly) ) {
+        QMessageBox::information(NULL, tr("É¾³ýÍ¼ÀýÊ§°Ü"), file.errorString());
+        return false;
+    }
+
+    QDomDocument domDoc;
+    QString strError;
+    int errLine = 0, errCol = 0;
+    bool isSetContentOk = domDoc.setContent(&file);
+    file.close();
+
+    if(!isSetContentOk) {
+        QMessageBox::information(NULL, tr("É¾³ýÍ¼ÀýÊ§°Ü"), tr("ÎÄ¼þ¸ñÊ½²»ÕýÈ·"));
+        return false;
+    }
+
+    if(domDoc.isNull()) {
+        return false;
+    }
+
+    //get the root of file
+    QDomElement root = domDoc.documentElement();
+    QDomNodeList list = domDoc.elementsByTagName("ColorLegendItem");
+
+    //Find the item to be delete
+    int countNodeOfProject = list.count();
+    for (int i = 0; i < countNodeOfProject; ++i)
+    {
+        QDomNode nodeToDel = list.item(i);
+        QString tagChild = nodeToDel.toElement().tagName();
+        if (0 != tagChild.compare("ColorLegendItem"))
+        {
+            continue;
+        }
+        else
+        {
+            //if has the nodeToDel with same name
+            if ( 0 == nodeToDel.toElement().attribute("name").compare(name) )
+            {
+                //delete the node
+                root.removeChild(list.at(i));
+
+                //write back to gvp
+                QFile fileModify(projectFilePath.c_str());
+                if (!fileModify.open(QFile::WriteOnly | QFile::Text)){
+                    QMessageBox::information(NULL,
+                        tr("É¾³ýÍ¼ÀýÊ§°Ü"),
+                        fileModify.errorString());
+                    return false;
+                }
+
                 QTextStream out(&fileModify);
                 domDoc.save(out, 4);
                 fileModify.close();
