@@ -21,9 +21,10 @@ public:
     ~ColorLegendManager();
     string getFilePath() {return projectFilePath;}
     bool insertItemToFile(string name, QColor rgb, string description);
+    bool editItemInFile(string name, QColor rgb, string description);
 
 public slots:
-    //should be called after edition on the legend dock.
+    //should be called after edit on the legend dock.
     void initOrUpdateLegend(string gvpFullFileName);
     vector<LegendRecord>* getVecPtrOfRecord() {return &vecOfLegendRecord;}
 
@@ -32,6 +33,7 @@ private:
     void parseLegendNames(string gvpFullFileName);
     void fillLegendDock();
     void genericItems();
+
 private:
     QListWidget* m_pListWidget;
     vector<LegendRecord> vecOfLegendRecord;

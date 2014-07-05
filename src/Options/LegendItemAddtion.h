@@ -11,11 +11,13 @@ class LegendItemAddtion : public QDialog
 public:
     LegendItemAddtion(QWidget* parent = 0);
     ~LegendItemAddtion();
+    Ui::LegendItemAddtion* getUI() { return &ui; };
     bool getAddConfirm() {return isAdd;}
 
 public slots:
     void OnClickedOK();
     void OnBtnClickedCancle();
+    void OnPaletteBtnClicked();
     void setAddConfirm(bool b) {isAdd = b;}
 
 public:

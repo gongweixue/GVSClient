@@ -214,7 +214,7 @@ std::string GVSDoc::getProjectPathByDlg()
     QString fileName = QFileDialog::getOpenFileName(
                                0,
                                tr("打开项目文件"),
-                               tr("D:\\"),
+                               tr("D:\\workspace\\gvsclient\\Example-cw06"),
                                tr("所有文件(*.*);;GVP项目文件(*.gvp)"),
                                &tr("GVP项目文件(*.gvp)"));
 

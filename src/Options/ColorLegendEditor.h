@@ -23,12 +23,11 @@ private:
 public slots:
     void OnAddItem();
     void OnBtnClickedClose();
-
+    void OnEditItem();
 private:
     Ui::ColorLegendEditor ui;
     ColorLegendManager* m_manager;
     vector<QListWidgetItem> vecOfItems;
-    LegendRecord recordToInsert;
 
 };
 

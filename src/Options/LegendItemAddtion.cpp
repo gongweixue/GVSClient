@@ -1,3 +1,4 @@
+#include <QColorDialog>
 #include <QLineEdit>
 #include <QMessageBox>
 #include "LegendItemAddtion.h"
@@ -44,5 +45,17 @@ void LegendItemAddtion::connectSignalSlots()
 {
     connect(ui.okButton, SIGNAL(clicked()), this, SLOT(OnClickedOK()));
     connect(ui.cancleButton, SIGNAL(clicked()), this, SLOT(OnBtnClickedCancle()));
+    connect(ui.paletteButton, SIGNAL(clicked()), this, SLOT(OnPaletteBtnClicked()));
+}
+
+void LegendItemAddtion::OnPaletteBtnClicked()
+{
+    QColor color = QColorDialog::getColor(Qt::white, this);
+    if (color.isValid())
+    {
+        ui.redSpinBox->setValue(color.red());
+        ui.greenSpinBox->setValue(color.green());
+        ui.blueSpinBox->setValue(color.blue());
+    }
 }
 

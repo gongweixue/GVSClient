@@ -9,11 +9,11 @@ using namespace std;
 class LegendRecord
 {
 public:
-    int id;
     string name;
     QColor rgb;
     string description;
-    LegendRecord(int lrID, string lrName, QColor lrRGB, string lrDesc);
+    LegendRecord(string lrName, QColor lrRGB, string lrDesc);
+
     LegendRecord();
 };
 

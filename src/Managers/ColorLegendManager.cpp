@@ -80,37 +80,20 @@ void ColorLegendManager::parseLegendNames(string gvpFullFileName)
         QDomNode node = list.item(i);
         QDomElement childOfProject = node.toElement();
         QString tagChild = childOfProject.tagName();
-        if (0 != tagChild.compare("ColorLegendItems"))
+        if (0 != tagChild.compare("ColorLegendItem"))
         {
             continue;
         }
         else
         {
-            QDomNodeList nodeListOfItems = childOfProject.childNodes();
-            int countItems = nodeListOfItems.count();
-            for (int j = 0; j < countItems; ++j)
-            {
-                LegendRecord rcrd;
-                rcrd.id = j + 1;
-                //get name of item
-                QDomNode itemNode = nodeListOfItems.item(j);
-                QDomElement elementLegendItem = itemNode.toElement();
-                QDomElement itemName = elementLegendItem.firstChildElement();
-                rcrd.name = itemName.text().toStdString();
-                //get rgb of item
-                QDomElement red = itemName.nextSiblingElement();
-                rcrd.rgb.setRed(red.text().toInt() % 256);
-                QDomElement green = red.nextSiblingElement();
-                rcrd.rgb.setGreen(green.text().toInt() % 256);
-                QDomElement blue = green.nextSiblingElement();
-                rcrd.rgb.setBlue(blue.text().toInt() % 256);
-                //get description of item
-                QDomElement desc = blue.nextSiblingElement();
-                rcrd.description = desc.text().toStdString();
+            LegendRecord rcrd;
+            rcrd.name = childOfProject.attribute("name").toStdString();
+            rcrd.rgb.setRed(childOfProject.attribute("r").toInt());
+            rcrd.rgb.setGreen(childOfProject.attribute("g").toInt());
+            rcrd.rgb.setBlue(childOfProject.attribute("b").toInt());
+            rcrd.description = childOfProject.text().toStdString();
 
-                vecOfLegendRecord.push_back(rcrd);
-            }
-            break;
+            vecOfLegendRecord.push_back(rcrd);
         }
     }
 
@@ -158,7 +141,7 @@ void ColorLegendManager::fillLegendDock()
     }
 }
 
-bool ColorLegendManager::insertItemToFile( string name, QColor rgb, string description )
+bool ColorLegendManager::insertItemToFile(string name, QColor rgb, string description)
 {
     if(projectFilePath.empty())
         return false;
@@ -172,93 +155,147 @@ bool ColorLegendManager::insertItemToFile( string name, QColor rgb, string descr
     QDomDocument domDoc;
     QString strError;
     int errLine = 0, errCol = 0;
-    if( !domDoc.setContent(&file) ) {
+    bool isSetContentOk = domDoc.setContent(&file);
+    file.close();
+
+    if(!isSetContentOk) {
         QMessageBox::information(NULL, tr("插入图例失败"), tr("文件格式不正确"));
-        file.close();
         return false;
     }
 
-    if( domDoc.isNull() ) {
-        file.close();
+    if(domDoc.isNull()) {
         return false;
     }
 
     //get the root of file
     QDomElement root = domDoc.documentElement();
     QDomNodeList list = root.childNodes();
+
+    //first, we should sure that there is no node
+    //which has the same name with the node to be insert.
     int countNodeOfProject = list.count();
     for (int i = 0; i < countNodeOfProject; ++i)
     {
         QDomNode node = list.item(i);
         QDomElement childOfProject = node.toElement();
         QString tagChild = childOfProject.tagName();
-        if (0 != tagChild.compare("ColorLegendItems"))
+        if (0 != tagChild.compare("ColorLegendItem"))
         {
             continue;
         }
         else
         {
-            QDomNodeList nodeListOfItems = childOfProject.childNodes();
-            int countItems = nodeListOfItems.count();
-            ostringstream oss;
-            oss << (countItems + 1);
-            //item root
-            QDomElement legendItem = domDoc.createElement("legend_item");
-            legendItem.setAttribute("id", oss.str().c_str());
-            //name
-            QDomElement nameNode = domDoc.createElement("name");
-            QDomText nameText = domDoc.createTextNode(tr(name.c_str()));
-            nameNode.appendChild(nameText);
-            //red
-            QDomElement redNode = domDoc.createElement("red");
-            ostringstream ossRed;
-            ossRed << rgb.red();
-            string redStr = ossRed.str();
-            QDomText redText = domDoc.createTextNode(tr(redStr.c_str()));
-            redNode.appendChild(redText);
-            //green
-            QDomElement greenNode = domDoc.createElement("green");
-            ostringstream ossGreen;
-            ossGreen << rgb.green();
-            string greenStr = ossGreen.str();
-            QDomText greenText = domDoc.createTextNode(tr(greenStr.c_str()));
-            greenNode.appendChild(greenText);
-            //blue
-            QDomElement blueNode = domDoc.createElement("blue");
-            ostringstream ossBlue;
-            ossBlue << rgb.blue();
-            string blueStr = ossBlue.str();
-            QDomText blueText = domDoc.createTextNode(tr(blueStr.c_str()));
-            blueNode.appendChild(blueText);
-            //
-            QDomElement descNode = domDoc.createElement("description");
-            QDomText descText = domDoc.createTextNode(tr(description.c_str()));
-            descNode.appendChild(descText);
-
-            legendItem.appendChild(nameNode);
-            legendItem.appendChild(redNode);
-            legendItem.appendChild(greenNode);
-            legendItem.appendChild(blueNode);
-            legendItem.appendChild(descNode);
-            QDomNode ret = childOfProject.appendChild(legendItem);
-
-            file.close();
-            if (ret.isNull())
+            //if has the node with same name
+            if ( 0 == childOfProject.attribute("name").compare(name.c_str()) )
             {
+                QString tip = tr("已经存在名为'");
+                tip.append(name.c_str());
+                tip.append("'的图例！");
+
+                QMessageBox::information(NULL, tr("提示"), tip);
                 return false;
             }
-            QFile fileModify(projectFilePath.c_str());
-            if (!fileModify.open(QFile::WriteOnly | QFile::Text)){
-                return false;
-            }
-            QTextStream out(&fileModify);
-            domDoc.save(out, 4);
-            fileModify.close();
-            break;
         }
     }
 
+    //start inserting.
+    QDomElement item = domDoc.createElement("ColorLegendItem");
+    item.setAttribute("name", name.c_str());
+    item.setAttribute("r", rgb.red());
+    item.setAttribute("g", rgb.green());
+    item.setAttribute("b", rgb.blue());
+
+    QDomText descText = domDoc.createTextNode(description.c_str());
+    item.appendChild(descText);
+
+    //insert the item.
+    if (root.appendChild(item).isNull())
+    {
+        return false;
+    }
+    //write back to gvp
+    QFile fileModify(projectFilePath.c_str());
+    if (!fileModify.open(QFile::WriteOnly | QFile::Text)){
+        return false;
+    }
+    QTextStream out(&fileModify);
+    domDoc.save(out, 4);
+    fileModify.close();
     return true;
 }
 
+bool ColorLegendManager::editItemInFile(string name, QColor rgb, string description)
+{
+    if(projectFilePath.empty())
+        return false;
+
+    QFile file(projectFilePath.c_str());
+    if( !file.open(QIODevice::ReadOnly) ) {
+        QMessageBox::information(NULL, tr("编辑图例失败"), file.errorString());
+        return false;
+    }
+
+    QDomDocument domDoc;
+    QString strError;
+    int errLine = 0, errCol = 0;
+    bool isSetContentOk = domDoc.setContent(&file);
+    file.close();
+
+    if(!isSetContentOk) {
+        QMessageBox::information(NULL, tr("编辑图例失败"), tr("文件格式不正确"));
+        return false;
+    }
+
+    if(domDoc.isNull()) {
+        return false;
+    }
+
+    //get the root of file
+    QDomElement root = domDoc.documentElement();
+    QDomNodeList list = root.childNodes();
+
+    //Find the item to be edit
+    int countNodeOfProject = list.count();
+    for (int i = 0; i < countNodeOfProject; ++i)
+    {
+        QDomNode node = list.item(i);
+        QDomElement childOfProject = node.toElement();
+        QString tagChild = childOfProject.tagName();
+        if (0 != tagChild.compare("ColorLegendItem"))
+        {
+            continue;
+        }
+        else
+        {
+            //if has the node with same name
+            if ( 0 == childOfProject.attribute("name").compare(name.c_str()) )
+            {
+                //Update the info of this legend.
+                childOfProject.setAttribute("r", rgb.red());
+                childOfProject.setAttribute("g", rgb.green());
+                childOfProject.setAttribute("b", rgb.blue());
+
+                //update desc
+                childOfProject.firstChild().setNodeValue(description.c_str());
+
+                //write back to gvp
+                QFile fileModify(projectFilePath.c_str());
+                if (!fileModify.open(QFile::WriteOnly | QFile::Text)){
+                    QMessageBox::information(NULL,
+                                             tr("编辑图例失败"),
+                                             fileModify.errorString());
+                    return false;
+                }
+                QTextStream out(&fileModify);
+                domDoc.save(out, 4);
+                fileModify.close();
+
+                return true;
+            }
+        }
+    }
+
+    QMessageBox::information(NULL, tr("错误"),tr("没有找到指定的图例。"));
+    return false;
+}
 
