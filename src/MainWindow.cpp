@@ -1226,36 +1226,58 @@ void MainWindow::fillUpPrjExplorer()
             }
             objItem->setIcon(0, QIcon(iconFileName));
 
-            ///////////////////////////////////////////////////////////
-            /////////////////////set object click signal and slot///////
-            ///////////////////////////////////////////////////////////
+            
 
             isModelItemChecked = isModelItemChecked && isObjItemChecked;
         }
         modelItem->setCheckState(0, isModelItemChecked ? Qt::Checked : Qt::Unchecked);
-        ///////////////////////////////////////////////////////////
-        /////////////////////set model click signal and slot///////
-        ///////////////////////////////////////////////////////////
+    }
+
+    connect(m_prjTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*, int)),
+            this, SLOT(OnPrjExplorerItemClicked(QTreeWidgetItem*, int)));
+}
+
+void MainWindow::OnPrjExplorerItemClicked(QTreeWidgetItem* item, int column)
+{
+    if (0 == item->childCount() && 0 == column)//clicked on obj check box
+    {
+        bool isMdlItemChckd = true;
+        for (int i = 0; i < item->parent()->childCount(); ++i)
+        {
+            Qt::CheckState childStateByIdx = item->parent()->child(i)->checkState(0);
+            bool isObjItemChckd = (childStateByIdx == Qt::Checked) ? true : false;
+            isMdlItemChckd = isMdlItemChckd && isObjItemChckd;
+        }
+        item->parent()->setCheckState(0, isMdlItemChckd ? Qt::Checked : Qt::Unchecked);
+
+        //update obj and actor state.
+        bool objVisible = (item->checkState(0) == Qt::Checked) ? true : false;
+        UpdateObjItem(item->parent()->text(0), item->text(0), objVisible);
+    }
+    else if (0 != item->childCount() && 0 == column)// clicked on model check box.
+    {
+        for (int i = 0; i < item->childCount(); ++i)
+        {
+            if (item->checkState(0) != item->child(i)->checkState(0))
+            {
+                item->child(i)->setCheckState(0, item->checkState(0));
+
+                Qt::CheckState childStateByIdx = item->child(i)->checkState(0);
+                bool objVisible = (childStateByIdx == Qt::Checked) ? true : false;
+                UpdateObjItem(item->text(0), item->child(i)->text(0),objVisible);
+            }
+        }
     }
 }
-//
-//void MainWindow::OnObjItemClicked()
-//{
-//    //if checked
-//    //    if other are all checked
-//    //        turn this model checked.
-//    //    set visibal in render and set the flag to '1' in tree.
-//    //else if unchecked
-//    //    if model item checked
-//    //        turn this model unchecked.
-//    //    set unvisibal in render, set flag to '0' in the tree.
-//}
-//
-//void MainWindow::OnModelItemClicked()
-//{
-//        for (every obj Items)
-//        {
-//            set checked state and set visibal in render and set flag.
-//        }
-//}
 
+void MainWindow::UpdateObjItem(QString modelName, QString objName, bool objVisible)
+{
+    //UpdateObjManager();
+    //UpdateSceneManager();
+    //RefreshRenderer();
+}
+
+
+
+
+    

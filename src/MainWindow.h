@@ -42,6 +42,7 @@ private:
     void destoryMainAreaMembers();
     void bindingActionsWithSlots();
     void fillUpPrjExplorer();
+    void UpdateObjItem(QString modelName, QString objName, bool objVisible);
 
     MainWindow(const MainWindow&); // Not implemented.
     void operator=(const MainWindow&); // Not implemented.
@@ -76,6 +77,7 @@ public slots:
     void OnShowColorLegend();
     void OnProjectExplorer();
     void OnEditColorLegend();
+    void OnPrjExplorerItemClicked(QTreeWidgetItem* item, int column);
 
 public:
     Ui::MainWindowClass ui;
