@@ -359,12 +359,12 @@ void MainWindow::RenderOriginal()
             //in case of the name including more than 1 '.', like "abc.def.vtk".
             string objName = obj_iter->getName();
             QStringList spltList = QString(objName.c_str()).split('.');
-            string actorName = modelName + "/";
-            for (int i = 0; i < (spltList.size() - 2); ++i)
-            {
-                actorName.append(spltList[i].toStdString() + ".");
-            }
-            actorName.append(spltList[spltList.size()-2].toStdString());
+            string actorName = modelName + "/" + objName;
+            //for (int i = 0; i < (spltList.size() - 2); ++i)
+            //{
+            //    actorName.append(spltList[i].toStdString() + ".");
+            //}
+            //actorName.append(spltList[spltList.size()-2].toStdString());
 
             m_sceneManager.InsertActorRcrd(MapToActor(obj_iter->reader->GetOutput()),
                                           actorName,
@@ -1270,11 +1270,36 @@ void MainWindow::OnPrjExplorerItemClicked(QTreeWidgetItem* item, int column)
     }
 }
 
-void MainWindow::UpdateObjItem(QString modelName, QString objName, bool objVisible)
+void MainWindow::UpdateObjItem(QString modelName, QString objName, bool vis)
 {
-    //UpdateObjManager();
-    //UpdateSceneManager();
-    //RefreshRenderer();
+    if (!(m_pDoc->setObjVisByName(modelName, objName, vis)))
+    {
+        throw std::exception("Obj not found in object manager.");
+    }
+
+    QString actorName(modelName + "/" + objName);
+    if (!(this->setActorVisByName(actorName, vis)))
+    {
+        throw std::exception("Actor not found in scene manager.");
+    }
+
+    //refresh
+    if (qvtkWidget->GetRenderWindow())
+    {
+        qvtkWidget->GetRenderWindow()->Render();
+    }
+}
+
+bool MainWindow::setActorVisByName( QString actorName, bool vis )
+{
+    ActorRecord* record = m_sceneManager.getActorRecordByName(actorName.toStdString());
+    if (record && record->actor)
+    {
+        record->isVisible = vis;
+        record->actor->SetVisibility(vis);
+        return true;
+    }
+    return false;
 }
 
 

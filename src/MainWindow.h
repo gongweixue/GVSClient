@@ -43,6 +43,7 @@ private:
     void bindingActionsWithSlots();
     void fillUpPrjExplorer();
     void UpdateObjItem(QString modelName, QString objName, bool objVisible);
+    bool setActorVisByName(QString actorName, bool vis);
 
     MainWindow(const MainWindow&); // Not implemented.
     void operator=(const MainWindow&); // Not implemented.

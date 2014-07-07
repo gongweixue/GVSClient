@@ -29,9 +29,10 @@ bool GVSDoc::OnOpenProject()
     return LoadProject(m_gvpFullFileName);
 }
 
-void GVSDoc::OnCloseDocument()
+bool GVSDoc::OnCloseDocument()
 {
     m_objManager.ClearObjTree();
+    return true;
 }
 
 bool GVSDoc::LoadProject(std::string gvpFullFileName)
@@ -89,6 +90,7 @@ bool GVSDoc::parseProjectByFileName(std::string gvpFullPath)
         {
             Model model;
             model.modelName = childElement.text();
+            model.Modified = false;
             m_objManager.treeOfGeoObjs.push_back(model);
         }
     }
@@ -219,5 +221,33 @@ std::string GVSDoc::getProjectPathByDlg()
                                &tr("GVP项目文件(*.gvp)"));
 
     return fileName.toStdString();
+}
+
+bool GVSDoc::setObjVisByName( QString modelName, QString objName, bool vis )
+{
+    //time complexity: m + n
+    vector<Model>::iterator modelIter = m_objManager.getObjTree()->begin();
+    for ( ; modelIter < m_objManager.getObjTree()->end(); modelIter++)
+    {
+        if (0 == modelName.compare(modelIter->modelName))
+        {
+            vector<GeoObject>::iterator objIter = modelIter->vecOfGeoObjs.begin();
+            for ( ; objIter < modelIter->vecOfGeoObjs.end(); objIter++)
+            {
+                if (0 == objName.compare(objIter->getName().c_str()))
+                {
+                    objIter->setVisibility(vis);
+
+                    objIter->setModified(true);
+                    modelIter->Modified = true;
+                    m_objManager.setTreeModified(true);
+
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }
 

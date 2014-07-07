@@ -160,3 +160,17 @@ void SceneManager::RemoveActorsByState(vtkRenderer* renderer, int state)
     }
 }
 
+ActorRecord* SceneManager::getActorRecordByName( std::string actorName )
+{
+    vector<ActorRecord>::iterator iter = m_ActorRecordTable.begin();
+    for ( ; iter < m_ActorRecordTable.end(); iter++)
+    {
+        if (0 == iter->name.compare(actorName))
+        {
+            return &(*iter);
+        }
+    }
+
+    return NULL;
+}
+

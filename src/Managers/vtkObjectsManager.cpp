@@ -7,6 +7,7 @@
 
 ObjectManager::ObjectManager(void)
 {
+    this->treeModified = false;
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for (; model_iter != treeOfGeoObjs.end(); ++model_iter)
     {

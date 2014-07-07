@@ -28,6 +28,7 @@ public:
 private:
     string fileName;
     bool visibility;
+    bool Modified;
 public:
     GeoObject(string fname, int ty, vtkDataSetReader* rder, bool vis)
     {
@@ -35,6 +36,7 @@ public:
         this->type = ty;
         reader=rder;
         visibility=vis;
+        Modified = false;
     };
     ~GeoObject()
     {
@@ -42,6 +44,8 @@ public:
     string getName() {return fileName;};
     bool getVisibility() {return visibility;};
     void setVisibility(bool vis) {visibility = vis;};
+    bool getModified() {return this->Modified;};
+    void setModified(bool isModified) {this->Modified = isModified;};
 } GeoObject;
 
 typedef struct Model
@@ -49,6 +53,7 @@ typedef struct Model
 public:
     QString modelName;
     vector<GeoObject> vecOfGeoObjs;
+    bool Modified;
 } Model;
 
 
@@ -65,6 +70,8 @@ public:
     void DelAllRdrsInObjTree();
     int getNumOfObjsInTree();
     vector<Model>* getObjTree() {return &treeOfGeoObjs;};
+    void setTreeModified(bool isModified) {this->treeModified = isModified;};
+    bool getTreeModified() {return this->treeModified;};
 
 public slots:
     void OnObjUpdateFinished();
@@ -75,6 +82,7 @@ private:
     double m_bounds[6];
     vector<Model> treeOfGeoObjs;
     QProgressDialog* pProgressDlg;
+    bool treeModified;
 };
 
 

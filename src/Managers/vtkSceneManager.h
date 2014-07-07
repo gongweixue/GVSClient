@@ -69,7 +69,7 @@ public:
     double* GetSceneCenter();
 
     vtkLookupTable* GetLookupTable();
-
+    ActorRecord* getActorRecordByName(std::string actorName);
 private:
     vector<ActorRecord> m_ActorRecordTable;
     int m_CurrentSceneState;
