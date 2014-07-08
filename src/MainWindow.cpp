@@ -116,7 +116,7 @@ void MainWindow::initMainAreaMembers()
 
     //left obj explorer init
     m_ProjectExplorer = new QTabWidget(splitterMain);
-    m_prjTreeWidget = new QTreeWidget();
+    m_prjTreeWidget = new GVSPrjTreeWidget(m_ProjectExplorer);
     m_prjTreeWidget->setHeaderLabel(tr("无项目..."));
     QIcon tabIcon(QString(":/Resources/PrjExplorer/TabIcon.png"));
     m_ProjectExplorer->addTab(m_prjTreeWidget, tabIcon, QString(tr("对象浏览")));
@@ -1272,7 +1272,7 @@ void MainWindow::OnPrjExplorerItemClicked(QTreeWidgetItem* item, int column)
 
 void MainWindow::UpdateObjItem(QString modelName, QString objName, bool vis)
 {
-    if (!(m_pDoc->setObjVisByName(modelName, objName, vis)))
+    if (!(m_pDoc->GetObjManager()->setObjVisByName(modelName, objName, vis)))
     {
         throw std::exception("Obj not found in object manager.");
     }

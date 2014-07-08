@@ -242,6 +242,15 @@
     <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_vtkObjectsManager.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_GVSPrjTreeWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_GVSPrjTreeWidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Extention\GVSPrjTreeWidget.cpp">
+      <Filter>Source Files\Extention</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.h">
@@ -312,6 +321,9 @@
     </CustomBuild>
     <CustomBuild Include="Managers\vtkObjectsManager.h">
       <Filter>Header Files\Managers</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Extention\GVSPrjTreeWidget.h">
+      <Filter>Header Files\Extention</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

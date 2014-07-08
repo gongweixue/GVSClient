@@ -46,6 +46,8 @@ public:
     void setVisibility(bool vis) {visibility = vis;};
     bool getModified() {return this->Modified;};
     void setModified(bool isModified) {this->Modified = isModified;};
+    void setObjColor(int r, int g, int b);
+    void getObjColor(int* r, int* g, int* b);
 } GeoObject;
 
 typedef struct Model
@@ -72,12 +74,16 @@ public:
     vector<Model>* getObjTree() {return &treeOfGeoObjs;};
     void setTreeModified(bool isModified) {this->treeModified = isModified;};
     bool getTreeModified() {return this->treeModified;};
+    bool setObjVisByName(QString modelName, QString objName, bool vis);
+    bool setObjColorByName(QString modelName, QString objName);
 
 public slots:
     void OnObjUpdateFinished();
 
 private:
     double* computeObjTreeBound();
+    bool setModelModified(QString modelName, bool hasModified);
+    GeoObject* findObjByName(QString modelName, QString objName);
 private:
     double m_bounds[6];
     vector<Model> treeOfGeoObjs;

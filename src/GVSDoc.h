@@ -16,7 +16,6 @@ public:
     ~GVSDoc();
     ObjectManager* GetObjManager(){ return &m_objManager; }
     string getProjectPathName() { return m_gvpFullFileName; }
-    bool setObjVisByName(QString modelName, QString objName, bool vis);
 
 public slots:
     bool OnOpenProject();
