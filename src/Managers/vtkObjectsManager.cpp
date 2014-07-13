@@ -1,5 +1,5 @@
-
 #include <QColorDialog>
+#include "vtkCellData.h"
 #include "vtkObjectsManager.h"
 #include "Utils/GVSUtils.h"
 #include "Utils/vtkTotallyInclude.h"
@@ -193,29 +193,38 @@ bool ObjectManager::setObjVisByName(QString modelName, QString objName, bool vis
     return false;
 }
 
-bool ObjectManager::setObjColorByName(QString modelName, QString objName)
+bool ObjectManager::setObjColorByName(QString modelName, QString objName, int r, int g, int b)
 {
     GeoObject* obj = findObjByName(modelName, objName);
     if (obj)
     {
         //get the color of this obj.
-        int rOld, gOld, bOld;
-        obj->getObjColor(&rOld, &gOld, &bOld);
-
-        QColor color = QColorDialog::getColor(QColor(rOld, gOld, bOld));
+        QColor color(r, g, b);
 
         if (color.isValid())
         {
-            if (color.red() != rOld || color.green() != gOld || color.blue() != bOld)
-            {
-                obj->setObjColor(color.red(), color.green(), color.blue());
-                obj->setModified(true);
-                setModelModified(modelName, true);
-                setTreeModified(true);
-            }
+            obj->setObjColor(color.red(), color.green(), color.blue());
+            obj->setModified(true);
+            setModelModified(modelName, true);
+            setTreeModified(true);
         }
 
         return true;
+    }
+
+    return false;
+}
+
+bool ObjectManager::getObjColorByName( QString modelName, QString objName, int rgb[3] )
+{
+    GeoObject* obj = findObjByName(modelName, objName);
+    if (obj)
+    {
+        obj->getObjColor(rgb, rgb+1, rgb+2);
+        if (QColor(rgb[0], rgb[1], rgb[2]).isValid())
+        {
+            return true;
+        }
     }
 
     return false;

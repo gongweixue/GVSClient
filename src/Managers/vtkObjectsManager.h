@@ -75,7 +75,8 @@ public:
     void setTreeModified(bool isModified) {this->treeModified = isModified;};
     bool getTreeModified() {return this->treeModified;};
     bool setObjVisByName(QString modelName, QString objName, bool vis);
-    bool setObjColorByName(QString modelName, QString objName);
+    bool setObjColorByName(QString modelName, QString objName, int r, int g, int b);
+    bool getObjColorByName(QString modelName, QString objName, int rgb[3]);
 
 public slots:
     void OnObjUpdateFinished();

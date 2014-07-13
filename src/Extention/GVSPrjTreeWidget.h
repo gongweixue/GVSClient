@@ -11,6 +11,9 @@ public:
     GVSPrjTreeWidget(QWidget *parent);
     ~GVSPrjTreeWidget();
 
+signals:
+    void objColorClicked(QString& modelName, QString& objName);
+
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* event);
 

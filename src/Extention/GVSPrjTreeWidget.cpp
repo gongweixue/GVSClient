@@ -44,22 +44,6 @@ void GVSPrjTreeWidget::OnChangeObjColor()
     QString objName = this->currentItem()->text(0);
     QString modelName = this->currentItem()->parent()->text(0);
 
-    QTabWidget* prjExplorer = (QTabWidget*)this->parent();
-    QSplitter* mainSplitter = (QSplitter*)prjExplorer->parent();
-    MainWindow* mainWindow = (MainWindow*)mainSplitter->parent();
-    ObjectManager* objManager = mainWindow->getDocument()->GetObjManager();
-    
-    if (objManager->setObjColorByName(modelName, objName) == false)
-    {
-        QMessageBox::information(NULL, tr("操作异常"),
-                                 tr("找不到对象") + modelName + "/" + objName);
-
-        return;
-    }
-
-    if (mainWindow->getQVTKWidget()->GetRenderWindow())
-    {
-        mainWindow->getQVTKWidget()->GetRenderWindow()->Render();
-    }
+    emit objColorClicked(modelName, objName);
 }
 

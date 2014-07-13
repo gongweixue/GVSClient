@@ -81,7 +81,7 @@ public slots:
     void OnProjectExplorer();
     void OnEditColorLegend();
     void OnPrjExplorerItemClicked(QTreeWidgetItem* item, int column);
-
+    void OnChangingObjColor(QString& modelName, QString& objName);
 public:
     Ui::MainWindowClass ui;
 
