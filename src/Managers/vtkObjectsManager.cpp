@@ -1,5 +1,6 @@
 #include <QColorDialog>
 #include "vtkCellData.h"
+#include "vtkPointData.h"
 #include "vtkObjectsManager.h"
 #include "Utils/GVSUtils.h"
 #include "Utils/vtkTotallyInclude.h"
@@ -232,12 +233,51 @@ bool ObjectManager::getObjColorByName( QString modelName, QString objName, int r
 
 void GeoObject::setObjColor(int r, int g, int b)
 {
-    throw std::exception("The method or operation is not implemented.");
+    //throw std::exception("The method or operation is not implemented.");
+    this->reader->Update();
+    vtkDataArray* scalars = reader->GetOutput()->GetPointData()->GetScalars();
+    int size = scalars->GetSize();
+
+    if ((size%3) != 0 || false == QColor(r, g, b).isValid())
+    {
+        return;
+    }
+
+    for (int i = 0; i < (size/3); i++)
+    {
+        scalars->SetTuple3(i, r,g,b);
+    }
+
+    reader->GetOutput()->GetPointData()->SetScalars(scalars);
 }
 
 void GeoObject::getObjColor( int* r, int* g, int* b )
 {
-    throw std::exception("The method or operation is not implemented.");
+    //throw std::exception("The method or operation is not implemented.");
+    this->reader->Update();
+    vtkDataArray* scalars = reader->GetOutput()->GetPointData()->GetScalars();
+    int size = scalars->GetSize();
+
+    if ((size%3) != 0)
+    {
+        *r = -1;
+        *g = -1;
+        *b = -1;
+        return;
+    }
+
+    double* tuple3;
+    int sumR, sumG, sumB;
+    for (int i = 0; i < (size/3); i++)
+    {
+         tuple3= scalars->GetTuple3(i);
+         sumR = tuple3[0];
+         sumG = tuple3[1];
+         sumB = tuple3[2];
+    }
+    *r = sumR / 3;
+    *b = sumB / 3;
+    *g = sumG / 3;
 }
 
 void ReaderUpdater::run()
