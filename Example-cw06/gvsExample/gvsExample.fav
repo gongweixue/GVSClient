@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Favs>
+    <Group name="包围">
+        <FavItem name="底层" model="cw06" obj="di.vtk"></FavItem>
+        <FavItem name="边界" model="cw07" obj="bj.vtk"></FavItem>
+        <FavItem name="地表" model="cw06" obj="d.e.m.vtk"></FavItem>
+    </Group>
+    <Group name="空">
+    </Group>
+    <Group name="F系列">
+        <FavItem name="F1" model="cw08" obj="F1.vtk"></FavItem>
+        <FavItem name="F3" model="cw08" obj="F3.vtk"></FavItem>
+        <FavItem name="F2" model="cw08" obj="F2.vtk"></FavItem>
+        <FavItem name="F4" model="cw08" obj="F4.vtk"></FavItem>
+        <FavItem name="F5" model="cw06" obj="F5.vtk"></FavItem>
+    </Group>
+</Fav>

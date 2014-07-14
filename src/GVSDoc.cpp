@@ -111,6 +111,11 @@ bool GVSDoc::parseProjectByFileName(std::string gvpFullPath)
     //Then we need to load all of these object into readers(by update).
     m_objManager.LoadDataForReadersInTree();
 
+    if (LoadFavTree(gvpFileInfo) == false)
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -249,5 +254,12 @@ bool GVSDoc::setObjVisByName( QString modelName, QString objName, bool vis )
     }
 
     return false;
+}
+
+bool GVSDoc::LoadFavTree(QFileInfo fileInfo)
+{
+    throw std::exception("The method or operation is not implemented.");
+    //find fav file, add a fav tree in obj manager.
+    //for() {} ,put the item into tree of obj manager.
 }
 
