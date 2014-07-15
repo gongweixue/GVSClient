@@ -42,74 +42,11 @@ bool GVSDoc::LoadProject(std::string gvpFullFileName)
 
 bool GVSDoc::parseProjectByFileName(std::string gvpFullPath)
 {
-    QFileInfo gvpFileInfo(gvpFullPath.c_str());
-    QString currentDir(gvpFileInfo.absolutePath() + "/");
-    QString prjDataDir(currentDir + gvpFileInfo.baseName() + "/");
-
-    if (gvpFullPath.empty())
-        return false;
-
-    QFile gvpFile(gvpFullPath.c_str());
-    QDomDocument domDocOfGVP;
-
-    if( !gvpFile.open(QFile::ReadOnly | QFile::Text) )
+    if (LoadFavTree(gvpFullPath) == false)
     {
-        QMessageBox::information(NULL, tr("打开项目失败"), gvpFile.errorString());
         return false;
     }
-
-    QString strError;
-    int errLine = 0, errCol = 0;
-    if(!domDocOfGVP.setContent(&gvpFile, false, &strError, &errLine, &errCol))
-    {
-        QMessageBox::information(NULL, tr("打开项目失败"), tr("非法项目文件"));
-        gvpFile.close();
-        return false;
-    }
-
-    if(domDocOfGVP.isNull())
-    {
-        QMessageBox::information(NULL, tr("打开项目失败"), tr("项目为空"));
-        gvpFile.close();
-        return false;
-    }
-
-    //get the root of file
-    QDomElement root = domDocOfGVP.documentElement();
-    QDomNodeList listOfRootNode = domDocOfGVP.elementsByTagName("Model");
-    int numOfRootNode = listOfRootNode.count();
-    for (int i = 0; i < numOfRootNode; ++i)
-    {
-        QDomElement childElement = listOfRootNode.item(i).toElement();
-        QString elementTagName = childElement.tagName();
-        if (0 != elementTagName.compare("Model"))// NOT <Model>
-        {
-            continue;
-        }
-        else
-        {
-            Model model(childElement.text().toStdString().c_str());
-            m_objManager.treeOfGeoObjs.push_back(model);
-        }
-    }
-    gvpFile.close();
-
-    for (int i = 0; i < (int)(m_objManager.treeOfGeoObjs.size()); ++i)
-    {
-        QString modelName = m_objManager.treeOfGeoObjs[i].name;
-        QString gvmFullPath(prjDataDir + modelName + ".gvm");
-        if (!parseAndLoadModel(gvmFullPath.toStdString()))
-        {
-            QMessageBox::information(NULL, tr("警告"), tr("模型加载错误：") + modelName);
-            continue;
-        }
-    }
-
-    //Now we just put the file names of the object in disk into the tree.
-    //Then we need to load all of these object into readers(by update).
-    m_objManager.LoadDataForReadersInTree();
-
-    if (LoadFavTree(gvpFileInfo) == false)
+    if (LoadObjTree(gvpFullPath) == false)
     {
         return false;
     }
@@ -204,7 +141,7 @@ bool GVSDoc::parseAndLoadModel(std::string gvmFullPath)
             objFileTy = GEO_OBJECT_TYPE_SURFACE;
         }
 
-        GeoObject geoObj(objFileName.toStdString(), objFileTy, reader, vis);
+        GeoObject geoObj(objFileName, objFileTy, reader, vis);
         //insert GeoObject into tree
         iter_model->vecOfGeoObjs.push_back(geoObj);
 
@@ -237,7 +174,7 @@ bool GVSDoc::setObjVisByName( QString modelName, QString objName, bool vis )
             vector<GeoObject>::iterator objIter = modelIter->vecOfGeoObjs.begin();
             for ( ; objIter < modelIter->vecOfGeoObjs.end(); objIter++)
             {
-                if (0 == objName.compare(objIter->getName().c_str()))
+                if (0 == objName.compare(objIter->getName()))
                 {
                     objIter->setVisibility(vis);
 
@@ -254,10 +191,143 @@ bool GVSDoc::setObjVisByName( QString modelName, QString objName, bool vis )
     return false;
 }
 
-bool GVSDoc::LoadFavTree(QFileInfo fileInfo)
+bool GVSDoc::LoadFavTree(std::string filePath)
 {
-    throw std::exception("The method or operation is not implemented.");
-    //find fav file, add a fav tree in obj manager.
-    //for() {} ,put the item into tree of obj manager.
+    QFileInfo fileInfo(filePath.c_str());
+    QString currentDir(fileInfo.absolutePath() + "/");
+    QString prjDataDir(currentDir + fileInfo.baseName() + "/");
+
+    QString favPath = prjDataDir + fileInfo.baseName() + ".fav";
+    QFile favFile(favPath);
+    if(!favFile.open(QFile::ReadOnly | QFile::Text))
+    {
+        return false;
+    }
+
+    //To be used
+    QString strError;
+    int errLine = 0, errCol = 0;
+
+    QDomDocument domDocOfFav;
+    if( !domDocOfFav.setContent(&favFile, false, &strError, &errLine, &errCol) )
+    {
+        favFile.close();
+        return false;
+    }
+
+    favFile.close();
+
+    if( domDocOfFav.isNull() )
+    {
+        return false;
+    }
+
+    QDomElement root = domDocOfFav.documentElement();
+    QDomNodeList listOfGroupNode = root.childNodes();
+    int numOfGroup = listOfGroupNode.count();
+    for (int i = 0; i < numOfGroup; ++i)
+    {
+        QDomElement groupElement = listOfGroupNode.item(i).toElement();
+        if (0 != groupElement.tagName().compare("Group"))
+        {
+            continue;
+        }
+        QString groupName = groupElement.attribute("name");
+
+        FavFolder folderTmp(groupName.toStdString().c_str());
+        m_objManager.getFavTree()->push_back(folderTmp);
+        vector<FavFolder>::reverse_iterator fldrIter = m_objManager.getFavTree()->rbegin();
+
+        QDomNodeList listOfFavItem = groupElement.childNodes();
+        int numOfItem = listOfFavItem.count();
+        for (int j = 0; j < numOfItem; ++j)
+        {
+            QDomElement favItemElement = listOfFavItem.item(j).toElement();
+            if (0 != favItemElement.tagName().compare("FavItem"))
+            {
+                continue;
+            }
+            QString itemName = favItemElement.attribute("name");
+            QString itemModel = favItemElement.attribute("model");
+            QString itemObj = favItemElement.attribute("obj");
+            fldrIter->vecOfItems.push_back(FavItem(itemName.toStdString().c_str(),
+                                                   itemModel.toStdString().c_str(),
+                                                   itemObj.toStdString().c_str()));
+        }
+    }
+
+    return true;
+}
+
+bool GVSDoc::LoadObjTree(std::string filePath)
+{
+    QFileInfo fileInfo(filePath.c_str());
+    QString currentDir(fileInfo.absolutePath() + "/");
+    QString prjDataDir(currentDir + fileInfo.baseName() + "/");
+
+    if (filePath.empty())
+        return false;
+
+    QFile gvpFile(filePath.c_str());
+    QDomDocument domDocOfGVP;
+
+    if( !gvpFile.open(QFile::ReadOnly | QFile::Text) )
+    {
+        QMessageBox::information(NULL, tr("打开项目失败"), gvpFile.errorString());
+        return false;
+    }
+
+    QString strError;
+    int errLine = 0, errCol = 0;
+    if(!domDocOfGVP.setContent(&gvpFile, false, &strError, &errLine, &errCol))
+    {
+        QMessageBox::information(NULL, tr("打开项目失败"), tr("非法项目文件"));
+        gvpFile.close();
+        return false;
+    }
+
+    if(domDocOfGVP.isNull())
+    {
+        QMessageBox::information(NULL, tr("打开项目失败"), tr("项目为空"));
+        gvpFile.close();
+        return false;
+    }
+
+    //get the root of file
+    QDomElement root = domDocOfGVP.documentElement();
+    QDomNodeList listOfRootNode = domDocOfGVP.elementsByTagName("Model");
+    int numOfRootNode = listOfRootNode.count();
+    for (int i = 0; i < numOfRootNode; ++i)
+    {
+        QDomElement childElement = listOfRootNode.item(i).toElement();
+        QString elementTagName = childElement.tagName();
+        if (0 != elementTagName.compare("Model"))// NOT <Model>
+        {
+            continue;
+        }
+        else
+        {
+            Model model(childElement.text().toStdString().c_str());
+            m_objManager.treeOfGeoObjs.push_back(model);
+        }
+    }
+    gvpFile.close();
+
+    for (int i = 0; i < (int)(m_objManager.treeOfGeoObjs.size()); ++i)
+    {
+        QString modelName = m_objManager.treeOfGeoObjs[i].name;
+        QString gvmFullPath(prjDataDir + modelName + ".gvm");
+        if (!parseAndLoadModel(gvmFullPath.toStdString()))
+        {
+            QMessageBox::information(NULL, tr("警告"), tr("模型加载错误：") + modelName);
+            continue;
+        }
+    }
+
+    //Now we just put the file names of the object in disk into the tree.
+    //Then we need to load all of these object into readers(by update).
+    m_objManager.LoadDataForReadersInTree();
+
+    return true;
 }
 

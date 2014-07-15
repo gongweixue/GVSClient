@@ -357,7 +357,7 @@ void MainWindow::RenderOriginal()
         for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
         {
             //in case of the name including more than 1 '.', like "abc.def.vtk".
-            string objName = obj_iter->getName();
+            string objName = obj_iter->getName().toStdString();
             QStringList spltList = QString(objName.c_str()).split('.');
             string actorName = modelName + "/" + objName;
             //for (int i = 0; i < (spltList.size() - 2); ++i)
@@ -1201,7 +1201,7 @@ void MainWindow::fillUpPrjExplorer()
         for ( ; obj_Iter != model_iter->vecOfGeoObjs.end(); obj_Iter++)
         {
             QStringList objStr;
-            objStr << QString(obj_Iter->getName().c_str());
+            objStr << QString(obj_Iter->getName());
 
             QTreeWidgetItem* objItem = new QTreeWidgetItem(modelItem, objStr);
             objItem->setFlags(Qt::ItemIsUserCheckable |

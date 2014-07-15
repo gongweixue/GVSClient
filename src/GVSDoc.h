@@ -28,7 +28,8 @@ private:
     bool parseProjectByFileName(std::string gvpFullFileName);
     std::string getProjectPathByDlg();
     bool parseAndLoadModel(std::string gvmFullPath);
-    bool LoadFavTree(QFileInfo fileInfo);
+    bool LoadFavTree(std::string filePath);
+    bool LoadObjTree(std::string filePath);
 private:
     MainWindow* m_pMainWindow;
     ObjectManager m_objManager;
