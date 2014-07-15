@@ -352,7 +352,7 @@ void MainWindow::RenderOriginal()
             m_pDoc->GetObjManager()->treeOfGeoObjs.begin();
     for ( ; model_iter != m_pDoc->GetObjManager()->treeOfGeoObjs.end(); model_iter++)
     {
-        string modelName = model_iter->modelName.toStdString();
+        string modelName = model_iter->name.toStdString();
         vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
         for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
         {
@@ -1188,7 +1188,7 @@ void MainWindow::fillUpPrjExplorer()
     for ( ; model_iter != objTree->end(); model_iter++)
     {
         QStringList modelStr;
-        modelStr << model_iter->modelName;
+        modelStr << model_iter->name;
 
         QTreeWidgetItem* modelItem = new QTreeWidgetItem(m_prjTreeWidget, modelStr);
         modelItem->setExpanded(true);

@@ -2,6 +2,7 @@
 #define GVS_DOC_H
 
 #include <string>
+#include <QFileInfo>
 #include <QObject>
 #include <Managers/vtkObjectsManager.h>
 

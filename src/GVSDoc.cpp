@@ -88,9 +88,7 @@ bool GVSDoc::parseProjectByFileName(std::string gvpFullPath)
         }
         else
         {
-            Model model;
-            model.modelName = childElement.text();
-            model.Modified = false;
+            Model model(childElement.text().toStdString().c_str());
             m_objManager.treeOfGeoObjs.push_back(model);
         }
     }
@@ -98,7 +96,7 @@ bool GVSDoc::parseProjectByFileName(std::string gvpFullPath)
 
     for (int i = 0; i < (int)(m_objManager.treeOfGeoObjs.size()); ++i)
     {
-        QString modelName = m_objManager.treeOfGeoObjs[i].modelName;
+        QString modelName = m_objManager.treeOfGeoObjs[i].name;
         QString gvmFullPath(prjDataDir + modelName + ".gvm");
         if (!parseAndLoadModel(gvmFullPath.toStdString()))
         {
@@ -154,7 +152,7 @@ bool GVSDoc::parseAndLoadModel(std::string gvmFullPath)
     vector<Model>::iterator iter_model = m_objManager.treeOfGeoObjs.begin();
     for ( ; iter_model != m_objManager.treeOfGeoObjs.end(); iter_model++)
     {
-        if (0 == iter_model->modelName.compare(gvmFileInfo.baseName()))
+        if (0 == iter_model->name.compare(gvmFileInfo.baseName()))
         {
             break;
         }
@@ -234,7 +232,7 @@ bool GVSDoc::setObjVisByName( QString modelName, QString objName, bool vis )
     vector<Model>::iterator modelIter = m_objManager.getObjTree()->begin();
     for ( ; modelIter < m_objManager.getObjTree()->end(); modelIter++)
     {
-        if (0 == modelName.compare(modelIter->modelName))
+        if (0 == modelName.compare(modelIter->name))
         {
             vector<GeoObject>::iterator objIter = modelIter->vecOfGeoObjs.begin();
             for ( ; objIter < modelIter->vecOfGeoObjs.end(); objIter++)
@@ -244,8 +242,8 @@ bool GVSDoc::setObjVisByName( QString modelName, QString objName, bool vis )
                     objIter->setVisibility(vis);
 
                     objIter->setModified(true);
-                    modelIter->Modified = true;
-                    m_objManager.setTreeModified(true);
+                    modelIter->hasModified = true;
+                    m_objManager.setObjTreeModified(true);
 
                     return true;
                 }

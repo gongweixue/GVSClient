@@ -7,7 +7,8 @@
 
 ObjectManager::ObjectManager(void)
 {
-    this->treeModified = false;
+    this->objTreeModified = false;
+    this->favTreeModified = false;
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for (; model_iter != treeOfGeoObjs.end(); ++model_iter)
     {
@@ -56,7 +57,7 @@ void ObjectManager::LoadDataForReadersInTree()
         for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
         {
             QString loadingTip("正在加载模型：                \n");
-            loadingTip.append(model_iter->modelName + "/" + obj_iter->getName().c_str());
+            loadingTip.append(model_iter->name + "/" + obj_iter->getName().c_str());
             pProgressDlg->setLabelText(loadingTip);
 
             obj_iter->reader->Update();

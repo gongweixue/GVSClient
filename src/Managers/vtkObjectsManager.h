@@ -51,10 +51,67 @@ public:
 typedef struct Model
 {
 public:
-    QString modelName;
+    Model(const char* modelName)
+    {
+        name = modelName;
+        hasModified = false;
+    }
+    QString name;
     vector<GeoObject> vecOfGeoObjs;
-    bool Modified;
+    bool hasModified;
 } Model;
+
+typedef struct FavItem
+{
+public:
+    FavItem(const char* itemName, const char* mdlNameVal, const char objNameVal)
+    {
+        name = itemName;
+        modelName = mdlNameVal;
+        objName = objNameVal;
+        hasModified = false;
+    }
+
+    void setModified(bool modifiedVal) {this->hasModified = modifiedVal;}
+    bool getModified() {return hasModified;}
+
+    void setName(const char* newName) {name = newName;}
+    QString getName() {return name;}
+
+    void setObjPath(const char* newModelName, const char* newObjName)
+    {
+        modelName = newModelName;
+        objName = newObjName;
+    }
+    QString getObjPath() {return modelName + "/" + objName;}
+
+private:
+    QString name;
+    QString modelName;
+    QString objName;
+    bool hasModified;
+} FavItem;
+
+typedef struct FavFolder
+{
+public:
+    FavFolder(const char* name)
+    {
+        this->folderName = name;
+        this->hasModified = false;
+    }
+
+    void setFolderName(const char* name) {this->folderName = name;}
+    QString getFolderName() {return folderName;}
+
+    void setModified(bool modifiedVal) {this->hasModified = modifiedVal;}
+    bool getModified() {return hasModified;}
+
+private:
+    QString folderName;
+    vector<FavItem> vecOfItems;
+    bool hasModified;
+} FavFolder;
 
 
 class ObjectManager : public QObject
@@ -63,15 +120,20 @@ class ObjectManager : public QObject
 public:
     friend class GVSDoc;
     friend class MainWindow;
+
     ObjectManager(void);
     ~ObjectManager(void);
+
     void ClearObjTree();
     void LoadDataForReadersInTree();
     void DelAllRdrsInObjTree();
+
     int getNumOfObjsInTree();
-    vector<Model>* getObjTree() {return &treeOfGeoObjs;};
-    void setTreeModified(bool isModified) {this->treeModified = isModified;};
-    bool getTreeModified() {return this->treeModified;};
+    vector<Model>* getObjTree() {return &treeOfGeoObjs;}
+    void setObjTreeModified(bool isModified) {this->objTreeModified = isModified;}
+    bool getObjTreeModified() {return this->objTreeModified;}
+    void setFavTreeModified(bool isModified) {this->favTreeModified = isModified;}
+    bool getFavTreeModified() {return this->favTreeModified;}
 
 public slots:
     void OnObjUpdateFinished();
@@ -80,9 +142,14 @@ private:
     double* computeObjTreeBound();
 private:
     double m_bounds[6];
+
     vector<Model> treeOfGeoObjs;
+    bool objTreeModified;
+
+    vector<FavFolder> treeOfFav;
+    bool favTreeModified;
+
     QProgressDialog* pProgressDlg;
-    bool treeModified;
 };
 
 
