@@ -10,6 +10,7 @@
 #include "ui_MainWindow.h"
 #include "Callbacks/vtkBoxClipCallback.h"
 #include "Callbacks/vtkPlaneClipCallback.h"
+#include "Extention/GVSPrjTreeWidget.h"
 #include "Managers/ColorLegendManager.h"
 #include "Managers/vtkSceneManager.h"
 
@@ -27,7 +28,8 @@ public:
     GVSDoc* getDocument();
     vtkRenderer* getRenderer() {return m_mainRenderer;}
     void removeAllActorsOfRenderer(vtkRenderer* renderer);
-    SceneManager* getSceneManager(){return &m_sceneManager;}
+    SceneManager* getSceneManager() {return &m_sceneManager;}
+    QVTKWidget* getQVTKWidget() { return qvtkWidget;}
 
 private:
     int loadLocalConfig();
@@ -81,14 +83,15 @@ public slots:
     void OnProjectExplorer();
     void OnEditColorLegend();
     void OnPrjExplorerObjItemClicked(QTreeWidgetItem* item, int column);
-
+    void OnChangingObjColor(QString& modelName, QString& objName);
 public:
     Ui::MainWindowClass ui;
 
 private:
     QSplitter* splitterMain;
     QTabWidget* m_ProjectExplorer;
-    QTreeWidget* m_prjTreeWidget;
+    //QTreeWidget* m_prjTreeWidget;
+    GVSPrjTreeWidget* m_prjTreeWidget;
 
     QVTKWidget* qvtkWidget;
     GVSDoc* m_pDoc;

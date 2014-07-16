@@ -47,6 +47,8 @@ public:
     void setVisibility(bool vis) {visibility = vis;}
     bool getModified() {return this->Modified;}
     void setModified(bool isModified) {this->Modified = isModified;}
+    void setObjColor(int r, int g, int b);
+    void getObjColor(int* r, int* g, int* b);
 } GeoObject;
 
 typedef struct Model
@@ -142,13 +144,14 @@ public:
     vector<Model>* getObjTree() {return &treeOfGeoObjs;}
     vector<FavGroup>* getFavTree() {return &treeOfFav;}
     bool setObjVisByName(QString modelName, QString objName, bool vis);
-    bool setObjColorByName(QString modelName, QString objName);
+    bool setObjColorByName(QString modelName, QString objName, int r, int g, int b);
     void setObjTreeModified(bool isModified) {this->objTreeModified = isModified;}
     bool getObjTreeModified() {return this->objTreeModified;}
     void setFavTreeModified(bool isModified) {this->favTreeModified = isModified;}
     bool getFavTreeModified() {return this->favTreeModified;}
     GeoObject* findObjByName(QString modelName, QString objName);
     bool setModelModified(QString modelName, bool hasModified);
+	bool getObjColorByName(QString modelName, QString objName, int rgb[3]);
 
 public slots:
     void OnObjUpdateFinished();

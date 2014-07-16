@@ -16,6 +16,7 @@
 #include <vtkRenderer.h>
 #include <vtkSmartPointer.h>
 #include <vtkTextProperty.h>
+#include <QColorDialog>
 #include <QFileInfo>
 #include <QIcon>
 #include <QMessageBox>
@@ -117,7 +118,7 @@ void MainWindow::initMainAreaMembers()
 
     //left obj explorer init
     m_ProjectExplorer = new QTabWidget(splitterMain);
-    m_prjTreeWidget = new QTreeWidget();
+    m_prjTreeWidget = new GVSPrjTreeWidget(m_ProjectExplorer);
     m_prjTreeWidget->setHeaderLabel(tr("无项目..."));
     QIcon tabIcon(QString(":/Resources/PrjExplorer/TabIcon.png"));
     m_ProjectExplorer->addTab(m_prjTreeWidget, tabIcon, QString(tr("对象浏览")));
@@ -884,6 +885,9 @@ void MainWindow::bindingActionsWithSlots()
     connect(ui.actionShowProjectExplorer, SIGNAL(triggered()),
             this, SLOT(OnProjectExplorer()));
     connect(ui.actionEditColorLegend, SIGNAL(triggered()), this, SLOT(OnEditColorLegend()));
+
+    connect(m_prjTreeWidget, SIGNAL(objColorClicked(QString&, QString&)),
+            this, SLOT(OnChangingObjColor(QString&, QString&)));
 }
 
 void MainWindow::OnOpenProject()
@@ -1365,4 +1369,48 @@ void MainWindow::fillUpFav()
         }
     }
 }
+
+void MainWindow::OnChangingObjColor(QString& modelName, QString& objName)
+{
+    int oldRGB[3];
+    if (m_pDoc->GetObjManager()->getObjColorByName(modelName, objName, oldRGB))
+    {
+        QColor color = QColorDialog::getColor(QColor(oldRGB[0], oldRGB[1], oldRGB[2]));
+        if (color.isValid())
+        {
+            //if no color changed, just return
+            if (color.red() == oldRGB[0] &&
+                color.green() == oldRGB[1] &&
+                color.blue() == oldRGB[2])
+            {
+                return;
+            }
+
+            bool setOk = m_pDoc->GetObjManager()->setObjColorByName(modelName, objName,
+                                                                    color.red(),
+                                                                    color.green(),
+                                                                    color.blue());
+
+            if (setOk && this->getQVTKWidget()->GetRenderWindow())
+            {
+                this->getQVTKWidget()->GetRenderWindow()->Render();
+            }
+            else if (!setOk)
+            {
+                QMessageBox::warning(NULL, tr("出错啦"), tr("无法设置对象颜色！"));
+            }
+
+        }
+        else
+        {
+            QMessageBox::warning(NULL, tr("出错啦"), tr("设定颜色值非法！"));
+        }
+    }
+    else
+    {
+        //QMessageBox::warning(NULL, tr("出错啦"), tr("无法得到对象原始颜色！"));
+    }
+}
+
+
 
