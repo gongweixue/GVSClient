@@ -232,11 +232,10 @@ bool GVSDoc::LoadFavTree(std::string filePath)
         {
             continue;
         }
-        QString groupName = groupElement.attribute("name");
 
-        FavFolder folderTmp(groupName.toStdString().c_str());
+        FavGroup folderTmp(groupElement.attribute("name").toStdString());
         m_objManager.getFavTree()->push_back(folderTmp);
-        vector<FavFolder>::reverse_iterator fldrIter = m_objManager.getFavTree()->rbegin();
+        vector<FavGroup>::reverse_iterator fldrIter = m_objManager.getFavTree()->rbegin();
 
         QDomNodeList listOfFavItem = groupElement.childNodes();
         int numOfItem = listOfFavItem.count();
@@ -250,9 +249,7 @@ bool GVSDoc::LoadFavTree(std::string filePath)
             QString itemName = favItemElement.attribute("name");
             QString itemModel = favItemElement.attribute("model");
             QString itemObj = favItemElement.attribute("obj");
-            fldrIter->vecOfItems.push_back(FavItem(itemName.toStdString().c_str(),
-                                                   itemModel.toStdString().c_str(),
-                                                   itemObj.toStdString().c_str()));
+            fldrIter->vecOfItems.push_back(FavItem(itemName, itemModel, itemObj));
         }
     }
 

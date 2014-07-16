@@ -145,6 +145,58 @@ void ObjectManager::OnObjUpdateFinished()
     progressValueMutex.unlock();
 }
 
+GeoObject* ObjectManager::findObjByName(QString modelName, QString objName)
+{
+    //time complexity: m + n
+    vector<Model>::iterator modelIter = treeOfGeoObjs.begin();
+    for ( ; modelIter < treeOfGeoObjs.end(); modelIter++)
+    {
+        if (0 == modelName.compare(modelIter->name))
+        {
+            vector<GeoObject>::iterator objIter = modelIter->vecOfGeoObjs.begin();
+            for ( ; objIter < modelIter->vecOfGeoObjs.end(); objIter++)
+            {
+                if (0 == objName.compare(objIter->getName()))
+                {
+                    return &(*objIter);
+                }
+            }
+        }
+    }
+
+    return NULL;
+}
+
+bool ObjectManager::setModelModified(QString modelName, bool hasModified)
+{
+    vector<Model>::iterator modelIter = treeOfGeoObjs.begin();
+    for ( ; modelIter < treeOfGeoObjs.end(); modelIter++)
+    {
+        if (0 == modelName.compare(modelIter->name))
+        {
+            modelIter->hasModified = hasModified;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool ObjectManager::setObjVisByName(QString modelName, QString objName, bool vis)
+{
+    GeoObject* obj = findObjByName(modelName, objName);
+    if (obj)
+    {
+        obj->setVisibility(vis);
+        obj->setModified(true);
+        setModelModified(modelName, true);
+        setObjTreeModified(true);
+
+        return true;
+    }
+    return false;
+}
+
 void ReaderUpdater::run()
 {
     m_reader->Update();

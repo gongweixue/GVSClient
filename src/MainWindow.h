@@ -42,6 +42,8 @@ private:
     void destoryMainAreaMembers();
     void bindingActionsWithSlots();
     void fillUpPrjExplorer();
+    void fillUpObjects();
+    void fillUpFav();
     void UpdateObjItem(QString modelName, QString objName, bool objVisible);
     bool setActorVisByName(QString actorName, bool vis);
 
@@ -78,7 +80,7 @@ public slots:
     void OnShowColorLegend();
     void OnProjectExplorer();
     void OnEditColorLegend();
-    void OnPrjExplorerItemClicked(QTreeWidgetItem* item, int column);
+    void OnPrjExplorerObjItemClicked(QTreeWidgetItem* item, int column);
 
 public:
     Ui::MainWindowClass ui;

@@ -1,12 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Favs name="gvsExample">
-    <Group name="包围">
-        <FavItem name="底层" model="cw06" obj="di.vtk"></FavItem>
-        <FavItem name="边界" model="cw07" obj="bj.vtk"></FavItem>
-        <FavItem name="地表" model="cw06" obj="d.e.m.vtk"></FavItem>
+    <Group name="Bound">
+        <FavItem name="di" model="cw06" obj="di.vtk"></FavItem>
+        <FavItem name="bianjie" model="cw07" obj="bj.vtk"></FavItem>
+        <FavItem name="dem" model="cw06" obj="d.e.m.vtk"></FavItem>
     </Group>
-    <Group name="空"></Group>
-    <Group name="F系列">
+    <Group name="Group with obj not existed">
+        <FavItem name="Not exist" model="cw09" obj="noObj.vtk"></FavItem>
+    </Group>
+    <Group name="Empty Group">
+    </Group>
+    <Group name="F series">
         <FavItem name="F1" model="cw08" obj="F1.vtk"></FavItem>
         <FavItem name="F3" model="cw08" obj="F3.vtk"></FavItem>
         <FavItem name="F2" model="cw08" obj="F2.vtk"></FavItem>

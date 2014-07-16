@@ -24,6 +24,7 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include "Extention/GVSCompassActor.h"
+#include "Extention/GVSPrjTreeWidgetItem.h"
 #include "GVSDoc.h"
 #include "Managers/TransportationManager.h"
 #include "MainWindow.h"
@@ -360,12 +361,6 @@ void MainWindow::RenderOriginal()
             string objName = obj_iter->getName().toStdString();
             QStringList spltList = QString(objName.c_str()).split('.');
             string actorName = modelName + "/" + objName;
-            //for (int i = 0; i < (spltList.size() - 2); ++i)
-            //{
-            //    actorName.append(spltList[i].toStdString() + ".");
-            //}
-            //actorName.append(spltList[spltList.size()-2].toStdString());
-
             m_sceneManager.InsertActorRcrd(MapToActor(obj_iter->reader->GetOutput()),
                                           actorName,
                                           SCENE_STATE_ORIGINAL,
@@ -1182,64 +1177,20 @@ void MainWindow::fillUpPrjExplorer()
     QString header(tr("ÏîÄ¿ \"") + prjName + tr("\""));
     m_prjTreeWidget->setHeaderLabel(header);
 
-    vector<Model>* objTree = m_pDoc->GetObjManager()->getObjTree();
+    fillUpObjects();
+    fillUpFav();
 
-    vector<Model>::iterator model_iter = objTree->begin();
-    for ( ; model_iter != objTree->end(); model_iter++)
-    {
-        QStringList modelStr;
-        modelStr << model_iter->name;
-
-        QTreeWidgetItem* modelItem = new QTreeWidgetItem(m_prjTreeWidget, modelStr);
-        modelItem->setExpanded(true);
-        modelItem->setFlags(Qt::ItemIsUserCheckable |
-                            Qt::ItemIsEnabled |
-                            Qt::ItemIsSelectable);
-        bool isModelItemChecked = true;
-
-        vector<GeoObject>::iterator obj_Iter = model_iter->vecOfGeoObjs.begin();
-        for ( ; obj_Iter != model_iter->vecOfGeoObjs.end(); obj_Iter++)
-        {
-            QStringList objStr;
-            objStr << QString(obj_Iter->getName());
-
-            QTreeWidgetItem* objItem = new QTreeWidgetItem(modelItem, objStr);
-            objItem->setFlags(Qt::ItemIsUserCheckable |
-                              Qt::ItemIsEnabled |
-                              Qt::ItemIsSelectable);
-
-            bool isObjItemChecked = obj_Iter->getVisibility();
-            objItem->setCheckState(0, isObjItemChecked ? Qt::Checked : Qt::Unchecked);
-
-            QString iconFileName;
-            switch (obj_Iter->type)
-            {
-            case GEO_OBJECT_TYPE_POINT:
-                iconFileName = tr(":/Resources/PrjExplorer/PointObj.png");
-                break;
-            case GEO_OBJECT_TYPE_LINE:
-                iconFileName = tr(":/Resources/PrjExplorer/LineObj.png");
-                break;
-            case GEO_OBJECT_TYPE_SURFACE:
-                iconFileName = tr(":/Resources/PrjExplorer/SurfaceObj.png");
-                break;
-            }
-            objItem->setIcon(0, QIcon(iconFileName));
-
-            
-
-            isModelItemChecked = isModelItemChecked && isObjItemChecked;
-        }
-        modelItem->setCheckState(0, isModelItemChecked ? Qt::Checked : Qt::Unchecked);
-    }
-
-    connect(m_prjTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*, int)),
-            this, SLOT(OnPrjExplorerItemClicked(QTreeWidgetItem*, int)));
 }
 
-void MainWindow::OnPrjExplorerItemClicked(QTreeWidgetItem* item, int column)
+void MainWindow::OnPrjExplorerObjItemClicked(QTreeWidgetItem* item, int column)
 {
-    if (0 == item->childCount() && 0 == column)//clicked on obj check box
+    GVSPrjTreeWidgetItem* item_clicked = dynamic_cast<GVSPrjTreeWidgetItem *>(item);
+    if (NULL == item_clicked)
+    {
+        return;
+    }
+
+    if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_OBJ)
     {
         bool isMdlItemChckd = true;
         for (int i = 0; i < item->parent()->childCount(); ++i)
@@ -1254,7 +1205,7 @@ void MainWindow::OnPrjExplorerItemClicked(QTreeWidgetItem* item, int column)
         bool objVisible = (item->checkState(0) == Qt::Checked) ? true : false;
         UpdateObjItem(item->parent()->text(0), item->text(0), objVisible);
     }
-    else if (0 != item->childCount() && 0 == column)// clicked on model check box.
+    else if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_MODEL)
     {
         for (int i = 0; i < item->childCount(); ++i)
         {
@@ -1302,7 +1253,116 @@ bool MainWindow::setActorVisByName( QString actorName, bool vis )
     return false;
 }
 
+void MainWindow::fillUpObjects()
+{
+    vector<Model>* objTree = m_pDoc->GetObjManager()->getObjTree();
 
+    vector<Model>::iterator model_iter = objTree->begin();
+    for ( ; model_iter != objTree->end(); model_iter++)
+    {
+        GVSPrjTreeWidgetItem* modelItem =
+                new GVSPrjTreeWidgetItem(m_prjTreeWidget, PRJ_TREE_ITEM_TYPE_MODEL);
+        modelItem->setText(0, model_iter->name);
+        modelItem->setExpanded(true);
+        modelItem->setFlags(Qt::ItemIsUserCheckable |
+                            Qt::ItemIsEnabled |
+                            Qt::ItemIsSelectable);
+        bool isModelItemChecked = true;
 
+        vector<GeoObject>::iterator obj_Iter = model_iter->vecOfGeoObjs.begin();
+        for ( ; obj_Iter != model_iter->vecOfGeoObjs.end(); obj_Iter++)
+        {
+            GVSPrjTreeWidgetItem* objItem =
+                    new GVSPrjTreeWidgetItem(modelItem, PRJ_TREE_ITEM_TYPE_OBJ);
+            objItem->setText(0, obj_Iter->getName());
+            objItem->setFlags(Qt::ItemIsUserCheckable |
+                              Qt::ItemIsEnabled |
+                              Qt::ItemIsSelectable);
 
-    
+            bool isObjItemChecked = obj_Iter->getVisibility();
+            objItem->setCheckState(0, isObjItemChecked ? Qt::Checked : Qt::Unchecked);
+
+            QString iconFileName;
+            switch (obj_Iter->getType())
+            {
+            case GEO_OBJECT_TYPE_POINT:
+                iconFileName = tr(":/Resources/PrjExplorer/PointObj.png");
+                break;
+            case GEO_OBJECT_TYPE_LINE:
+                iconFileName = tr(":/Resources/PrjExplorer/LineObj.png");
+                break;
+            case GEO_OBJECT_TYPE_SURFACE:
+                iconFileName = tr(":/Resources/PrjExplorer/SurfaceObj.png");
+                break;
+            }
+            objItem->setIcon(0, QIcon(iconFileName));
+
+            isModelItemChecked = isModelItemChecked && isObjItemChecked;
+        }
+        modelItem->setCheckState(0, isModelItemChecked ? Qt::Checked : Qt::Unchecked);
+    }
+
+    connect(m_prjTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*, int)),
+            this, SLOT(OnPrjExplorerObjItemClicked(QTreeWidgetItem*, int)));
+}
+
+void MainWindow::fillUpFav()
+{
+    vector<FavGroup>* favTree = m_pDoc->GetObjManager()->getFavTree();
+
+    GVSPrjTreeWidgetItem* favRootItem =
+            new GVSPrjTreeWidgetItem(m_prjTreeWidget, PRJ_TREE_ITEM_TYPE_FAV_ROOT);
+    favRootItem->setText(0, tr("Favorite"));
+    favRootItem->setExpanded(true);
+
+    vector<FavGroup>::iterator favGroup_iter = favTree->begin();
+    for ( ; favGroup_iter != favTree->end(); favGroup_iter++)
+    {
+        GVSPrjTreeWidgetItem* group =
+                new GVSPrjTreeWidgetItem(favRootItem, PRJ_TREE_ITEM_TYPE_FAV_GROUP);
+        group->setText(0, tr(favGroup_iter->getFolderName().c_str()));
+        group->setExpanded(true);
+        group->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable);
+
+        vector<FavItem>::iterator favItem_Iter = favGroup_iter->vecOfItems.begin();
+        for ( ; favItem_Iter != favGroup_iter->vecOfItems.end(); favItem_Iter++)
+        {
+            GVSPrjTreeWidgetItem* favItem =
+                    new GVSPrjTreeWidgetItem(group, PRJ_TREE_ITEM_TYPE_FAV_ITEM);
+            favItem->setText(0, favItem_Iter->getName());
+            favItem->setFlags(Qt::ItemIsUserCheckable |
+                              Qt::ItemIsEnabled |
+                              Qt::ItemIsSelectable);
+
+            ObjectManager* objManager = m_pDoc->GetObjManager();
+            QString modelName = favItem_Iter->getModelName();
+            QString objName = favItem_Iter->getObjName();
+            GeoObject* obj = objManager->findObjByName(modelName, objName);
+
+            if (obj)
+            {
+                QString iconFileName;
+                switch (obj->getType())
+                {
+                case GEO_OBJECT_TYPE_POINT:
+                    iconFileName = tr(":/Resources/PrjExplorer/PointObj.png");
+                    break;
+                case GEO_OBJECT_TYPE_LINE:
+                    iconFileName = tr(":/Resources/PrjExplorer/LineObj.png");
+                    break;
+                case GEO_OBJECT_TYPE_SURFACE:
+                    iconFileName = tr(":/Resources/PrjExplorer/SurfaceObj.png");
+                    break;
+                }
+                favItem->setIcon(0, QIcon(iconFileName));
+                favItem->setCheckState(0, obj->getVisibility()? Qt::Checked : Qt::Unchecked);
+            }
+            else
+            {
+                favItem->setIcon(0, QIcon(tr(":/Resources/PrjExplorer/NoObj.png")));
+                favItem->setCheckState(0, Qt::Unchecked);
+            }
+        }
+    }
+}
+

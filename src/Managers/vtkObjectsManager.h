@@ -23,12 +23,12 @@ using namespace std;
 typedef struct GeoObject
 {
 public:
-    int type;
     vtkDataSetReader* reader;
 private:
     QString fileName;
     bool visibility;
     bool Modified;
+    int type;
 public:
     GeoObject(QString fname, int ty, vtkDataSetReader* rder, bool vis)
     {
@@ -41,11 +41,12 @@ public:
     ~GeoObject()
     {
     }
-    QString getName() {return fileName;};
-    bool getVisibility() {return visibility;};
-    void setVisibility(bool vis) {visibility = vis;};
-    bool getModified() {return this->Modified;};
-    void setModified(bool isModified) {this->Modified = isModified;};
+    QString getName() {return fileName;}
+    int getType() {return this->type;}
+    bool getVisibility() {return visibility;}
+    void setVisibility(bool vis) {visibility = vis;}
+    bool getModified() {return this->Modified;}
+    void setModified(bool isModified) {this->Modified = isModified;}
 } GeoObject;
 
 typedef struct Model
@@ -78,12 +79,18 @@ public:
     void setName(QString newName) {name = newName;}
     QString getName() {return name;}
 
+    QString getObjPath() {return modelName + "/" + objName;}
     void setObjPath(QString newModelName, QString newObjName)
     {
         modelName = newModelName;
         objName = newObjName;
     }
-    QString getObjPath() {return modelName + "/" + objName;}
+
+    void setModelName(QString newModelName) {modelName = newModelName;}
+    QString getModelName() {return modelName;}
+
+    void setObjName(QString newObjName) {objName = newObjName;}
+    QString getObjName() {return objName;}
 
 private:
     QString name;
@@ -92,17 +99,17 @@ private:
     bool hasModified;
 } FavItem;
 
-typedef struct FavFolder
+typedef struct FavGroup
 {
 public:
-    FavFolder(QString name)
+    FavGroup(std::string name)
     {
         this->folderName = name;
         this->hasModified = false;
     }
 
-    void setFolderName(QString name) {this->folderName = name;}
-    QString getFolderName() {return folderName;}
+    void setFolderName(std::string name) {this->folderName = name;}
+    std::string getFolderName() {return folderName;}
 
     void setModified(bool modifiedVal) {this->hasModified = modifiedVal;}
     bool getModified() {return hasModified;}
@@ -111,10 +118,10 @@ public:
     vector<FavItem> vecOfItems;
 
 private:
-    QString folderName;
+    std::string folderName;
 
     bool hasModified;
-} FavFolder;
+} FavGroup;
 
 
 class ObjectManager : public QObject
@@ -133,11 +140,15 @@ public:
 
     int getNumOfObjsInTree();
     vector<Model>* getObjTree() {return &treeOfGeoObjs;}
-    vector<FavFolder>* getFavTree() {return &treeOfFav;}
+    vector<FavGroup>* getFavTree() {return &treeOfFav;}
+    bool setObjVisByName(QString modelName, QString objName, bool vis);
+    bool setObjColorByName(QString modelName, QString objName);
     void setObjTreeModified(bool isModified) {this->objTreeModified = isModified;}
     bool getObjTreeModified() {return this->objTreeModified;}
     void setFavTreeModified(bool isModified) {this->favTreeModified = isModified;}
     bool getFavTreeModified() {return this->favTreeModified;}
+    GeoObject* findObjByName(QString modelName, QString objName);
+    bool setModelModified(QString modelName, bool hasModified);
 
 public slots:
     void OnObjUpdateFinished();
@@ -150,7 +161,7 @@ private:
     vector<Model> treeOfGeoObjs;
     bool objTreeModified;
 
-    vector<FavFolder> treeOfFav;
+    vector<FavGroup> treeOfFav;
     bool favTreeModified;
 
     QProgressDialog* pProgressDlg;

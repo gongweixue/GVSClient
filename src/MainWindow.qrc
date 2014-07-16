@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/">
+    <file>Resources/PrjExplorer/NoObj.png</file>
     <file>Resources/ColorPalette.png</file>
     <file>Resources/PrjExplorer/LineObj.png</file>
     <file>Resources/PrjExplorer/PointObj.png</file>
