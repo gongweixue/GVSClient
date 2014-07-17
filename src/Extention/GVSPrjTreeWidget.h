@@ -12,17 +12,19 @@ public:
     ~GVSPrjTreeWidget();
 
 signals:
-    void objColorClicked(QString& modelName, QString& objName);
+    void sigChangeObjColor(QString& modelName, QString& objName);
+    void sigAddFavGroup();
 
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* event);
 
 public slots:
     void OnChangeObjColor();
-
+    void OnAddFavGroup();
 private:
     QMenu* popMenu;
-    QAction* actChangeObjColor;
+    QAction* actionChangeObjColor;
+    QAction* actionAddFavGroup;
 };
 
 #endif // GVSPRJTREEWIDGET_H

@@ -24,6 +24,7 @@
 #include <QTextCodec>
 #include <QTextEdit>
 #include <QVBoxLayout>
+#include "ContextMenus/AddFavGroupDialog.h"
 #include "Extention/GVSCompassActor.h"
 #include "Extention/GVSPrjTreeWidgetItem.h"
 #include "GVSDoc.h"
@@ -862,6 +863,7 @@ void MainWindow::TurnCubeAxesOnOff(int isOn, int xGridOn, int yGridOn)
 
 void MainWindow::bindingActionsWithSlots()
 {
+    /***************************main menu and bar connections****************************/
     connect(ui.actionOpen, SIGNAL(triggered()), this, SLOT(OnOpenProject()));
     connect(ui.actionClipModel, SIGNAL(triggered()), this, SLOT(OnRenderClip()));
     connect(ui.actionCrossExplode, SIGNAL(triggered()), this, SLOT(OnCrossExplode()));
@@ -884,10 +886,15 @@ void MainWindow::bindingActionsWithSlots()
     connect(ui.actionShowColorLegend, SIGNAL(triggered()), this, SLOT(OnShowColorLegend()));
     connect(ui.actionShowProjectExplorer, SIGNAL(triggered()),
             this, SLOT(OnProjectExplorer()));
+
+    /**********************************color lenged stuff********************************/
     connect(ui.actionEditColorLegend, SIGNAL(triggered()), this, SLOT(OnEditColorLegend()));
 
-    connect(m_prjTreeWidget, SIGNAL(objColorClicked(QString&, QString&)),
+    /*******************************prj tree connections*********************************/
+    connect(m_prjTreeWidget, SIGNAL(sigChangeObjColor(QString&, QString&)),
             this, SLOT(OnChangingObjColor(QString&, QString&)));
+    connect(m_prjTreeWidget, SIGNAL(sigAddFavGroup()), this, SLOT(OnAddFavGroup()));
+
 }
 
 void MainWindow::OnOpenProject()
@@ -1324,7 +1331,7 @@ void MainWindow::fillUpFav()
     {
         GVSPrjTreeWidgetItem* group =
                 new GVSPrjTreeWidgetItem(favRootItem, PRJ_TREE_ITEM_TYPE_FAV_GROUP);
-        group->setText(0, tr(favGroup_iter->getFolderName().c_str()));
+        group->setText(0, tr(favGroup_iter->getGroupName().c_str()));
         group->setExpanded(true);
         group->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable);
 
@@ -1412,5 +1419,63 @@ void MainWindow::OnChangingObjColor(QString& modelName, QString& objName)
     }
 }
 
+void MainWindow::OnAddFavGroup()
+{
+    AddFavGroupDialog dlgAddFavGroup(this);
+    dlgAddFavGroup.exec();
+    if (dlgAddFavGroup.result() == QDialog::Accepted)
+    {
+        QString groupName(dlgAddFavGroup.getGroupName());
 
+        if (NULL != m_pDoc->GetObjManager()->findFavGroupByName(groupName))
+        {
+            QMessageBox::information(NULL, tr("非法名称"), tr("已经存在该收藏夹。"));
+
+            return;
+        }
+
+        if (false == (m_pDoc->GetObjManager()->addFavGroup(groupName)))
+        {
+            QMessageBox::information(NULL, tr("错误"), tr("无法添加收藏夹。"));
+        }
+
+        QList<QTreeWidgetItem*> itemList = m_prjTreeWidget->findItems("Favorite", Qt::MatchExactly);
+        if (itemList.size() != 1)
+        {
+            QMessageBox::information(NULL, tr("错误"), tr("Favorite子节点出错。"));
+            return;
+        }
+        GVSPrjTreeWidgetItem* favRootItem = dynamic_cast<GVSPrjTreeWidgetItem*>(itemList.first());
+        GVSPrjTreeWidgetItem* newGroup =
+                new GVSPrjTreeWidgetItem(favRootItem, PRJ_TREE_ITEM_TYPE_FAV_GROUP);
+        newGroup->setText(0, groupName);
+        newGroup->setExpanded(true);
+        newGroup->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable);
+    }
+
+    return;
+}
+
+// void MainWindow::cleanItemsUnderItem(GVSPrjTreeWidgetItem item)
+// {
+//     if (item.childCount() != 0)
+//     {
+//         for (int i = 0; i < item.childCount(); ++i)
+//         {
+//             GVSPrjTreeWidgetItem* childItem = dynamic_cast<GVSPrjTreeWidgetItem*>(item.child(i));
+//             cleanItemsUnderItem(childItem);
+//         }
+//     }
+//     else if (item.childCount() == 0 && )
+//     {
+//         GVSPrjTreeWidgetItem* parentItem = dynamic_cast<GVSPrjTreeWidgetItem*>(item.parent());
+//         for (int i = parentItem->childCount() - 1; i >= 0; i--)
+//         {
+//             GVSPrjTreeWidgetItem* childItem = dynamic_cast<GVSPrjTreeWidgetItem*>(item.child(i));
+//             parentItem->removeChild(childItem);
+//             delete childItem;
+//         }
+//     }
+// 
+// }
 

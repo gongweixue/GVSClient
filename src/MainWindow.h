@@ -49,9 +49,6 @@ private:
     void UpdateObjItem(QString modelName, QString objName, bool objVisible);
     bool setActorVisByName(QString actorName, bool vis);
 
-    MainWindow(const MainWindow&); // Not implemented.
-    void operator=(const MainWindow&); // Not implemented.
-
     void onInitialUpdate();
     void showOrientationMarker();
     void processRenderRequest(int state);
@@ -62,6 +59,9 @@ private:
     void RenderPrismClip();
     vtkActor* MapToActor(vtkDataSet* ds);
     void TurnCubeAxesOnOff(int isOn, int xGridOn, int yGridOn);
+
+    MainWindow(const MainWindow&); // Not implemented.
+    void operator=(const MainWindow&); // Not implemented.
 
 public slots:
     void OnOpenProject();
@@ -84,6 +84,8 @@ public slots:
     void OnEditColorLegend();
     void OnPrjExplorerObjItemClicked(QTreeWidgetItem* item, int column);
     void OnChangingObjColor(QString& modelName, QString& objName);
+    void OnAddFavGroup();
+
 public:
     Ui::MainWindowClass ui;
 

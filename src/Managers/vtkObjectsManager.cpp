@@ -284,6 +284,31 @@ void GeoObject::getObjColor( int* r, int* g, int* b )
     *g = sumG / 3;
 }
 
+const FavGroup* ObjectManager::findFavGroupByName(QString groupName)
+{
+    vector<FavGroup>::const_iterator group_iter = treeOfFav.cbegin();
+    for ( ; group_iter < treeOfFav.cend(); group_iter++)
+    {
+        if (0 == groupName.compare(group_iter->getGroupName().c_str()))
+        {
+            return &(*group_iter);
+        }
+    }
+
+    return NULL;
+}
+
+bool ObjectManager::addFavGroup(QString groupName)
+{
+    if (NULL != this->findFavGroupByName(groupName))
+    {
+        return false;
+    }
+
+    this->treeOfFav.push_back(FavGroup(groupName.toStdString()));
+    return true;
+}
+
 void ReaderUpdater::run()
 {
     m_reader->Update();

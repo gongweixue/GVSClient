@@ -233,8 +233,7 @@ bool GVSDoc::LoadFavTree(std::string filePath)
             continue;
         }
 
-        FavGroup folderTmp(groupElement.attribute("name").toStdString());
-        m_objManager.getFavTree()->push_back(folderTmp);
+        m_objManager.getFavTree()->push_back(FavGroup(groupElement.attribute("name").toStdString()));
         vector<FavGroup>::reverse_iterator fldrIter = m_objManager.getFavTree()->rbegin();
 
         QDomNodeList listOfFavItem = groupElement.childNodes();

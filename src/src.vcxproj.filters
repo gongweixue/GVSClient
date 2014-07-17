@@ -96,6 +96,15 @@
     <Filter Include="Source Files\Extention">
       <UniqueIdentifier>{24d74c32-6d9b-4413-bb0d-2b02e8d47948}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Form Files\Dialogs\ContextMenu">
+      <UniqueIdentifier>{09d88196-6cea-4c89-b584-b37930540e7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Context">
+      <UniqueIdentifier>{63c155a3-c138-49a7-b297-05451fab4e3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Context">
+      <UniqueIdentifier>{317fd75d-0e1e-4336-99c8-0a6e79e68dbb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -260,6 +269,15 @@
     <ClCompile Include="Extention\GVSPrjTreeWidget.cpp">
       <Filter>Source Files\Extention</Filter>
     </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_AddFavGroupDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_AddFavGroupDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="ContextMenus\AddFavGroupDialog.cpp">
+      <Filter>Source Files\Context</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.h">
@@ -337,6 +355,12 @@
     <CustomBuild Include="Extention\GVSPrjTreeWidget.h">
       <Filter>Header Files\Extention</Filter>
     </CustomBuild>
+    <CustomBuild Include="ContextMenus\AddFavGroupDialog.ui">
+      <Filter>Form Files\Dialogs\ContextMenu</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ContextMenus\AddFavGroupDialog.h">
+      <Filter>Header Files\Context</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\build\Qt\GeneratedFiles\ui_MainWindow.h">
@@ -398,6 +422,9 @@
     </ClInclude>
     <ClInclude Include="Extention\GVSCompassActor.h">
       <Filter>Header Files\Extention</Filter>
+    </ClInclude>
+    <ClInclude Include="..\build\Qt\GeneratedFiles\ui_AddFavGroupDialog.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -89,10 +89,10 @@ public:
     }
 
     void setModelName(QString newModelName) {modelName = newModelName;}
-    QString getModelName() {return modelName;}
+    QString getModelName() const {return modelName;}
 
     void setObjName(QString newObjName) {objName = newObjName;}
-    QString getObjName() {return objName;}
+    QString getObjName() const {return objName;}
 
 private:
     QString name;
@@ -106,12 +106,12 @@ typedef struct FavGroup
 public:
     FavGroup(std::string name)
     {
-        this->folderName = name;
+        this->groupName = name;
         this->hasModified = false;
     }
 
-    void setFolderName(std::string name) {this->folderName = name;}
-    std::string getFolderName() {return folderName;}
+    void setGroupName(std::string name) {this->groupName = name;}
+    std::string getGroupName() const {return groupName;}
 
     void setModified(bool modifiedVal) {this->hasModified = modifiedVal;}
     bool getModified() {return hasModified;}
@@ -120,7 +120,7 @@ public:
     vector<FavItem> vecOfItems;
 
 private:
-    std::string folderName;
+    std::string groupName;
 
     bool hasModified;
 } FavGroup;
@@ -153,11 +153,15 @@ public:
     bool setModelModified(QString modelName, bool hasModified);
 	bool getObjColorByName(QString modelName, QString objName, int rgb[3]);
 
+    const FavGroup* findFavGroupByName(QString groupName);
+    bool addFavGroup(QString groupName);
+
 public slots:
     void OnObjUpdateFinished();
 
 private:
     double* computeObjTreeBound();
+
 private:
     double m_bounds[6];
 
