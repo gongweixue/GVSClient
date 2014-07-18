@@ -41,7 +41,7 @@ public:
     ~GeoObject()
     {
     }
-    QString getName() {return fileName;}
+    QString getName() const {return fileName;}
     int getType() {return this->type;}
     bool getVisibility() {return visibility;}
     void setVisibility(bool vis) {visibility = vis;}
@@ -116,6 +116,8 @@ public:
     void setModified(bool modifiedVal) {this->hasModified = modifiedVal;}
     bool getModified() {return hasModified;}
 
+    FavItem* findFavItem(QString itemName);
+
 public:
     vector<FavItem> vecOfItems;
 
@@ -141,20 +143,30 @@ public:
     void DelAllRdrsInObjTree();
 
     int getNumOfObjsInTree();
+
     vector<Model>* getObjTree() {return &treeOfGeoObjs;}
     vector<FavGroup>* getFavTree() {return &treeOfFav;}
+
+    GeoObject* findObjByName(QString modelName, QString objName);
+    Model* findModelByName(QString modelName);
+    FavGroup* findFavGroupByName(QString groupName);
+    FavItem* findFavItemByName(QString groupName, QString favItemName);
+
     bool setObjVisByName(QString modelName, QString objName, bool vis);
-    bool setObjColorByName(QString modelName, QString objName, int r, int g, int b);
+
+    bool setModelModified(QString modelName, bool hasModified);
+
     void setObjTreeModified(bool isModified) {this->objTreeModified = isModified;}
     bool getObjTreeModified() {return this->objTreeModified;}
+
     void setFavTreeModified(bool isModified) {this->favTreeModified = isModified;}
     bool getFavTreeModified() {return this->favTreeModified;}
-    GeoObject* findObjByName(QString modelName, QString objName);
-    bool setModelModified(QString modelName, bool hasModified);
-	bool getObjColorByName(QString modelName, QString objName, int rgb[3]);
 
-    const FavGroup* findFavGroupByName(QString groupName);
+    bool setObjColorByName(QString modelName, QString objName, int r, int g, int b);
+    bool getObjColorByName(QString modelName, QString objName, int rgb[3]);
+
     bool addFavGroup(QString groupName);
+    bool addFavItem(QString groupName, FavItem& favItem);
 
 public slots:
     void OnObjUpdateFinished();

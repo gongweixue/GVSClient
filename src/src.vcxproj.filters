@@ -96,13 +96,13 @@
     <Filter Include="Source Files\Extention">
       <UniqueIdentifier>{24d74c32-6d9b-4413-bb0d-2b02e8d47948}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Form Files\Dialogs\ContextMenu">
+    <Filter Include="Form Files\Dialogs\ContextMenus">
       <UniqueIdentifier>{09d88196-6cea-4c89-b584-b37930540e7f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Context">
+    <Filter Include="Header Files\ContextMenus">
       <UniqueIdentifier>{63c155a3-c138-49a7-b297-05451fab4e3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Context">
+    <Filter Include="Source Files\ContextMenus">
       <UniqueIdentifier>{317fd75d-0e1e-4336-99c8-0a6e79e68dbb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -276,7 +276,16 @@
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="ContextMenus\AddFavGroupDialog.cpp">
-      <Filter>Source Files\Context</Filter>
+      <Filter>Source Files\ContextMenus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_AddFavItemDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_AddFavItemDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="ContextMenus\AddFavItemDialog.cpp">
+      <Filter>Source Files\ContextMenus</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -356,10 +365,16 @@
       <Filter>Header Files\Extention</Filter>
     </CustomBuild>
     <CustomBuild Include="ContextMenus\AddFavGroupDialog.ui">
-      <Filter>Form Files\Dialogs\ContextMenu</Filter>
+      <Filter>Form Files\Dialogs\ContextMenus</Filter>
     </CustomBuild>
     <CustomBuild Include="ContextMenus\AddFavGroupDialog.h">
-      <Filter>Header Files\Context</Filter>
+      <Filter>Header Files\ContextMenus</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ContextMenus\AddFavItemDialog.h">
+      <Filter>Header Files\ContextMenus</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ContextMenus\AddFavItemDialog.ui">
+      <Filter>Form Files\Dialogs\ContextMenus</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -426,5 +441,14 @@
     <ClInclude Include="..\build\Qt\GeneratedFiles\ui_AddFavGroupDialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\build\Qt\GeneratedFiles\ui_AddFavItemDialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GVSClient.rc" />
   </ItemGroup>
 </Project>

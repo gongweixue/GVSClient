@@ -3,6 +3,8 @@
 
 #include <QTreeWidget>
 
+class GVSPrjTreeWidgetItem;
+
 class GVSPrjTreeWidget : public QTreeWidget
 {
     Q_OBJECT
@@ -14,6 +16,7 @@ public:
 signals:
     void sigChangeObjColor(QString& modelName, QString& objName);
     void sigAddFavGroup();
+    void sigAddFavItem(GVSPrjTreeWidgetItem& currentItem);
 
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* event);
@@ -21,10 +24,12 @@ protected:
 public slots:
     void OnChangeObjColor();
     void OnAddFavGroup();
+    void OnAddFavItem();
 private:
     QMenu* popMenu;
     QAction* actionChangeObjColor;
     QAction* actionAddFavGroup;
+    QAction* actionAddFavItem;
 };
 
 #endif // GVSPRJTREEWIDGET_H

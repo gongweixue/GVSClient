@@ -237,7 +237,6 @@ bool ObjectManager::getObjColorByName( QString modelName, QString objName, int r
 
 void GeoObject::setObjColor(int r, int g, int b)
 {
-    //throw std::exception("The method or operation is not implemented.");
     this->reader->Update();
     vtkDataArray* scalars = reader->GetOutput()->GetPointData()->GetScalars();
     int size = scalars->GetSize();
@@ -253,6 +252,8 @@ void GeoObject::setObjColor(int r, int g, int b)
     }
 
     reader->GetOutput()->GetPointData()->SetScalars(scalars);
+
+    this->setModified(true);
 }
 
 void GeoObject::getObjColor( int* r, int* g, int* b )
@@ -284,10 +285,10 @@ void GeoObject::getObjColor( int* r, int* g, int* b )
     *g = sumG / 3;
 }
 
-const FavGroup* ObjectManager::findFavGroupByName(QString groupName)
+FavGroup* ObjectManager::findFavGroupByName(QString groupName)
 {
-    vector<FavGroup>::const_iterator group_iter = treeOfFav.cbegin();
-    for ( ; group_iter < treeOfFav.cend(); group_iter++)
+    vector<FavGroup>::iterator group_iter = treeOfFav.begin();
+    for ( ; group_iter < treeOfFav.end(); group_iter++)
     {
         if (0 == groupName.compare(group_iter->getGroupName().c_str()))
         {
@@ -306,6 +307,51 @@ bool ObjectManager::addFavGroup(QString groupName)
     }
 
     this->treeOfFav.push_back(FavGroup(groupName.toStdString()));
+    this->setFavTreeModified(true);
+    return true;
+}
+
+Model* ObjectManager::findModelByName(QString modelName)
+{
+    vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
+    for ( ; model_iter < treeOfGeoObjs.end(); model_iter++)
+    {
+        if (0 == modelName.compare(model_iter->name))
+        {
+            return &(*model_iter);
+        }
+    }
+
+    return NULL;
+}
+
+FavItem* ObjectManager::findFavItemByName(QString groupName, QString favItemName)
+{
+    FavGroup* pGroup = findFavGroupByName(groupName);
+    if (pGroup)
+    {
+        return (pGroup->findFavItem(favItemName));
+    }
+
+    return NULL;
+}
+
+bool ObjectManager::addFavItem(QString groupName, FavItem& favItem)
+{
+    FavGroup* pGroup = findFavGroupByName(groupName);
+    if (NULL == pGroup)
+    {
+        return false;
+    }
+
+    if (NULL != pGroup->findFavItem(favItem.getName()))
+    {
+        return false;
+    }
+
+    pGroup->vecOfItems.push_back(favItem);
+    pGroup->setModified(true);
+    this->setFavTreeModified(true);
     return true;
 }
 
@@ -315,3 +361,17 @@ void ReaderUpdater::run()
     emit UpdateFinished();
 }
 
+
+FavItem* FavGroup::findFavItem(QString itemName)
+{
+    vector<FavItem>::iterator item_Iter = this->vecOfItems.begin();
+    for ( ; item_Iter < vecOfItems.end(); item_Iter++)
+    {
+        if (0 == item_Iter->getName().compare(itemName))
+        {
+            return &(*item_Iter);
+        }
+    }
+
+    return NULL;
+}

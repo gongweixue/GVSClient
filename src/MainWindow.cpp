@@ -25,6 +25,7 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include "ContextMenus/AddFavGroupDialog.h"
+#include "ContextMenus/AddFavItemDialog.h"
 #include "Extention/GVSCompassActor.h"
 #include "Extention/GVSPrjTreeWidgetItem.h"
 #include "GVSDoc.h"
@@ -883,17 +884,21 @@ void MainWindow::bindingActionsWithSlots()
     connect(ui.actionRulerGridCtrl, SIGNAL(triggered()), this, SLOT(OnCubeAxesOption()));
     connect(ui.actionLightOption, SIGNAL(triggered()), this, SLOT(OnLightOption()));
     connect(ui.actionStdExplode, SIGNAL(triggered()), this, SLOT(OnStdExplode()));
-    connect(ui.actionShowColorLegend, SIGNAL(triggered()), this, SLOT(OnShowColorLegend()));
+    connect(ui.actionShowColorLegend, SIGNAL(triggered()),
+            this, SLOT(OnShowColorLegend()));
     connect(ui.actionShowProjectExplorer, SIGNAL(triggered()),
             this, SLOT(OnProjectExplorer()));
 
     /**********************************color lenged stuff********************************/
-    connect(ui.actionEditColorLegend, SIGNAL(triggered()), this, SLOT(OnEditColorLegend()));
+    connect(ui.actionEditColorLegend, SIGNAL(triggered()),
+        this, SLOT(OnEditColorLegend()));
 
     /*******************************prj tree connections*********************************/
     connect(m_prjTreeWidget, SIGNAL(sigChangeObjColor(QString&, QString&)),
             this, SLOT(OnChangingObjColor(QString&, QString&)));
     connect(m_prjTreeWidget, SIGNAL(sigAddFavGroup()), this, SLOT(OnAddFavGroup()));
+    connect(m_prjTreeWidget, SIGNAL(sigAddFavItem(GVSPrjTreeWidgetItem&)),
+            this, SLOT(OnAddFavItem(GVSPrjTreeWidgetItem&)));
 
 }
 
@@ -1201,7 +1206,8 @@ void MainWindow::OnPrjExplorerObjItemClicked(QTreeWidgetItem* item, int column)
         return;
     }
 
-    if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_OBJ)
+    if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_OBJ ||
+        item_clicked->getType() == PRJ_TREE_ITEM_TYPE_FAV_ITEM)
     {
         bool isMdlItemChckd = true;
         for (int i = 0; i < item->parent()->childCount(); ++i)
@@ -1214,9 +1220,17 @@ void MainWindow::OnPrjExplorerObjItemClicked(QTreeWidgetItem* item, int column)
 
         //update obj and actor state.
         bool objVisible = (item->checkState(0) == Qt::Checked) ? true : false;
-        UpdateObjItem(item->parent()->text(0), item->text(0), objVisible);
+        if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_OBJ)
+        {
+            UpdateObjItem(item->parent()->text(0), item->text(0), objVisible);
+        }
+        else
+        {
+            throw std::exception("to be finished.");
+        }
     }
-    else if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_MODEL)
+    else if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_MODEL ||
+             item_clicked->getType() == PRJ_TREE_ITEM_TYPE_FAV_GROUP)
     {
         for (int i = 0; i < item->childCount(); ++i)
         {
@@ -1226,7 +1240,14 @@ void MainWindow::OnPrjExplorerObjItemClicked(QTreeWidgetItem* item, int column)
 
                 Qt::CheckState childStateByIdx = item->child(i)->checkState(0);
                 bool objVisible = (childStateByIdx == Qt::Checked) ? true : false;
-                UpdateObjItem(item->text(0), item->child(i)->text(0),objVisible);
+                if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_MODEL)
+                {
+                    UpdateObjItem(item->text(0), item->child(i)->text(0),objVisible);
+                }
+                else
+                {
+                    throw std::exception("to be finished.");
+                }
             }
         }
     }
@@ -1333,7 +1354,11 @@ void MainWindow::fillUpFav()
                 new GVSPrjTreeWidgetItem(favRootItem, PRJ_TREE_ITEM_TYPE_FAV_GROUP);
         group->setText(0, tr(favGroup_iter->getGroupName().c_str()));
         group->setExpanded(true);
-        group->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable);
+        group->setFlags(Qt::ItemIsEnabled |
+                        Qt::ItemIsSelectable |
+                        Qt::ItemIsUserCheckable);
+
+        bool isGroupNodeChecked = (favGroup_iter->vecOfItems.size() > 0) ? true : false;
 
         vector<FavItem>::iterator favItem_Iter = favGroup_iter->vecOfItems.begin();
         for ( ; favItem_Iter != favGroup_iter->vecOfItems.end(); favItem_Iter++)
@@ -1366,14 +1391,20 @@ void MainWindow::fillUpFav()
                     break;
                 }
                 favItem->setIcon(0, QIcon(iconFileName));
-                favItem->setCheckState(0, obj->getVisibility()? Qt::Checked : Qt::Unchecked);
+
+                bool isVis = obj->getVisibility();
+                favItem->setCheckState(0, isVis ? Qt::Checked : Qt::Unchecked);
+
+                isGroupNodeChecked = isGroupNodeChecked && isVis;
             }
             else
             {
                 favItem->setIcon(0, QIcon(tr(":/Resources/PrjExplorer/NoObj.png")));
                 favItem->setCheckState(0, Qt::Unchecked);
+                isGroupNodeChecked = false;
             }
         }
+        group->setCheckState(0, isGroupNodeChecked ? Qt::Checked : Qt::Unchecked);
     }
 }
 
@@ -1439,43 +1470,144 @@ void MainWindow::OnAddFavGroup()
             QMessageBox::information(NULL, tr("错误"), tr("无法添加收藏夹。"));
         }
 
-        QList<QTreeWidgetItem*> itemList = m_prjTreeWidget->findItems("Favorite", Qt::MatchExactly);
+        QList<QTreeWidgetItem*> itemList =
+                m_prjTreeWidget->findItems("Favorite", Qt::MatchExactly);
+
         if (itemList.size() != 1)
         {
-            QMessageBox::information(NULL, tr("错误"), tr("Favorite子节点出错。"));
+            QMessageBox::information(NULL, tr("错误"), tr("Favorite节点出错。"));
             return;
         }
-        GVSPrjTreeWidgetItem* favRootItem = dynamic_cast<GVSPrjTreeWidgetItem*>(itemList.first());
+        GVSPrjTreeWidgetItem* favRootItem =
+                dynamic_cast<GVSPrjTreeWidgetItem*>(itemList.first());
+
         GVSPrjTreeWidgetItem* newGroup =
                 new GVSPrjTreeWidgetItem(favRootItem, PRJ_TREE_ITEM_TYPE_FAV_GROUP);
         newGroup->setText(0, groupName);
         newGroup->setExpanded(true);
-        newGroup->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable);
+        newGroup->setFlags(Qt::ItemIsEnabled |
+                           Qt::ItemIsSelectable |
+                           Qt::ItemIsUserCheckable);
     }
 
     return;
 }
 
-// void MainWindow::cleanItemsUnderItem(GVSPrjTreeWidgetItem item)
-// {
-//     if (item.childCount() != 0)
-//     {
-//         for (int i = 0; i < item.childCount(); ++i)
-//         {
-//             GVSPrjTreeWidgetItem* childItem = dynamic_cast<GVSPrjTreeWidgetItem*>(item.child(i));
-//             cleanItemsUnderItem(childItem);
-//         }
-//     }
-//     else if (item.childCount() == 0 && )
-//     {
-//         GVSPrjTreeWidgetItem* parentItem = dynamic_cast<GVSPrjTreeWidgetItem*>(item.parent());
-//         for (int i = parentItem->childCount() - 1; i >= 0; i--)
-//         {
-//             GVSPrjTreeWidgetItem* childItem = dynamic_cast<GVSPrjTreeWidgetItem*>(item.child(i));
-//             parentItem->removeChild(childItem);
-//             delete childItem;
-//         }
-//     }
-// 
-// }
+void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
+{
+    if (currTreeItem.getType() == PRJ_TREE_ITEM_TYPE_FAV_GROUP ||
+        currTreeItem.getType() == PRJ_TREE_ITEM_TYPE_FAV_ROOT)
+    {
+        ObjectManager* objManager = m_pDoc->GetObjManager();
+
+        AddFavItemDialog addFavItemDlg(objManager);
+        //prepare group combo box ctrl.
+        const vector<FavGroup>* favTree = objManager->getFavTree();
+        for (unsigned int i = 0; i < favTree->size(); ++i)
+        {
+            QString tmpGroupName(favTree->at(i).getGroupName().c_str()); 
+            addFavItemDlg.getGroupComboBox()->addItem(tmpGroupName);
+
+            if (currTreeItem.getType() == PRJ_TREE_ITEM_TYPE_FAV_GROUP)
+            {
+                if (0 == currTreeItem.text(0).compare(tmpGroupName))
+                {
+                    addFavItemDlg.getGroupComboBox()->setCurrentIndex(i);
+                }
+            }
+        }
+        //prepare model combo box ctrl.
+        const vector<Model>* objTree = objManager->getObjTree();
+        for (unsigned int i = 0; i < objTree->size(); ++i)
+        {
+            QString tmpModelName(objTree->at(i).name);
+            addFavItemDlg.getModelComboBox()->addItem(tmpModelName);
+        }
+        //prepare obj combo box ctrl.
+        QString currModelName = addFavItemDlg.getModelComboBox()->currentText();
+        const Model* pModel = objManager->findModelByName(currModelName);
+        if (NULL == pModel)
+        {
+            QMessageBox::information(NULL, tr("错误"), tr("模型名错误。"));
+            return;
+        }
+        for (unsigned int i = 0; i < pModel->vecOfGeoObjs.size(); ++i)
+        {
+            QString tmpObjName(pModel->vecOfGeoObjs.at(i).getName());
+            addFavItemDlg.getObjComboBox()->addItem(tmpObjName);
+        }
+
+
+        addFavItemDlg.exec();
+        if (addFavItemDlg.result() == QDialog::Accepted)
+        {
+            QString newGroupName(addFavItemDlg.getGroupComboBox()->currentText());
+            QString newFavItemName(addFavItemDlg.getFavItemLineEdit()->text());
+            QString newModelName(addFavItemDlg.getModelComboBox()->currentText());
+            QString newObjName(addFavItemDlg.getObjComboBox()->currentText());
+
+            FavItem newFavItem(newFavItemName, newModelName, newObjName);
+            if (!(objManager->addFavItem(newGroupName, newFavItem)))
+            {
+                QMessageBox::information(NULL, tr("错误"), tr("插入新记录失败。"));
+            }
+
+            //find the group node and add an item of tree.
+            QList<QTreeWidgetItem*> itemList =
+                    m_prjTreeWidget->findItems("Favorite", Qt::MatchExactly);
+
+            if (itemList.size() != 1)
+            {
+                QMessageBox::information(NULL, tr("错误"), tr("Favorite节点出错。"));
+                return;
+            }
+
+            GVSPrjTreeWidgetItem* favRootItem =
+                    dynamic_cast<GVSPrjTreeWidgetItem*>(itemList.first());
+
+            for (int i = 0; i < favRootItem->childCount(); ++i)
+            {
+                QTreeWidgetItem* group = favRootItem->child(i);
+                if (0 == newGroupName.compare(group->text(0)))
+                {
+                    GVSPrjTreeWidgetItem* newItem =
+                            new GVSPrjTreeWidgetItem(group, PRJ_TREE_ITEM_TYPE_FAV_ITEM);
+                    newItem->setText(0, newFavItemName);
+                    newItem->setFlags(Qt::ItemIsUserCheckable |
+                                      Qt::ItemIsEnabled |
+                                      Qt::ItemIsSelectable);
+
+                    GeoObject* obj = objManager->findObjByName(newModelName, newObjName);
+                    if (obj)
+                    {
+                        QString iconFileName;
+                        switch (obj->getType())
+                        {
+                        case GEO_OBJECT_TYPE_POINT:
+                            iconFileName = tr(":/Resources/PrjExplorer/PointObj.png");
+                            break;
+                        case GEO_OBJECT_TYPE_LINE:
+                            iconFileName = tr(":/Resources/PrjExplorer/LineObj.png");
+                            break;
+                        case GEO_OBJECT_TYPE_SURFACE:
+                            iconFileName = tr(":/Resources/PrjExplorer/SurfaceObj.png");
+                            break;
+                        }
+                        newItem->setIcon(0, QIcon(iconFileName));
+
+                        bool isVis = obj->getVisibility();
+                        newItem->setCheckState(0, isVis ? Qt::Checked : Qt::Unchecked);
+                    }
+                    else
+                    {
+                        newItem->setIcon(0, QIcon(tr(":/Resources/PrjExplorer/NoObj.png")));
+                        newItem->setCheckState(0, Qt::Unchecked);
+                    }
+                }
+            }
+        }
+    }
+
+    return;
+}
 

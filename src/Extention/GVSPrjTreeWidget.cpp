@@ -18,11 +18,16 @@ GVSPrjTreeWidget::GVSPrjTreeWidget(QWidget *parent)
 
     this->actionAddFavGroup = new QAction(tr("新建收藏群组"), this);
     connect(actionAddFavGroup, SIGNAL(triggered()), this, SLOT(OnAddFavGroup()));
+
+    this->actionAddFavItem = new QAction(tr("新建收藏项"), this);
+    connect(actionAddFavItem, SIGNAL(triggered()), this, SLOT(OnAddFavItem()));
 }
 
 GVSPrjTreeWidget::~GVSPrjTreeWidget()
 {
     delete this->actionChangeObjColor;
+    delete this->actionAddFavGroup;
+    delete this->actionAddFavItem;
     delete this->popMenu;
 }
 
@@ -44,12 +49,14 @@ void GVSPrjTreeWidget::contextMenuEvent(QContextMenuEvent* event)
     case PRJ_TREE_ITEM_TYPE_FAV_ROOT:
         this->popMenu->clear();
         this->popMenu->addAction(actionAddFavGroup);
+        this->popMenu->addAction(actionAddFavItem);
         this->popMenu->exec(QCursor::pos());
         break;
 
     case PRJ_TREE_ITEM_TYPE_FAV_GROUP:
         this->popMenu->clear();
         this->popMenu->addAction(actionAddFavGroup);
+        this->popMenu->addAction(actionAddFavItem);
         this->popMenu->exec(QCursor::pos());
         break;
 
@@ -71,5 +78,13 @@ void GVSPrjTreeWidget::OnChangeObjColor()
 void GVSPrjTreeWidget::OnAddFavGroup()
 {
     emit sigAddFavGroup();
+}
+
+void GVSPrjTreeWidget::OnAddFavItem()
+{
+    GVSPrjTreeWidgetItem* currentItem =
+            dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
+
+    emit sigAddFavItem(*currentItem);
 }
 

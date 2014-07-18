@@ -11,6 +11,7 @@
 #include "Callbacks/vtkBoxClipCallback.h"
 #include "Callbacks/vtkPlaneClipCallback.h"
 #include "Extention/GVSPrjTreeWidget.h"
+#include "Extention/GVSPrjTreeWidgetItem.h"
 #include "Managers/ColorLegendManager.h"
 #include "Managers/vtkSceneManager.h"
 
@@ -46,6 +47,7 @@ private:
     void fillUpPrjExplorer();
     void fillUpObjects();
     void fillUpFav();
+    void updateFavItem(QTreeWidgetItem* favItem);
     void UpdateObjItem(QString modelName, QString objName, bool objVisible);
     bool setActorVisByName(QString actorName, bool vis);
 
@@ -85,6 +87,7 @@ public slots:
     void OnPrjExplorerObjItemClicked(QTreeWidgetItem* item, int column);
     void OnChangingObjColor(QString& modelName, QString& objName);
     void OnAddFavGroup();
+    void OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem);
 
 public:
     Ui::MainWindowClass ui;
