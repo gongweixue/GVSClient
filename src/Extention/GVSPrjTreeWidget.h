@@ -18,6 +18,7 @@ signals:
     void sigAddFavGroup();
     void sigAddFavItem(GVSPrjTreeWidgetItem& currentItem);
     void sigRenameGroup(GVSPrjTreeWidgetItem& currentItem);
+    void sigRemoveGroup(GVSPrjTreeWidgetItem& currentItem);
 
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* event);
@@ -27,12 +28,14 @@ public slots:
     void OnAddFavGroup();
     void OnAddFavItem();
     void OnRenameGroup();
+    void OnRemoveGroup();
 private:
     QMenu* popMenu;
     QAction* actionChangeObjColor;
     QAction* actionAddFavGroup;
     QAction* actionAddFavItem;
     QAction* actionRenameGroup;
+    QAction* actionRemoveGroup;
 };
 
 #endif // GVSPRJTREEWIDGET_H

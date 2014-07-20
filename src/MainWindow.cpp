@@ -901,6 +901,8 @@ void MainWindow::bindingActionsWithSlots()
             this, SLOT(OnAddFavItem(GVSPrjTreeWidgetItem&)));
     connect(m_prjTreeWidget, SIGNAL(sigRenameGroup(GVSPrjTreeWidgetItem&)),
             this, SLOT(OnRenameGroup(GVSPrjTreeWidgetItem&)));
+    connect(m_prjTreeWidget, SIGNAL(sigRemoveGroup(GVSPrjTreeWidgetItem&)),
+            this, SLOT(OnRemoveGroup(GVSPrjTreeWidgetItem&)));
 
 }
 
@@ -1221,15 +1223,15 @@ void MainWindow::OnPrjExplorerTreeItemChanged(QTreeWidgetItem* item, int column)
     }
     else if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_FAV_ITEM)
     {
-        prjExplorerFavItemClicked(item_clicked);
+        prjExplorerFavItemChanged(item_clicked);
     }
     else if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_FAV_GROUP)
     {
-        prjExplorerFavGroupClicked(item_clicked);
+        prjExplorerFavGroupChanged(item_clicked);
     }
     else if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_MODEL)
     {
-        prjExplorerModelClicked(item_clicked);
+        prjExplorerModelChanged(item_clicked);
     }
 
     //reconnect the signal and slot.
@@ -1299,7 +1301,7 @@ QTreeWidgetItem* MainWindow::findObjItemInPrjTree(QString modelName, QString obj
     return NULL;
 }
 
-void MainWindow::prjExplorerFavItemClicked(GVSPrjTreeWidgetItem* item)
+void MainWindow::prjExplorerFavItemChanged(GVSPrjTreeWidgetItem* item)
 {
     if (item->getType() != PRJ_TREE_ITEM_TYPE_FAV_ITEM)
     {
@@ -1395,7 +1397,7 @@ void MainWindow::refreshModelCheckState(QTreeWidgetItem* modelWidget)
     modelItem->setCheckState(0, isModelItemChckd ? Qt::Checked : Qt::Unchecked);
 }
 
-void MainWindow::prjExplorerFavGroupClicked(GVSPrjTreeWidgetItem* item_clicked)
+void MainWindow::prjExplorerFavGroupChanged(GVSPrjTreeWidgetItem* item_clicked)
 {
     if (item_clicked->getType() != PRJ_TREE_ITEM_TYPE_FAV_GROUP) 
     {
@@ -1411,12 +1413,12 @@ void MainWindow::prjExplorerFavGroupClicked(GVSPrjTreeWidgetItem* item_clicked)
             item_clicked->child(i)->setCheckState(0, newGroupState);
             GVSPrjTreeWidgetItem* favItemInView =
                 dynamic_cast<GVSPrjTreeWidgetItem*>(item_clicked->child(i));
-            prjExplorerFavItemClicked(favItemInView);
+            prjExplorerFavItemChanged(favItemInView);
         }
     }
 }
 
-void MainWindow::prjExplorerModelClicked(GVSPrjTreeWidgetItem* item_clicked)
+void MainWindow::prjExplorerModelChanged(GVSPrjTreeWidgetItem* item_clicked)
 {
     if (item_clicked->getType() != PRJ_TREE_ITEM_TYPE_MODEL)
     {
@@ -1853,5 +1855,53 @@ void MainWindow::OnRenameGroup(GVSPrjTreeWidgetItem& currTreeItem)
     connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
             this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
     return;
+}
+
+void MainWindow::OnRemoveGroup( GVSPrjTreeWidgetItem& itemRemoved )
+{
+    disconnect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+               this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+
+    QMessageBox confirm;
+    confirm.setWindowTitle(tr("删除收藏群组"));
+    confirm.setText(tr("不可恢复的操作，确认删除收藏群组么？"));
+    confirm.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    confirm.setDefaultButton(QMessageBox::Cancel);
+    int confirmResult = confirm.exec();
+
+    if (QMessageBox::Ok == confirmResult)
+    {
+        QString groupName(itemRemoved.text(0));
+
+        //remove group in doc.
+        if (!m_pDoc->GetObjManager()->removeGroup(groupName))
+        {
+            connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+                    this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+            throw std::exception("Wrong group name when deleting.");
+            return;
+        }
+        
+
+        //remove group in prj tree.
+        int numOfChildren = itemRemoved.childCount();
+        vector<GVSPrjTreeWidgetItem*> vecOfChildren;
+        for (int i = 0; i < numOfChildren; ++i)
+        {
+            GVSPrjTreeWidgetItem* childByIdx =
+                dynamic_cast<GVSPrjTreeWidgetItem*>(itemRemoved.child(i));
+            vecOfChildren.push_back(childByIdx);
+        }
+        vector<GVSPrjTreeWidgetItem*>::iterator childIter = vecOfChildren.begin();
+        for ( ; childIter < vecOfChildren.end(); childIter++)
+        {
+            itemRemoved.removeChild(*childIter);
+            delete *childIter;
+        }
+        itemRemoved.parent()->removeChild(&itemRemoved);
+    }
+
+    connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+            this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
 }
 

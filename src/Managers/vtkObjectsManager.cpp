@@ -319,6 +319,21 @@ FavGroup* ObjectManager::findFavGroupByName(QString groupName)
     return NULL;
 }
 
+bool ObjectManager::removeGroup(QString groupName)
+{
+    vector<FavGroup>::iterator group_iter = treeOfFav.begin();
+    for ( ; group_iter < treeOfFav.end(); group_iter++)
+    {
+        if (0 == groupName.compare(group_iter->getGroupName().c_str()))
+        {
+            treeOfFav.erase(group_iter);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool ObjectManager::addFavGroup(QString groupName)
 {
     if (NULL != this->findFavGroupByName(groupName))

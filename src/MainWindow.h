@@ -52,9 +52,9 @@ private:
      void updateObjItem(QString modelName, QString objName, bool objVisible);
 
     void prjExplorerObjItemChanged(GVSPrjTreeWidgetItem* item);
-    void prjExplorerFavItemClicked(GVSPrjTreeWidgetItem* item);
-    void prjExplorerFavGroupClicked(GVSPrjTreeWidgetItem* item_clicked);
-    void prjExplorerModelClicked(GVSPrjTreeWidgetItem* item_clicked);
+    void prjExplorerFavItemChanged(GVSPrjTreeWidgetItem* item);
+    void prjExplorerFavGroupChanged(GVSPrjTreeWidgetItem* item_clicked);
+    void prjExplorerModelChanged(GVSPrjTreeWidgetItem* item_clicked);
     void refreshGroupCheckState(QTreeWidgetItem* groupWidget);
     void refreshModelCheckState(QTreeWidgetItem* modelWidget);
 
@@ -101,6 +101,8 @@ public slots:
     void OnAddFavGroup();
     void OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem);
     void OnRenameGroup(GVSPrjTreeWidgetItem& currTreeItem);
+    void OnRemoveGroup(GVSPrjTreeWidgetItem& itemRemoved);
+
 public:
     Ui::MainWindowClass ui;
 
