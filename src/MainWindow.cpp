@@ -1408,13 +1408,10 @@ void MainWindow::prjExplorerFavGroupChanged(GVSPrjTreeWidgetItem* item_clicked)
 
     for (int i = 0; i < item_clicked->childCount(); ++i)
     {
-        if (item_clicked->checkState(0) != item_clicked->child(i)->checkState(0))
-        {
-            item_clicked->child(i)->setCheckState(0, newGroupState);
-            GVSPrjTreeWidgetItem* favItemInView =
+        item_clicked->child(i)->setCheckState(0, newGroupState);
+        GVSPrjTreeWidgetItem* favItemInView =
                 dynamic_cast<GVSPrjTreeWidgetItem*>(item_clicked->child(i));
-            prjExplorerFavItemChanged(favItemInView);
-        }
+        prjExplorerFavItemChanged(favItemInView);
     }
 }
 
