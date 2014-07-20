@@ -166,6 +166,7 @@ public:
     bool getObjColorByName(QString modelName, QString objName, int rgb[3]);
 
     bool addFavGroup(QString groupName);
+    bool removeGroup(QString groupName);
     bool addFavItem(QString groupName, FavItem& favItem);
 
 public slots:

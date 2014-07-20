@@ -899,6 +899,8 @@ void MainWindow::bindingActionsWithSlots()
     connect(m_prjTreeWidget, SIGNAL(sigAddFavGroup()), this, SLOT(OnAddFavGroup()));
     connect(m_prjTreeWidget, SIGNAL(sigAddFavItem(GVSPrjTreeWidgetItem&)),
             this, SLOT(OnAddFavItem(GVSPrjTreeWidgetItem&)));
+    connect(m_prjTreeWidget, SIGNAL(sigRemoveGroup(GVSPrjTreeWidgetItem&)),
+            this, SLOT(OnRemoveGroup(GVSPrjTreeWidgetItem&)));
 
 }
 
@@ -1271,6 +1273,10 @@ QTreeWidgetItem* MainWindow::findObjItemInPrjTree(QString modelName, QString obj
     QList<QTreeWidgetItem*> modelList = m_prjTreeWidget->findItems(modelName,
                                                                    Qt::MatchCaseSensitive
                                                                    | Qt::MatchExactly);
+    if (modelList.isEmpty())
+    {
+        return NULL;
+    }
     QTreeWidgetItem* modelItemInView = modelList[0];
     for (int i = 0; i < modelItemInView->childCount(); ++i)
     {
@@ -1782,5 +1788,53 @@ void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
         }
     }
     return;
+}
+
+void MainWindow::OnRemoveGroup( GVSPrjTreeWidgetItem& itemRemoved )
+{
+    disconnect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+               this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+
+    QMessageBox confirm;
+    confirm.setWindowTitle(tr("删除收藏群组"));
+    confirm.setText(tr("不可恢复的操作，确认删除收藏群组么？"));
+    confirm.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    confirm.setDefaultButton(QMessageBox::Cancel);
+    int confirmResult = confirm.exec();
+
+    if (QMessageBox::Ok == confirmResult)
+    {
+        QString groupName(itemRemoved.text(0));
+
+        //remove group in doc.
+        if (!m_pDoc->GetObjManager()->removeGroup(groupName))
+        {
+            connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+                    this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+            throw std::exception("Wrong group name when deleting.");
+            return;
+        }
+        
+
+        //remove group in prj tree.
+        int numOfChildren = itemRemoved.childCount();
+        vector<GVSPrjTreeWidgetItem*> vecOfChildren;
+        for (int i = 0; i < numOfChildren; ++i)
+        {
+            GVSPrjTreeWidgetItem* childByIdx =
+                dynamic_cast<GVSPrjTreeWidgetItem*>(itemRemoved.child(i));
+            vecOfChildren.push_back(childByIdx);
+        }
+        vector<GVSPrjTreeWidgetItem*>::iterator childIter = vecOfChildren.begin();
+        for ( ; childIter < vecOfChildren.end(); childIter++)
+        {
+            itemRemoved.removeChild(*childIter);
+            delete *childIter;
+        }
+        itemRemoved.parent()->removeChild(&itemRemoved);
+    }
+
+    connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+            this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
 }
 

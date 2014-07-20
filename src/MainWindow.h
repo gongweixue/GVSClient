@@ -100,7 +100,7 @@ public slots:
     void OnChangingObjColor(QString& modelName, QString& objName);
     void OnAddFavGroup();
     void OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem);
-
+    void OnRemoveGroup(GVSPrjTreeWidgetItem& itemRemoved);
 public:
     Ui::MainWindowClass ui;
 
