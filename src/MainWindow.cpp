@@ -906,7 +906,7 @@ void MainWindow::OnOpenProject()
 {
     if (m_pDoc->OnOpenProject())
     {
-        fillUpPrjExplorer();
+        initPrjExplorer();
         onInitialUpdate();
         delete m_ColorLegendManager;
         m_ColorLegendManager = new ColorLegendManager(this->ui.legendItemList,
@@ -1185,7 +1185,7 @@ void MainWindow::OnEditColorLegend()
     delete editor;
 }
 
-void MainWindow::fillUpPrjExplorer()
+void MainWindow::initPrjExplorer()
 {
     QString prjFileName(m_pDoc->getProjectPathName().c_str());
     QFileInfo gvpFileInfo(prjFileName.toStdString().c_str());
@@ -1193,12 +1193,12 @@ void MainWindow::fillUpPrjExplorer()
     QString header(tr("ÏîÄ¿ \"") + prjName + tr("\""));
     m_prjTreeWidget->setHeaderLabel(header);
 
-    fillUpObjects();
-    fillUpFav();
+    initObjectItems();
+    initFavItems();
 
 }
 
-void MainWindow::OnPrjExplorerObjItemClicked(QTreeWidgetItem* item, int column)
+void MainWindow::OnPrjExplorerTreeItemClicked(QTreeWidgetItem* item, int column)
 {
     GVSPrjTreeWidgetItem* item_clicked = dynamic_cast<GVSPrjTreeWidgetItem *>(item);
     if (NULL == item_clicked)
@@ -1206,70 +1206,210 @@ void MainWindow::OnPrjExplorerObjItemClicked(QTreeWidgetItem* item, int column)
         return;
     }
 
-    if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_OBJ ||
-        item_clicked->getType() == PRJ_TREE_ITEM_TYPE_FAV_ITEM)
+    if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_OBJ)
     {
-        bool isMdlItemChckd = true;
-        for (int i = 0; i < item->parent()->childCount(); ++i)
-        {
-            Qt::CheckState childStateByIdx = item->parent()->child(i)->checkState(0);
-            bool isObjItemChckd = (childStateByIdx == Qt::Checked) ? true : false;
-            isMdlItemChckd = isMdlItemChckd && isObjItemChckd;
-        }
-        item->parent()->setCheckState(0, isMdlItemChckd ? Qt::Checked : Qt::Unchecked);
-
-        //update obj and actor state.
-        bool objVisible = (item->checkState(0) == Qt::Checked) ? true : false;
-        if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_OBJ)
-        {
-            UpdateObjItem(item->parent()->text(0), item->text(0), objVisible);
-        }
-        else
-        {
-            throw std::exception("to be finished.");
-        }
+        prjExplorerObjItemClicked(item_clicked);
     }
-    else if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_MODEL ||
-             item_clicked->getType() == PRJ_TREE_ITEM_TYPE_FAV_GROUP)
+    else if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_FAV_ITEM)
     {
-        for (int i = 0; i < item->childCount(); ++i)
-        {
-            if (item->checkState(0) != item->child(i)->checkState(0))
-            {
-                item->child(i)->setCheckState(0, item->checkState(0));
+        prjExplorerFavItemClicked(item_clicked);
+    }
+    else if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_FAV_GROUP)
+    {
+        prjExplorerFavGroupClicked(item_clicked);
+    }
+    else if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_MODEL)
+    {
+        prjExplorerModelClicked(item_clicked);
+    }
 
-                Qt::CheckState childStateByIdx = item->child(i)->checkState(0);
-                bool objVisible = (childStateByIdx == Qt::Checked) ? true : false;
-                if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_MODEL)
+//     if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_OBJ ||
+//         item_clicked->getType() == PRJ_TREE_ITEM_TYPE_FAV_ITEM)
+//     {
+//         bool isMdlItemChckd = true;
+//         for (int i = 0; i < item->parent()->childCount(); ++i)
+//         {
+//             Qt::CheckState childStateByIdx = item->parent()->child(i)->checkState(0);
+//             bool isObjItemChckd = (childStateByIdx == Qt::Checked) ? true : false;
+//             isMdlItemChckd = isMdlItemChckd && isObjItemChckd;
+//         }
+//         item->parent()->setCheckState(0, isMdlItemChckd ? Qt::Checked : Qt::Unchecked);
+// 
+//         //update obj and actor state.
+//         bool objVisible = (item->checkState(0) == Qt::Checked) ? true : false;
+//         if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_OBJ)
+//         {
+//             updateObjItem(item->parent()->text(0), item->text(0), objVisible);
+//         }
+//         else
+//         {
+//             throw std::exception("to be finished.");
+//         }
+//     }
+//     else if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_MODEL ||
+//              item_clicked->getType() == PRJ_TREE_ITEM_TYPE_FAV_GROUP)
+//     {
+//         for (int i = 0; i < item->childCount(); ++i)
+//         {
+//             if (item->checkState(0) != item->child(i)->checkState(0))
+//             {
+//                 item->child(i)->setCheckState(0, item->checkState(0));
+// 
+//                 Qt::CheckState childStateByIdx = item->child(i)->checkState(0);
+//                 bool objVisible = (childStateByIdx == Qt::Checked) ? true : false;
+//                 if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_MODEL)
+//                 {
+//                     updateObjItem(item->text(0), item->child(i)->text(0),objVisible);
+//                 }
+//                 else
+//                 {
+//                     throw std::exception("to be finished.");
+//                 }
+//             }
+//         }
+//     }
+}
+
+void MainWindow::prjExplorerObjItemClicked(GVSPrjTreeWidgetItem* item)
+{
+    if (item->getType() != PRJ_TREE_ITEM_TYPE_OBJ)
+    {
+        return;
+    }
+
+    //update obj and actor state.
+    bool objVisible = (item->checkState(0) == Qt::Checked) ? true : false;
+    updateObjItem(item->parent()->text(0), item->text(0), objVisible);
+
+    //update model check state
+    refreshModelCheckState(item->parent());
+
+    //update favitem check state, here is not a good way in time complexity.
+    ObjectManager* objManager = m_pDoc->GetObjManager();
+    vector<FavGroup>* favTreeInDoc = objManager->getFavTree();
+    vector<FavGroup>::iterator groupIter = favTreeInDoc->begin();
+    for ( ; groupIter < favTreeInDoc->end(); groupIter++)
+    {
+        QString groupName(groupIter->getGroupName().c_str());
+        vector<FavItem>::iterator favItemIter = groupIter->vecOfItems.begin();
+        for ( ; favItemIter < groupIter->vecOfItems.end(); favItemIter++)
+        {
+            if (0 == favItemIter->getModelName().compare(item->parent()->text(0)) &&
+                0 == favItemIter->getObjName().compare(item->text(0)))
+            {
+                QString favName(favItemIter->getName());
+
+                QList<QTreeWidgetItem*> childrenList =
+                        m_prjTreeWidget->findItems(tr("Favorite"),
+                                                   Qt::MatchCaseSensitive,
+                                                   Qt::MatchExactly);
+                GVSPrjTreeWidgetItem* favRoot =
+                        dynamic_cast<GVSPrjTreeWidgetItem*>(childrenList[0]);
+                for (int i = 0; i < favRoot->childCount(); ++i)
                 {
-                    UpdateObjItem(item->text(0), item->child(i)->text(0),objVisible);
-                }
-                else
-                {
-                    throw std::exception("to be finished.");
+                    QTreeWidgetItem* groupWidget = favRoot->child(i);
+
+                    if (0 == groupWidget->text(0).compare(groupName))
+                    {
+                        for (int j = 0; j < groupWidget->childCount(); ++j)
+                        {
+                            QTreeWidgetItem* favWidget = groupWidget->child(j);
+                            if (0 == favWidget->text(0).compare(favName))
+                            {
+                                favWidget->setCheckState(0, item->checkState(0));
+                            }
+                        }
+                        refreshGroupCheckState(groupWidget);
+                    }
                 }
             }
         }
     }
+
 }
 
-void MainWindow::UpdateObjItem(QString modelName, QString objName, bool vis)
+void MainWindow::prjExplorerFavItemClicked(GVSPrjTreeWidgetItem* item)
+{
+//     if (item->getType() != PRJ_TREE_ITEM_TYPE_FAV_ITEM)
+//     {
+//         return;
+//     }
+// 
+//     bool isGroupItemChecked = true;
+//     for (int i = 0; i < item->parent()->childCount(); ++i)
+//     {
+//         Qt::CheckState childStateByIdx = item->parent()->child(i)->checkState(0);
+//         bool isObjItemChckd = (childStateByIdx == Qt::Checked) ? true : false;
+//         isGroupItemChecked = isGroupItemChecked && isObjItemChckd;
+//     }
+}
+
+void MainWindow::refreshGroupCheckState(QTreeWidgetItem* groupWidget)
+{
+    GVSPrjTreeWidgetItem* groupItem = dynamic_cast<GVSPrjTreeWidgetItem*>(groupWidget);
+    if (groupItem->getType() != PRJ_TREE_ITEM_TYPE_FAV_GROUP)
+    {
+        return;
+    }
+
+    bool isGroupItemChckd = true;
+    for (int i = 0; i < groupItem->childCount(); ++i)
+    {
+        Qt::CheckState childStateByIdx = groupItem->child(i)->checkState(0);
+        bool isFavItemChckd = (childStateByIdx == Qt::Checked) ? true : false;
+        isGroupItemChckd = isGroupItemChckd && isFavItemChckd;
+    }
+    groupItem->setCheckState(0, isGroupItemChckd ? Qt::Checked : Qt::Unchecked);
+}
+
+void MainWindow::refreshModelCheckState(QTreeWidgetItem* modelWidget)
+{
+    GVSPrjTreeWidgetItem* modelItem = dynamic_cast<GVSPrjTreeWidgetItem*>(modelWidget);
+    if (modelItem->getType() != PRJ_TREE_ITEM_TYPE_MODEL)
+    {
+        return;
+    }
+
+    bool isModelItemChckd = true;
+    for (int i = 0; i < modelItem->childCount(); ++i)
+    {
+        Qt::CheckState childStateByIdx = modelItem->child(i)->checkState(0);
+        bool isObjItemChckd = (childStateByIdx == Qt::Checked) ? true : false;
+        isModelItemChckd = isModelItemChckd && isObjItemChckd;
+    }
+    modelItem->setCheckState(0, isModelItemChckd ? Qt::Checked : Qt::Unchecked);
+}
+
+void MainWindow::prjExplorerFavGroupClicked(GVSPrjTreeWidgetItem* item_clicked)
+{
+    throw std::exception("The method or operation is not implemented.");
+}
+
+void MainWindow::prjExplorerModelClicked(GVSPrjTreeWidgetItem* item_clicked)
+{
+    throw std::exception("The method or operation is not implemented.");
+}
+
+void MainWindow::updateObjItem(QString modelName, QString objName, bool vis)
 {
     if (!(m_pDoc->setObjVisByName(modelName, objName, vis)))
     {
         throw std::exception("Obj not found in object manager.");
     }
 
-    QString actorName(modelName + "/" + objName);
-    if (!(this->setActorVisByName(actorName, vis)))
+    if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL)
     {
-        throw std::exception("Actor not found in scene manager.");
-    }
+        QString actorName(modelName + "/" + objName);
+        if (!(this->setActorVisByName(actorName, vis)))
+        {
+            throw std::exception("Actor not found in scene manager.");
+        }
 
-    //refresh
-    if (qvtkWidget->GetRenderWindow())
-    {
-        qvtkWidget->GetRenderWindow()->Render();
+        //refresh
+        if (qvtkWidget->GetRenderWindow())
+        {
+            qvtkWidget->GetRenderWindow()->Render();
+        }
     }
 }
 
@@ -1285,7 +1425,7 @@ bool MainWindow::setActorVisByName( QString actorName, bool vis )
     return false;
 }
 
-void MainWindow::fillUpObjects()
+void MainWindow::initObjectItems()
 {
     vector<Model>* objTree = m_pDoc->GetObjManager()->getObjTree();
 
@@ -1335,10 +1475,10 @@ void MainWindow::fillUpObjects()
     }
 
     connect(m_prjTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*, int)),
-            this, SLOT(OnPrjExplorerObjItemClicked(QTreeWidgetItem*, int)));
+            this, SLOT(OnPrjExplorerTreeItemClicked(QTreeWidgetItem*, int)));
 }
 
-void MainWindow::fillUpFav()
+void MainWindow::initFavItems()
 {
     vector<FavGroup>* favTree = m_pDoc->GetObjManager()->getFavTree();
 
@@ -1610,4 +1750,5 @@ void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
 
     return;
 }
+
 

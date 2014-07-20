@@ -44,11 +44,20 @@ private:
     void destoryStatusBarMembers();
     void destoryMainAreaMembers();
     void bindingActionsWithSlots();
-    void fillUpPrjExplorer();
-    void fillUpObjects();
-    void fillUpFav();
-    void updateFavItem(QTreeWidgetItem* favItem);
-    void UpdateObjItem(QString modelName, QString objName, bool objVisible);
+
+    void initPrjExplorer();
+    void initObjectItems();
+    void initFavItems();
+//     void updateFavItem(QTreeWidgetItem* favItem);
+     void updateObjItem(QString modelName, QString objName, bool objVisible);
+
+    void prjExplorerObjItemClicked(GVSPrjTreeWidgetItem* item);
+    void prjExplorerFavItemClicked(GVSPrjTreeWidgetItem* item);
+    void prjExplorerFavGroupClicked(GVSPrjTreeWidgetItem* item_clicked);
+    void prjExplorerModelClicked(GVSPrjTreeWidgetItem* item_clicked);
+    void refreshGroupCheckState(QTreeWidgetItem* groupWidget);
+    void refreshModelCheckState(QTreeWidgetItem* modelWidget);
+
     bool setActorVisByName(QString actorName, bool vis);
 
     void onInitialUpdate();
@@ -84,7 +93,7 @@ public slots:
     void OnShowColorLegend();
     void OnProjectExplorer();
     void OnEditColorLegend();
-    void OnPrjExplorerObjItemClicked(QTreeWidgetItem* item, int column);
+    void OnPrjExplorerTreeItemClicked(QTreeWidgetItem* item, int column);
     void OnChangingObjColor(QString& modelName, QString& objName);
     void OnAddFavGroup();
     void OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem);

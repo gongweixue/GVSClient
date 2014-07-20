@@ -21,6 +21,11 @@ public:
     explicit GVSPrjTreeWidgetItem(QTreeWidgetItem* parent, GVS_TREE_ITEM_TYPE ty);
     ~GVSPrjTreeWidgetItem();
 
+    QTreeWidgetItem* parent() const
+    {
+        return QTreeWidgetItem::parent();
+    }
+
     GVS_TREE_ITEM_TYPE getType() {return this->itemType;}
 
 protected:
