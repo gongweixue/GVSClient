@@ -153,6 +153,7 @@ public:
     FavItem* findFavItemByName(QString groupName, QString favItemName);
 
     bool setObjVisByName(QString modelName, QString objName, bool vis);
+    bool getObjVisByName(QString modelName, QString objName);
 
     bool setModelModified(QString modelName, bool hasModified);
 

@@ -220,6 +220,26 @@ bool ObjectManager::setObjColorByName(QString modelName, QString objName, int r,
     return false;
 }
 
+bool ObjectManager::getObjVisByName(QString modelName, QString objName)
+{
+    vector<Model>::iterator modelIter = this->getObjTree()->begin();
+    for ( ; modelIter < this->getObjTree()->end(); modelIter++)
+    {
+        if (0 == modelName.compare(modelIter->name))
+        {
+            vector<GeoObject>::iterator objIter = modelIter->vecOfGeoObjs.begin();
+            for ( ; objIter < modelIter->vecOfGeoObjs.end(); objIter++)
+            {
+                if (0 == objName.compare(objIter->getName()))
+                {
+                    return objIter->getVisibility();
+                }
+            }
+        }
+    }
+    return false; //in case of obj not existed.
+}
+
 bool ObjectManager::getObjColorByName( QString modelName, QString objName, int rgb[3] )
 {
     GeoObject* obj = findObjByName(modelName, objName);

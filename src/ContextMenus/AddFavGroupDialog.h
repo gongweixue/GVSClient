@@ -12,7 +12,9 @@ public:
     AddFavGroupDialog(QWidget *parent = 0);
     ~AddFavGroupDialog();
 
-    QString getGroupName () {return ui.GroupName->text();}
+    QString getGroupName() {return ui.GroupNameLineEdit->text();}
+    QLineEdit* getGroupNameLineEdit() {return ui.GroupNameLineEdit;}
+    QPushButton* getOkBtn() {return ui.okButton;}
 
 private:
     Ui::AddFavGroupDialog ui;

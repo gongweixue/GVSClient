@@ -51,7 +51,7 @@ private:
 //     void updateFavItem(QTreeWidgetItem* favItem);
      void updateObjItem(QString modelName, QString objName, bool objVisible);
 
-    void prjExplorerObjItemClicked(GVSPrjTreeWidgetItem* item);
+    void prjExplorerObjItemChanged(GVSPrjTreeWidgetItem* item);
     void prjExplorerFavItemClicked(GVSPrjTreeWidgetItem* item);
     void prjExplorerFavGroupClicked(GVSPrjTreeWidgetItem* item_clicked);
     void prjExplorerModelClicked(GVSPrjTreeWidgetItem* item_clicked);
@@ -96,11 +96,11 @@ public slots:
     void OnShowColorLegend();
     void OnProjectExplorer();
     void OnEditColorLegend();
-    void OnPrjExplorerTreeItemClicked(QTreeWidgetItem* item, int column);
+    void OnPrjExplorerTreeItemChanged(QTreeWidgetItem* item, int column);
     void OnChangingObjColor(QString& modelName, QString& objName);
     void OnAddFavGroup();
     void OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem);
-
+    void OnRenameGroup(GVSPrjTreeWidgetItem& currTreeItem);
 public:
     Ui::MainWindowClass ui;
 

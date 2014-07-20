@@ -17,6 +17,7 @@ signals:
     void sigChangeObjColor(QString& modelName, QString& objName);
     void sigAddFavGroup();
     void sigAddFavItem(GVSPrjTreeWidgetItem& currentItem);
+    void sigRenameGroup(GVSPrjTreeWidgetItem& currentItem);
 
 protected:
     virtual void contextMenuEvent(QContextMenuEvent* event);
@@ -25,11 +26,13 @@ public slots:
     void OnChangeObjColor();
     void OnAddFavGroup();
     void OnAddFavItem();
+    void OnRenameGroup();
 private:
     QMenu* popMenu;
     QAction* actionChangeObjColor;
     QAction* actionAddFavGroup;
     QAction* actionAddFavItem;
+    QAction* actionRenameGroup;
 };
 
 #endif // GVSPRJTREEWIDGET_H

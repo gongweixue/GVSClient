@@ -61,7 +61,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QLineEdit" name="GroupName">
+  <widget class="QLineEdit" name="GroupNameLineEdit">
    <property name="geometry">
     <rect>
      <x>20</x>

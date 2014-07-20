@@ -21,6 +21,9 @@ GVSPrjTreeWidget::GVSPrjTreeWidget(QWidget *parent)
 
     this->actionAddFavItem = new QAction(tr("新建收藏项"), this);
     connect(actionAddFavItem, SIGNAL(triggered()), this, SLOT(OnAddFavItem()));
+
+    this->actionRenameGroup = new QAction(tr("重命名"), this);
+    connect(actionRenameGroup, SIGNAL(triggered()), this, SLOT(OnRenameGroup()));
 }
 
 GVSPrjTreeWidget::~GVSPrjTreeWidget()
@@ -28,6 +31,7 @@ GVSPrjTreeWidget::~GVSPrjTreeWidget()
     delete this->actionChangeObjColor;
     delete this->actionAddFavGroup;
     delete this->actionAddFavItem;
+    delete this->actionRenameGroup;
     delete this->popMenu;
 }
 
@@ -35,6 +39,10 @@ void GVSPrjTreeWidget::contextMenuEvent(QContextMenuEvent* event)
 {
     GVSPrjTreeWidgetItem* item = NULL;
     QPoint pos = event->pos();
+    if (this->itemAt(pos) == NULL)
+    {
+        return;
+    }
     item = dynamic_cast<GVSPrjTreeWidgetItem*>(this->itemAt(pos));
 
     switch (item->getType())
@@ -57,6 +65,7 @@ void GVSPrjTreeWidget::contextMenuEvent(QContextMenuEvent* event)
         this->popMenu->clear();
         this->popMenu->addAction(actionAddFavGroup);
         this->popMenu->addAction(actionAddFavItem);
+        this->popMenu->addAction(actionRenameGroup);
         this->popMenu->exec(QCursor::pos());
         break;
 
@@ -86,5 +95,13 @@ void GVSPrjTreeWidget::OnAddFavItem()
             dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
 
     emit sigAddFavItem(*currentItem);
+}
+
+void GVSPrjTreeWidget::OnRenameGroup()
+{
+    GVSPrjTreeWidgetItem* currentItem =
+        dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
+
+    emit sigRenameGroup(*currentItem);
 }
 

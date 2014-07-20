@@ -899,6 +899,8 @@ void MainWindow::bindingActionsWithSlots()
     connect(m_prjTreeWidget, SIGNAL(sigAddFavGroup()), this, SLOT(OnAddFavGroup()));
     connect(m_prjTreeWidget, SIGNAL(sigAddFavItem(GVSPrjTreeWidgetItem&)),
             this, SLOT(OnAddFavItem(GVSPrjTreeWidgetItem&)));
+    connect(m_prjTreeWidget, SIGNAL(sigRenameGroup(GVSPrjTreeWidgetItem&)),
+            this, SLOT(OnRenameGroup(GVSPrjTreeWidgetItem&)));
 
 }
 
@@ -1196,10 +1198,17 @@ void MainWindow::initPrjExplorer()
     initObjectItems();
     initFavItems();
 
+    connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+            this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+
 }
 
-void MainWindow::OnPrjExplorerTreeItemClicked(QTreeWidgetItem* item, int column)
+void MainWindow::OnPrjExplorerTreeItemChanged(QTreeWidgetItem* item, int column)
 {
+    //disconnect the signal and slot to avoid infinite loop
+    disconnect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+            this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+
     GVSPrjTreeWidgetItem* item_clicked = dynamic_cast<GVSPrjTreeWidgetItem *>(item);
     if (NULL == item_clicked)
     {
@@ -1208,7 +1217,7 @@ void MainWindow::OnPrjExplorerTreeItemClicked(QTreeWidgetItem* item, int column)
 
     if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_OBJ)
     {
-        prjExplorerObjItemClicked(item_clicked);
+        prjExplorerObjItemChanged(item_clicked);
     }
     else if (item_clicked->getType() == PRJ_TREE_ITEM_TYPE_FAV_ITEM)
     {
@@ -1222,9 +1231,13 @@ void MainWindow::OnPrjExplorerTreeItemClicked(QTreeWidgetItem* item, int column)
     {
         prjExplorerModelClicked(item_clicked);
     }
+
+    //reconnect the signal and slot.
+    connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+            this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
 }
 
-void MainWindow::prjExplorerObjItemClicked(GVSPrjTreeWidgetItem* item)
+void MainWindow::prjExplorerObjItemChanged(GVSPrjTreeWidgetItem* item)
 {
     if (item->getType() != PRJ_TREE_ITEM_TYPE_OBJ)
     {
@@ -1271,7 +1284,11 @@ QTreeWidgetItem* MainWindow::findObjItemInPrjTree(QString modelName, QString obj
     QList<QTreeWidgetItem*> modelList = m_prjTreeWidget->findItems(modelName,
                                                                    Qt::MatchCaseSensitive
                                                                    | Qt::MatchExactly);
-    QTreeWidgetItem* modelItemInView = modelList[0];
+    if (modelList.isEmpty())
+    {
+        return NULL;
+    }
+    QTreeWidgetItem* modelItemInView = modelList.first();
     for (int i = 0; i < modelItemInView->childCount(); ++i)
     {
         if (modelItemInView->child(i)->text(0).compare(objName) == 0)
@@ -1389,10 +1406,13 @@ void MainWindow::prjExplorerFavGroupClicked(GVSPrjTreeWidgetItem* item_clicked)
 
     for (int i = 0; i < item_clicked->childCount(); ++i)
     {
-        item_clicked->child(i)->setCheckState(0, newGroupState);
-        GVSPrjTreeWidgetItem* favItemInView =
-            dynamic_cast<GVSPrjTreeWidgetItem*>(item_clicked->child(i));
-        prjExplorerFavItemClicked(favItemInView);
+        if (item_clicked->checkState(0) != item_clicked->child(i)->checkState(0))
+        {
+            item_clicked->child(i)->setCheckState(0, newGroupState);
+            GVSPrjTreeWidgetItem* favItemInView =
+                dynamic_cast<GVSPrjTreeWidgetItem*>(item_clicked->child(i));
+            prjExplorerFavItemClicked(favItemInView);
+        }
     }
 }
 
@@ -1410,22 +1430,19 @@ void MainWindow::prjExplorerModelClicked(GVSPrjTreeWidgetItem* item_clicked)
         item_clicked->child(i)->setCheckState(0, newModelState);
         GVSPrjTreeWidgetItem* objItemInView =
                 dynamic_cast<GVSPrjTreeWidgetItem*>(item_clicked->child(i));
-        prjExplorerObjItemClicked(objItemInView);
+        prjExplorerObjItemChanged(objItemInView);
     }
 }
 
 void MainWindow::updateObjItem(QString modelName, QString objName, bool vis)
 {
-    if (m_pDoc->getObjVisByName(modelName, objName) == vis)
+    if (m_pDoc->GetObjManager()->getObjVisByName(modelName, objName) == vis)
     {
         return;
     }
-    if (!(m_pDoc->setObjVisByName(modelName, objName, vis)))
-    {
-        throw std::exception("Obj not found in object manager.");
-    }
+    bool setVisOk = m_pDoc->GetObjManager()->setObjVisByName(modelName, objName, vis);
 
-    if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL)
+    if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL && true == setVisOk)
     {
         QString actorName(modelName + "/" + objName);
         if (!(this->setActorVisByName(actorName, vis)))
@@ -1501,9 +1518,6 @@ void MainWindow::initObjectItems()
         }
         modelItem->setCheckState(0, isModelItemChecked ? Qt::Checked : Qt::Unchecked);
     }
-
-    connect(m_prjTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*, int)),
-            this, SLOT(OnPrjExplorerTreeItemClicked(QTreeWidgetItem*, int)));
 }
 
 void MainWindow::initFavItems()
@@ -1781,6 +1795,63 @@ void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
             }
         }
     }
+    return;
+}
+
+void MainWindow::OnRenameGroup(GVSPrjTreeWidgetItem& currTreeItem)
+{
+    disconnect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+               this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+
+    QString oldGroupName(currTreeItem.text(0));
+    AddFavGroupDialog dlgAddFavGroup(this);
+    dlgAddFavGroup.setWindowTitle(tr("重命名收藏夹"));
+    dlgAddFavGroup.getOkBtn()->setText(tr("确定"));
+    dlgAddFavGroup.getGroupNameLineEdit()->setText(oldGroupName);
+    dlgAddFavGroup.exec();
+
+    if (dlgAddFavGroup.result() == QDialog::Accepted)
+    {
+        QString newGroupName(dlgAddFavGroup.getGroupName());
+
+        if (0 == newGroupName.compare(oldGroupName))
+        {
+            connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+                    this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+            return;
+        }
+
+        if (NULL != m_pDoc->GetObjManager()->findFavGroupByName(newGroupName))
+        {
+            QMessageBox::information(NULL, tr("非法名称"), tr("已经存在该收藏夹。"));
+
+            connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+                    this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+            return;
+        }
+
+        //change name in doc
+        ObjectManager* objManager = m_pDoc->GetObjManager();
+        FavGroup* groupInDoc = objManager->findFavGroupByName(oldGroupName);
+        if (NULL == groupInDoc)
+        {
+            QMessageBox::information(NULL, tr("错误"), tr("无法找到收藏夹。"));
+
+            connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+                    this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+            return;
+        }
+        else
+        {
+            groupInDoc->setGroupName(newGroupName.toStdString());
+        }
+
+        //change name in view
+        currTreeItem.setText(0, newGroupName);
+    }
+
+    connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+            this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
     return;
 }
 

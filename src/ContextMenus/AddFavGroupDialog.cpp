@@ -7,7 +7,7 @@ AddFavGroupDialog::AddFavGroupDialog(QWidget *parent)
     ui.setupUi(this);
     QRegExp regExp("[A-Za-z0-9_]*");
 
-    ui.GroupName->setValidator(new QRegExpValidator(regExp, this));
+    ui.GroupNameLineEdit->setValidator(new QRegExpValidator(regExp, this));
 }
 
 AddFavGroupDialog::~AddFavGroupDialog()
