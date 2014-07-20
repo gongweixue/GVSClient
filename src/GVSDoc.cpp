@@ -176,12 +176,14 @@ bool GVSDoc::setObjVisByName( QString modelName, QString objName, bool vis )
             {
                 if (0 == objName.compare(objIter->getName()))
                 {
-                    objIter->setVisibility(vis);
+                    if (vis != objIter->getVisibility())
+                    {
+                        objIter->setVisibility(vis);
 
-                    objIter->setModified(true);
-                    modelIter->hasModified = true;
-                    m_objManager.setObjTreeModified(true);
-
+                        objIter->setModified(true);
+                        modelIter->hasModified = true;
+                        m_objManager.setObjTreeModified(true);
+                    }
                     return true;
                 }
             }
@@ -189,6 +191,26 @@ bool GVSDoc::setObjVisByName( QString modelName, QString objName, bool vis )
     }
 
     return false;
+}
+
+bool GVSDoc::getObjVisByName(QString modelName, QString objName)
+{
+    vector<Model>::iterator modelIter = m_objManager.getObjTree()->begin();
+    for ( ; modelIter < m_objManager.getObjTree()->end(); modelIter++)
+    {
+        if (0 == modelName.compare(modelIter->name))
+        {
+            vector<GeoObject>::iterator objIter = modelIter->vecOfGeoObjs.begin();
+            for ( ; objIter < modelIter->vecOfGeoObjs.end(); objIter++)
+            {
+                if (0 == objName.compare(objIter->getName()))
+                {
+                    return objIter->getVisibility();
+                }
+            }
+        }
+    }
+    throw std::exception("Obj not found.");
 }
 
 bool GVSDoc::LoadFavTree(std::string filePath)

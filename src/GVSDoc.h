@@ -18,6 +18,7 @@ public:
     ObjectManager* GetObjManager(){ return &m_objManager; }
     string getProjectPathName() { return m_gvpFullFileName; }
     bool setObjVisByName(QString modelName, QString objName, bool vis);
+    bool getObjVisByName(QString modelName, QString objName);
 
 public slots:
     bool OnOpenProject();
@@ -30,6 +31,7 @@ private:
     bool parseAndLoadModel(std::string gvmFullPath);
     bool LoadFavTree(std::string filePath);
     bool LoadObjTree(std::string filePath);
+
 private:
     MainWindow* m_pMainWindow;
     ObjectManager m_objManager;

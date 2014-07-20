@@ -1287,61 +1287,105 @@ void MainWindow::prjExplorerObjItemClicked(GVSPrjTreeWidgetItem* item)
     //update favitem check state, here is not a good way in time complexity.
     ObjectManager* objManager = m_pDoc->GetObjManager();
     vector<FavGroup>* favTreeInDoc = objManager->getFavTree();
-    vector<FavGroup>::iterator groupIter = favTreeInDoc->begin();
-    for ( ; groupIter < favTreeInDoc->end(); groupIter++)
+    vector<FavGroup>::iterator groupIterInDoc = favTreeInDoc->begin();
+    for ( ; groupIterInDoc < favTreeInDoc->end(); groupIterInDoc++)
     {
-        QString groupName(groupIter->getGroupName().c_str());
-        vector<FavItem>::iterator favItemIter = groupIter->vecOfItems.begin();
-        for ( ; favItemIter < groupIter->vecOfItems.end(); favItemIter++)
+        QString groupName(groupIterInDoc->getGroupName().c_str());
+        vector<FavItem>::iterator favItemIterInView = groupIterInDoc->vecOfItems.begin();
+        for ( ; favItemIterInView < groupIterInDoc->vecOfItems.end(); favItemIterInView++)
         {
-            if (0 == favItemIter->getModelName().compare(item->parent()->text(0)) &&
-                0 == favItemIter->getObjName().compare(item->text(0)))
+            if (0 == favItemIterInView->getModelName().compare(item->parent()->text(0)) &&
+                0 == favItemIterInView->getObjName().compare(item->text(0)))
             {
-                QString favName(favItemIter->getName());
+                QString favName(favItemIterInView->getName());
 
-                QList<QTreeWidgetItem*> childrenList =
-                        m_prjTreeWidget->findItems(tr("Favorite"),
-                                                   Qt::MatchCaseSensitive,
-                                                   Qt::MatchExactly);
-                GVSPrjTreeWidgetItem* favRoot =
-                        dynamic_cast<GVSPrjTreeWidgetItem*>(childrenList[0]);
-                for (int i = 0; i < favRoot->childCount(); ++i)
+                QTreeWidgetItem* favItemInView = findFavItemInPrjTree(groupName, favName);
+                if (NULL == favItemInView)
                 {
-                    QTreeWidgetItem* groupWidget = favRoot->child(i);
-
-                    if (0 == groupWidget->text(0).compare(groupName))
-                    {
-                        for (int j = 0; j < groupWidget->childCount(); ++j)
-                        {
-                            QTreeWidgetItem* favWidget = groupWidget->child(j);
-                            if (0 == favWidget->text(0).compare(favName))
-                            {
-                                favWidget->setCheckState(0, item->checkState(0));
-                            }
-                        }
-                        refreshGroupCheckState(groupWidget);
-                    }
+                    return;
                 }
+                favItemInView->setCheckState(0, item->checkState(0));
+                refreshGroupCheckState(favItemInView->parent());
             }
         }
     }
 
 }
 
+QTreeWidgetItem* MainWindow::findObjItemInPrjTree(QString modelName, QString objName)
+{
+    QList<QTreeWidgetItem*> modelList = m_prjTreeWidget->findItems(modelName,
+                                                                   Qt::MatchCaseSensitive
+                                                                   | Qt::MatchExactly);
+    QTreeWidgetItem* modelItemInView = modelList[0];
+    for (int i = 0; i < modelItemInView->childCount(); ++i)
+    {
+        if (modelItemInView->child(i)->text(0).compare(objName) == 0)
+        {
+            return modelItemInView->child(i);
+        }
+    }
+    return NULL;
+}
+
 void MainWindow::prjExplorerFavItemClicked(GVSPrjTreeWidgetItem* item)
 {
-//     if (item->getType() != PRJ_TREE_ITEM_TYPE_FAV_ITEM)
-//     {
-//         return;
-//     }
-// 
-//     bool isGroupItemChecked = true;
-//     for (int i = 0; i < item->parent()->childCount(); ++i)
-//     {
-//         Qt::CheckState childStateByIdx = item->parent()->child(i)->checkState(0);
-//         bool isObjItemChckd = (childStateByIdx == Qt::Checked) ? true : false;
-//         isGroupItemChecked = isGroupItemChecked && isObjItemChckd;
-//     }
+    if (item->getType() != PRJ_TREE_ITEM_TYPE_FAV_ITEM)
+    {
+        return;
+    }
+
+    //update group check state
+    refreshGroupCheckState(item->parent());
+
+    //find Fav record in doc
+    ObjectManager* objManager = m_pDoc->GetObjManager();
+    FavItem* favItemInDoc =
+            objManager->findFavItemByName(item->parent()->text(0), item->text(0));
+    if (NULL == favItemInDoc)
+    {
+        return;
+    }
+
+    //change vis of obj in doc
+    QString modelName = favItemInDoc->getModelName();
+    QString objName = favItemInDoc->getObjName();
+
+    updateObjItem(modelName, objName, (item->checkState(0) == Qt::Checked) ? true : false);
+
+    //change obj item check state in main window.
+    QTreeWidgetItem* objItemInView = findObjItemInPrjTree(modelName, objName);
+    if (NULL == objItemInView)
+    {
+        return;
+    }
+    objItemInView->setCheckState(0, item->checkState(0));
+
+    //refresh model check state
+    refreshModelCheckState(objItemInView->parent());
+}
+
+QTreeWidgetItem* MainWindow::findFavItemInPrjTree(QString groupName, QString favName)
+{
+    QList<QTreeWidgetItem*> tmpList = m_prjTreeWidget->findItems("Favorite",
+                                                                 Qt::MatchCaseSensitive |
+                                                                 Qt::MatchExactly);
+
+    QTreeWidgetItem* favRoot = tmpList[0];
+    for (int i = 0; i < favRoot->childCount(); ++i)
+    {
+        if (favRoot->child(i)->text(0).compare(groupName) == 0)
+        {
+            for (int j = 0; j < favRoot->child(i)->childCount(); ++j)
+            {
+                if (favRoot->child(i)->child(j)->text(0).compare(favName) == 0)
+                {
+                    return favRoot->child(i)->child(j);
+                }
+            }
+        }
+    }
+    return NULL;
 }
 
 void MainWindow::refreshGroupCheckState(QTreeWidgetItem* groupWidget)
@@ -1392,6 +1436,10 @@ void MainWindow::prjExplorerModelClicked(GVSPrjTreeWidgetItem* item_clicked)
 
 void MainWindow::updateObjItem(QString modelName, QString objName, bool vis)
 {
+    if (m_pDoc->getObjVisByName(modelName, objName) == vis)
+    {
+        return;
+    }
     if (!(m_pDoc->setObjVisByName(modelName, objName, vis)))
     {
         throw std::exception("Obj not found in object manager.");
@@ -1611,7 +1659,9 @@ void MainWindow::OnAddFavGroup()
         }
 
         QList<QTreeWidgetItem*> itemList =
-                m_prjTreeWidget->findItems("Favorite", Qt::MatchExactly);
+                m_prjTreeWidget->findItems("Favorite",
+                                           Qt::MatchExactly |
+                                           Qt::MatchCaseSensitive);
 
         if (itemList.size() != 1)
         {
@@ -1628,6 +1678,7 @@ void MainWindow::OnAddFavGroup()
         newGroup->setFlags(Qt::ItemIsEnabled |
                            Qt::ItemIsSelectable |
                            Qt::ItemIsUserCheckable);
+        refreshGroupCheckState(newGroup);
     }
 
     return;
@@ -1694,7 +1745,9 @@ void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
 
             //find the group node and add an item of tree.
             QList<QTreeWidgetItem*> itemList =
-                    m_prjTreeWidget->findItems("Favorite", Qt::MatchExactly);
+                    m_prjTreeWidget->findItems("Favorite",
+                                               Qt::MatchExactly |
+                                               Qt::MatchCaseSensitive);
 
             if (itemList.size() != 1)
             {
@@ -1744,8 +1797,11 @@ void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
                         newItem->setCheckState(0, Qt::Unchecked);
                     }
                 }
+                refreshGroupCheckState(group);
+                break;
             }
         }
+
     }
 
     return;

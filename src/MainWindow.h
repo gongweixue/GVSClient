@@ -58,6 +58,9 @@ private:
     void refreshGroupCheckState(QTreeWidgetItem* groupWidget);
     void refreshModelCheckState(QTreeWidgetItem* modelWidget);
 
+    QTreeWidgetItem* findObjItemInPrjTree(QString modelName, QString objName);
+    QTreeWidgetItem* findFavItemInPrjTree(QString groupName, QString favName);
+
     bool setActorVisByName(QString actorName, bool vis);
 
     void onInitialUpdate();
