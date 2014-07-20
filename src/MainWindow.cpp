@@ -1431,7 +1431,20 @@ void MainWindow::prjExplorerFavGroupClicked(GVSPrjTreeWidgetItem* item_clicked)
 
 void MainWindow::prjExplorerModelClicked(GVSPrjTreeWidgetItem* item_clicked)
 {
-    throw std::exception("The method or operation is not implemented.");
+    if (item_clicked->getType() != PRJ_TREE_ITEM_TYPE_MODEL)
+    {
+        return;
+    }
+
+    Qt::CheckState newModelState = item_clicked->checkState(0);
+
+    for (int i = 0; i < item_clicked->childCount(); ++i)
+    {
+        item_clicked->child(i)->setCheckState(0, newModelState);
+        GVSPrjTreeWidgetItem* objItemInView =
+                dynamic_cast<GVSPrjTreeWidgetItem*>(item_clicked->child(i));
+        prjExplorerObjItemClicked(objItemInView);
+    }
 }
 
 void MainWindow::updateObjItem(QString modelName, QString objName, bool vis)
