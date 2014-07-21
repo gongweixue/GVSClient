@@ -89,7 +89,7 @@ bool GVSDoc::parseAndLoadModel(std::string gvmFullPath)
     vector<Model>::iterator iter_model = m_objManager.treeOfGeoObjs.begin();
     for ( ; iter_model != m_objManager.treeOfGeoObjs.end(); iter_model++)
     {
-        if (0 == iter_model->name.compare(gvmFileInfo.baseName()))
+        if (0 == iter_model->getModelName().compare(gvmFileInfo.baseName()))
         {
             break;
         }
@@ -143,7 +143,7 @@ bool GVSDoc::parseAndLoadModel(std::string gvmFullPath)
 
         GeoObject geoObj(objFileName, objFileTy, reader, vis);
         //insert GeoObject into tree
-        iter_model->vecOfGeoObjs.push_back(geoObj);
+        iter_model->getVecOfGeoObjs()->push_back(geoObj);
 
     }
     gvmFile.close();
@@ -220,7 +220,7 @@ bool GVSDoc::LoadFavTree(std::string filePath)
             QString itemName = favItemElement.attribute("name");
             QString itemModel = favItemElement.attribute("model");
             QString itemObj = favItemElement.attribute("obj");
-            fldrIter->vecOfItems.push_back(FavItem(itemName, itemModel, itemObj));
+            fldrIter->getVecOfItems()->push_back(FavItem(itemName, itemModel, itemObj));
         }
     }
 
@@ -283,7 +283,7 @@ bool GVSDoc::LoadObjTree(std::string filePath)
 
     for (int i = 0; i < (int)(m_objManager.treeOfGeoObjs.size()); ++i)
     {
-        QString modelName = m_objManager.treeOfGeoObjs[i].name;
+        QString modelName = m_objManager.treeOfGeoObjs[i].getModelName();
         QString gvmFullPath(prjDataDir + modelName + ".gvm");
         if (!parseAndLoadModel(gvmFullPath.toStdString()))
         {

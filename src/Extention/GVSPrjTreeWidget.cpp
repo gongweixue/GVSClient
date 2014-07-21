@@ -27,6 +27,9 @@ GVSPrjTreeWidget::GVSPrjTreeWidget(QWidget *parent)
 
     this->actionRemoveGroup = new QAction(tr("移除收藏群组"), this);
     connect(actionRemoveGroup, SIGNAL(triggered()), this, SLOT(OnRemoveGroup()));
+
+    this->actionRemoveFavItem = new QAction(tr("删除收藏项"), this);
+    connect(actionRemoveFavItem, SIGNAL(triggered()), this, SLOT(OnRemoveFavItem()));
 }
 
 GVSPrjTreeWidget::~GVSPrjTreeWidget()
@@ -36,6 +39,7 @@ GVSPrjTreeWidget::~GVSPrjTreeWidget()
     delete this->actionAddFavItem;
     delete this->actionRenameGroup;
     delete this->actionRemoveGroup;
+    delete this->actionRemoveFavItem;
     delete this->popMenu;
 }
 
@@ -63,6 +67,7 @@ void GVSPrjTreeWidget::contextMenuEvent(QContextMenuEvent* event)
         this->popMenu->addAction(actionAddFavGroup);
         this->popMenu->addAction(actionAddFavItem);
         this->popMenu->exec(QCursor::pos());
+        event->accept();
         break;
 
     case PRJ_TREE_ITEM_TYPE_FAV_GROUP:
@@ -72,6 +77,14 @@ void GVSPrjTreeWidget::contextMenuEvent(QContextMenuEvent* event)
         this->popMenu->addAction(actionRenameGroup);
         this->popMenu->addAction(actionRemoveGroup);
         this->popMenu->exec(QCursor::pos());
+        event->accept();
+        break;
+
+    case PRJ_TREE_ITEM_TYPE_FAV_ITEM:
+        this->popMenu->clear();
+        this->popMenu->addAction(actionRemoveFavItem);
+        this->popMenu->exec(QCursor::pos());
+        event->accept();
         break;
 
     default:
@@ -105,7 +118,7 @@ void GVSPrjTreeWidget::OnAddFavItem()
 void GVSPrjTreeWidget::OnRenameGroup()
 {
     GVSPrjTreeWidgetItem* currentItem =
-        dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
+            dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
 
     emit sigRenameGroup(*currentItem);
 }
@@ -113,8 +126,16 @@ void GVSPrjTreeWidget::OnRenameGroup()
 void GVSPrjTreeWidget::OnRemoveGroup()
 {
     GVSPrjTreeWidgetItem* currentItem =
-        dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
+            dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
 
     emit sigRemoveGroup(*currentItem);
+}
+
+void GVSPrjTreeWidget::OnRemoveFavItem()
+{
+    GVSPrjTreeWidgetItem* currentItem =
+            dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
+
+    emit sigRemoveFavItem(*currentItem);
 }
 

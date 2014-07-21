@@ -356,9 +356,9 @@ void MainWindow::RenderOriginal()
             m_pDoc->GetObjManager()->treeOfGeoObjs.begin();
     for ( ; model_iter != m_pDoc->GetObjManager()->treeOfGeoObjs.end(); model_iter++)
     {
-        string modelName = model_iter->name.toStdString();
-        vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
-        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
+        string modelName = model_iter->getModelName().toStdString();
+        vector<GeoObject>::iterator obj_iter = model_iter->getVecOfGeoObjs()->begin();
+        for ( ; obj_iter != model_iter->getVecOfGeoObjs()->end(); obj_iter++)
         {
             //in case of the name including more than 1 '.', like "abc.def.vtk".
             string objName = obj_iter->getName().toStdString();
@@ -389,8 +389,8 @@ void MainWindow::RenderPlaneClip()
     vector<Model>::iterator model_iter = m_pDoc->GetObjManager()->treeOfGeoObjs.begin();
     for ( ; model_iter != m_pDoc->GetObjManager()->treeOfGeoObjs.end(); model_iter++)
     {
-        vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
-        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
+        vector<GeoObject>::iterator obj_iter = model_iter->getVecOfGeoObjs()->begin();
+        for ( ; obj_iter != model_iter->getVecOfGeoObjs()->end(); obj_iter++)
         {
             if (obj_iter->getVisibility())
             {
@@ -448,8 +448,8 @@ void MainWindow::RenderStdExplode()
     vector<Model>::iterator model_iter = m_pDoc->GetObjManager()->treeOfGeoObjs.begin();
     for ( ; model_iter != m_pDoc->GetObjManager()->treeOfGeoObjs.end(); model_iter++)
     {
-        vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
-        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
+        vector<GeoObject>::iterator obj_iter = model_iter->getVecOfGeoObjs()->begin();
+        for ( ; obj_iter != model_iter->getVecOfGeoObjs()->end(); obj_iter++)
         {
             if (obj_iter->getVisibility())
             {
@@ -589,8 +589,8 @@ void MainWindow::RenderPrismClip()
     vector<Model>::iterator model_iter = m_pDoc->GetObjManager()->treeOfGeoObjs.begin();
     for ( ; model_iter != m_pDoc->GetObjManager()->treeOfGeoObjs.end(); model_iter++)
     {
-        vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
-        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
+        vector<GeoObject>::iterator obj_iter = model_iter->getVecOfGeoObjs()->begin();
+        for ( ; obj_iter != model_iter->getVecOfGeoObjs()->end(); obj_iter++)
         {
             if (obj_iter->getVisibility())
             {
@@ -744,8 +744,8 @@ void MainWindow::RenderBoxClip()
     vector<Model>::iterator model_iter = m_pDoc->GetObjManager()->treeOfGeoObjs.begin();
     for ( ; model_iter != m_pDoc->GetObjManager()->treeOfGeoObjs.end(); model_iter++)
     {
-        vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
-        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
+        vector<GeoObject>::iterator obj_iter = model_iter->getVecOfGeoObjs()->begin();
+        for ( ; obj_iter != model_iter->getVecOfGeoObjs()->end(); obj_iter++)
         {
             if (obj_iter->getVisibility())
             {
@@ -903,7 +903,8 @@ void MainWindow::bindingActionsWithSlots()
             this, SLOT(OnRenameGroup(GVSPrjTreeWidgetItem&)));
     connect(m_prjTreeWidget, SIGNAL(sigRemoveGroup(GVSPrjTreeWidgetItem&)),
             this, SLOT(OnRemoveGroup(GVSPrjTreeWidgetItem&)));
-
+    connect(m_prjTreeWidget, SIGNAL(sigRemoveFavItem(GVSPrjTreeWidgetItem&)),
+            this, SLOT(OnRemoveFavItem(GVSPrjTreeWidgetItem&)));
 }
 
 void MainWindow::OnOpenProject()
@@ -1260,13 +1261,14 @@ void MainWindow::prjExplorerObjItemChanged(GVSPrjTreeWidgetItem* item)
     for ( ; groupIterInDoc < favTreeInDoc->end(); groupIterInDoc++)
     {
         QString groupName(groupIterInDoc->getGroupName().c_str());
-        vector<FavItem>::iterator favItemIterInView = groupIterInDoc->vecOfItems.begin();
-        for ( ; favItemIterInView < groupIterInDoc->vecOfItems.end(); favItemIterInView++)
+        vector<FavItem>::iterator favItemInView =
+                groupIterInDoc->getVecOfItems()->begin();
+        for (;favItemInView < groupIterInDoc->getVecOfItems()->end(); favItemInView++)
         {
-            if (0 == favItemIterInView->getModelName().compare(item->parent()->text(0)) &&
-                0 == favItemIterInView->getObjName().compare(item->text(0)))
+            if (0 == favItemInView->getModelName().compare(item->parent()->text(0)) &&
+                0 == favItemInView->getObjName().compare(item->text(0)))
             {
-                QString favName(favItemIterInView->getName());
+                QString favName(favItemInView->getName());
 
                 QTreeWidgetItem* favItemInView = findFavItemInPrjTree(groupName, favName);
                 if (NULL == favItemInView)
@@ -1368,6 +1370,11 @@ void MainWindow::refreshGroupCheckState(QTreeWidgetItem* groupWidget)
     {
         return;
     }
+    if (groupItem->childCount() == 0)
+    {
+        groupItem->setCheckState(0, Qt::Unchecked);
+        return;
+    }
 
     bool isGroupItemChckd = true;
     for (int i = 0; i < groupItem->childCount(); ++i)
@@ -1384,6 +1391,12 @@ void MainWindow::refreshModelCheckState(QTreeWidgetItem* modelWidget)
     GVSPrjTreeWidgetItem* modelItem = dynamic_cast<GVSPrjTreeWidgetItem*>(modelWidget);
     if (modelItem->getType() != PRJ_TREE_ITEM_TYPE_MODEL)
     {
+        return;
+    }
+
+    if (modelItem->childCount() == 0)
+    {
+        modelItem->setCheckState(0, Qt::Unchecked);
         return;
     }
 
@@ -1478,15 +1491,15 @@ void MainWindow::initObjectItems()
     {
         GVSPrjTreeWidgetItem* modelItem =
                 new GVSPrjTreeWidgetItem(m_prjTreeWidget, PRJ_TREE_ITEM_TYPE_MODEL);
-        modelItem->setText(0, model_iter->name);
+        modelItem->setText(0, model_iter->getModelName());
         modelItem->setExpanded(true);
         modelItem->setFlags(Qt::ItemIsUserCheckable |
                             Qt::ItemIsEnabled |
                             Qt::ItemIsSelectable);
         bool isModelItemChecked = true;
 
-        vector<GeoObject>::iterator obj_Iter = model_iter->vecOfGeoObjs.begin();
-        for ( ; obj_Iter != model_iter->vecOfGeoObjs.end(); obj_Iter++)
+        vector<GeoObject>::iterator obj_Iter = model_iter->getVecOfGeoObjs()->begin();
+        for ( ; obj_Iter != model_iter->getVecOfGeoObjs()->end(); obj_Iter++)
         {
             GVSPrjTreeWidgetItem* objItem =
                     new GVSPrjTreeWidgetItem(modelItem, PRJ_TREE_ITEM_TYPE_OBJ);
@@ -1539,10 +1552,11 @@ void MainWindow::initFavItems()
                         Qt::ItemIsSelectable |
                         Qt::ItemIsUserCheckable);
 
-        bool isGroupNodeChecked = (favGroup_iter->vecOfItems.size() > 0) ? true : false;
+        bool isGroupNodeChecked =
+                (favGroup_iter->getVecOfItems()->size() > 0) ? true : false;
 
-        vector<FavItem>::iterator favItem_Iter = favGroup_iter->vecOfItems.begin();
-        for ( ; favItem_Iter != favGroup_iter->vecOfItems.end(); favItem_Iter++)
+        vector<FavItem>::iterator favItem_Iter = favGroup_iter->getVecOfItems()->begin();
+        for ( ; favItem_Iter != favGroup_iter->getVecOfItems()->end(); favItem_Iter++)
         {
             GVSPrjTreeWidgetItem* favItem =
                     new GVSPrjTreeWidgetItem(group, PRJ_TREE_ITEM_TYPE_FAV_ITEM);
@@ -1700,23 +1714,23 @@ void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
             }
         }
         //prepare model combo box ctrl.
-        const vector<Model>* objTree = objManager->getObjTree();
+        vector<Model>* objTree = objManager->getObjTree();
         for (unsigned int i = 0; i < objTree->size(); ++i)
         {
-            QString tmpModelName(objTree->at(i).name);
+            QString tmpModelName(objTree->at(i).getModelName());
             addFavItemDlg.getModelComboBox()->addItem(tmpModelName);
         }
         //prepare obj combo box ctrl.
         QString currModelName = addFavItemDlg.getModelComboBox()->currentText();
-        const Model* pModel = objManager->findModelByName(currModelName);
+        Model* pModel = objManager->findModelByName(currModelName);
         if (NULL == pModel)
         {
             QMessageBox::information(NULL, tr("错误"), tr("模型名错误。"));
             return;
         }
-        for (unsigned int i = 0; i < pModel->vecOfGeoObjs.size(); ++i)
+        for (unsigned int i = 0; i < pModel->getVecOfGeoObjs()->size(); ++i)
         {
-            QString tmpObjName(pModel->vecOfGeoObjs.at(i).getName());
+            QString tmpObjName(pModel->getVecOfGeoObjs()->at(i).getName());
             addFavItemDlg.getObjComboBox()->addItem(tmpObjName);
         }
 
@@ -1854,7 +1868,7 @@ void MainWindow::OnRenameGroup(GVSPrjTreeWidgetItem& currTreeItem)
     return;
 }
 
-void MainWindow::OnRemoveGroup( GVSPrjTreeWidgetItem& itemRemoved )
+void MainWindow::OnRemoveGroup( GVSPrjTreeWidgetItem& groupRemoved )
 {
     disconnect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
                this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
@@ -1868,7 +1882,7 @@ void MainWindow::OnRemoveGroup( GVSPrjTreeWidgetItem& itemRemoved )
 
     if (QMessageBox::Ok == confirmResult)
     {
-        QString groupName(itemRemoved.text(0));
+        QString groupName(groupRemoved.text(0));
 
         //remove group in doc.
         if (!m_pDoc->GetObjManager()->removeGroup(groupName))
@@ -1881,21 +1895,59 @@ void MainWindow::OnRemoveGroup( GVSPrjTreeWidgetItem& itemRemoved )
         
 
         //remove group in prj tree.
-        int numOfChildren = itemRemoved.childCount();
+        int numOfChildren = groupRemoved.childCount();
         vector<GVSPrjTreeWidgetItem*> vecOfChildren;
         for (int i = 0; i < numOfChildren; ++i)
         {
             GVSPrjTreeWidgetItem* childByIdx =
-                dynamic_cast<GVSPrjTreeWidgetItem*>(itemRemoved.child(i));
+                dynamic_cast<GVSPrjTreeWidgetItem*>(groupRemoved.child(i));
             vecOfChildren.push_back(childByIdx);
         }
         vector<GVSPrjTreeWidgetItem*>::iterator childIter = vecOfChildren.begin();
         for ( ; childIter < vecOfChildren.end(); childIter++)
         {
-            itemRemoved.removeChild(*childIter);
+            groupRemoved.removeChild(*childIter);
             delete *childIter;
         }
-        itemRemoved.parent()->removeChild(&itemRemoved);
+        groupRemoved.parent()->removeChild(&groupRemoved);
+    }
+
+    connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+            this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+}
+
+void MainWindow::OnRemoveFavItem(GVSPrjTreeWidgetItem& favItemRemoved)
+{
+    disconnect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+            this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+
+    QMessageBox confirm;
+    confirm.setWindowTitle(tr("删除收藏项"));
+    confirm.setText(tr("不可恢复的操作，确认删除该收藏项么？"));
+    confirm.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    confirm.setDefaultButton(QMessageBox::Cancel);
+    int confirmResult = confirm.exec();
+
+    if (QMessageBox::Ok == confirmResult)
+    {
+        QString favItemName(favItemRemoved.text(0));
+        QString groupName(favItemRemoved.parent()->text(0));
+
+        //remove fav item in fav tree of doc
+        if (!m_pDoc->GetObjManager()->removeFavItem(groupName, favItemName))
+        {
+            connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+                    this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+            throw std::exception("Wrong fav item name when deleting.");
+            return;
+        }
+
+        //remove favitem in prj tree widget.
+        QTreeWidgetItem* groupInView = favItemRemoved.parent();
+        groupInView->removeChild(&favItemRemoved);
+        delete &favItemRemoved;
+
+        refreshGroupCheckState(groupInView);
     }
 
     connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),

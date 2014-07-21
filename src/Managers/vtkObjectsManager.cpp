@@ -13,7 +13,7 @@ ObjectManager::ObjectManager(void)
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for (; model_iter != treeOfGeoObjs.end(); ++model_iter)
     {
-        model_iter->vecOfGeoObjs.clear();
+        model_iter->getVecOfGeoObjs()->clear();
     }
     treeOfGeoObjs.clear();
 
@@ -26,7 +26,7 @@ ObjectManager::~ObjectManager(void)
     vector<Model>::iterator iter = treeOfGeoObjs.begin();
     for (; iter != treeOfGeoObjs.end(); ++iter)
     {
-        iter->vecOfGeoObjs.clear();
+        iter->getVecOfGeoObjs()->clear();
     }
     treeOfGeoObjs.clear();
 
@@ -54,11 +54,11 @@ void ObjectManager::LoadDataForReadersInTree()
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
     {
-        vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
-        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
+        vector<GeoObject>::iterator obj_iter = model_iter->getVecOfGeoObjs()->begin();
+        for ( ; obj_iter != model_iter->getVecOfGeoObjs()->end(); obj_iter++)
         {
             QString loadingTip("正在加载模型：                \n");
-            loadingTip.append(model_iter->name + "/" + obj_iter->getName());
+            loadingTip.append(model_iter->getModelName() + "/" + obj_iter->getName());
             pProgressDlg->setLabelText(loadingTip);
 
             obj_iter->reader->Update();
@@ -78,12 +78,12 @@ void ObjectManager::DelAllRdrsInObjTree()
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
     {
-        vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
-        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
+        vector<GeoObject>::iterator obj_iter = model_iter->getVecOfGeoObjs()->begin();
+        for ( ; obj_iter != model_iter->getVecOfGeoObjs()->end(); obj_iter++)
         {
             DeleteVTKPointer(obj_iter->reader);
         }
-        model_iter->vecOfGeoObjs.clear();
+        model_iter->getVecOfGeoObjs()->clear();
     }
     computeObjTreeBound();
 }
@@ -94,7 +94,7 @@ void ObjectManager::ClearObjTree()
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
     {
-        model_iter->vecOfGeoObjs.clear();
+        model_iter->getVecOfGeoObjs()->clear();
     }
     treeOfGeoObjs.clear();
 }
@@ -108,8 +108,8 @@ double* ObjectManager::computeObjTreeBound()
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
     {
-        vector<GeoObject>::iterator obj_iter = model_iter->vecOfGeoObjs.begin();
-        for ( ; obj_iter != model_iter->vecOfGeoObjs.end(); obj_iter++)
+        vector<GeoObject>::iterator obj_iter = model_iter->getVecOfGeoObjs()->begin();
+        for ( ; obj_iter != model_iter->getVecOfGeoObjs()->end(); obj_iter++)
         {
             double tmpBnds[6];
             obj_iter->reader->GetOutput()->GetBounds(tmpBnds);
@@ -132,7 +132,7 @@ int ObjectManager::getNumOfObjsInTree()
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
     {
-        ret += model_iter->vecOfGeoObjs.size();
+        ret += model_iter->getVecOfGeoObjs()->size();
     }
 
     return ret;
@@ -152,10 +152,10 @@ GeoObject* ObjectManager::findObjByName(QString modelName, QString objName)
     vector<Model>::iterator modelIter = treeOfGeoObjs.begin();
     for ( ; modelIter < treeOfGeoObjs.end(); modelIter++)
     {
-        if (0 == modelName.compare(modelIter->name))
+        if (0 == modelName.compare(modelIter->getModelName()))
         {
-            vector<GeoObject>::iterator objIter = modelIter->vecOfGeoObjs.begin();
-            for ( ; objIter < modelIter->vecOfGeoObjs.end(); objIter++)
+            vector<GeoObject>::iterator objIter = modelIter->getVecOfGeoObjs()->begin();
+            for ( ; objIter < modelIter->getVecOfGeoObjs()->end(); objIter++)
             {
                 if (0 == objName.compare(objIter->getName()))
                 {
@@ -173,9 +173,9 @@ bool ObjectManager::setModelModified(QString modelName, bool hasModified)
     vector<Model>::iterator modelIter = treeOfGeoObjs.begin();
     for ( ; modelIter < treeOfGeoObjs.end(); modelIter++)
     {
-        if (0 == modelName.compare(modelIter->name))
+        if (0 == modelName.compare(modelIter->getModelName()))
         {
-            modelIter->hasModified = hasModified;
+            modelIter->setModified(hasModified);
             return true;
         }
     }
@@ -225,10 +225,10 @@ bool ObjectManager::getObjVisByName(QString modelName, QString objName)
     vector<Model>::iterator modelIter = this->getObjTree()->begin();
     for ( ; modelIter < this->getObjTree()->end(); modelIter++)
     {
-        if (0 == modelName.compare(modelIter->name))
+        if (0 == modelName.compare(modelIter->getModelName()))
         {
-            vector<GeoObject>::iterator objIter = modelIter->vecOfGeoObjs.begin();
-            for ( ; objIter < modelIter->vecOfGeoObjs.end(); objIter++)
+            vector<GeoObject>::iterator objIter = modelIter->getVecOfGeoObjs()->begin();
+            for ( ; objIter < modelIter->getVecOfGeoObjs()->end(); objIter++)
             {
                 if (0 == objName.compare(objIter->getName()))
                 {
@@ -248,8 +248,10 @@ bool ObjectManager::getObjColorByName( QString modelName, QString objName, int r
         obj->getObjColor(rgb, rgb+1, rgb+2);
         if (QColor(rgb[0], rgb[1], rgb[2]).isValid())
         {
+            findModelByName(modelName)->setModified(true);
             return true;
         }
+
     }
 
     return false;
@@ -327,6 +329,7 @@ bool ObjectManager::removeGroup(QString groupName)
         if (0 == groupName.compare(group_iter->getGroupName().c_str()))
         {
             treeOfFav.erase(group_iter);
+            this->setFavTreeModified(true);
             return true;
         }
     }
@@ -351,7 +354,7 @@ Model* ObjectManager::findModelByName(QString modelName)
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for ( ; model_iter < treeOfGeoObjs.end(); model_iter++)
     {
-        if (0 == modelName.compare(model_iter->name))
+        if (0 == modelName.compare(model_iter->getModelName()))
         {
             return &(*model_iter);
         }
@@ -384,10 +387,28 @@ bool ObjectManager::addFavItem(QString groupName, FavItem& favItem)
         return false;
     }
 
-    pGroup->vecOfItems.push_back(favItem);
+    pGroup->getVecOfItems()->push_back(favItem);
     pGroup->setModified(true);
     this->setFavTreeModified(true);
     return true;
+}
+
+bool ObjectManager::removeFavItem(QString groupName, QString favItemName)
+{
+    FavGroup* group = findFavGroupByName(groupName);
+    vector<FavItem>::iterator item_Iter = group->getVecOfItems()->begin();
+    for ( ; item_Iter < group->getVecOfItems()->end(); item_Iter++)
+    {
+        if (0 == item_Iter->getName().compare(favItemName))
+        {
+            group->getVecOfItems()->erase(item_Iter);
+            group->setModified(true);
+            this->setFavTreeModified(true);
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void ReaderUpdater::run()

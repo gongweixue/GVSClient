@@ -90,7 +90,7 @@ int AddFavItemDialog::checkInfoValid()
 void AddFavItemDialog::reloadObjComboBoxItems(int index)
 {
     QString currModelName = this->ui.modelNameComboBox->currentText();
-    const Model* pModel = objManager->findModelByName(currModelName);
+    Model* pModel = objManager->findModelByName(currModelName);
     if (NULL == pModel)
     {
         QMessageBox::information(NULL, tr("´íÎó"), tr("Ä£ÐÍÃû´íÎó¡£"));
@@ -99,9 +99,9 @@ void AddFavItemDialog::reloadObjComboBoxItems(int index)
 
     this->ui.objNameComboBox->clear();
 
-    for (unsigned int i = 0; i < pModel->vecOfGeoObjs.size(); ++i)
+    for (unsigned int i = 0; i < pModel->getVecOfGeoObjs()->size(); ++i)
     {
-        QString tmpObjName(pModel->vecOfGeoObjs.at(i).getName());
+        QString tmpObjName(pModel->getVecOfGeoObjs()->at(i).getName());
         this->ui.objNameComboBox->addItem(tmpObjName);
     }
 }

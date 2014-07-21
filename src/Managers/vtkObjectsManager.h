@@ -8,10 +8,6 @@
 #include <QString>
 #include "Utils/vtkTotallyInclude.h"
 
-//#define GEO_OBJECT_TYPE_POINT       100
-//#define GEO_OBJECT_TYPE_LINE        200
-//#define GEO_OBJECT_TYPE_SURFACE     300
-
 typedef enum GVS_OBJ_TYPE {
     GEO_OBJECT_TYPE_POINT,
     GEO_OBJECT_TYPE_LINE,
@@ -25,22 +21,20 @@ typedef struct GeoObject
 public:
     vtkDataSetReader* reader;
 private:
-    QString fileName;
+    const QString fileName;
     bool visibility;
     bool Modified;
-    int type;
+    const int type;
 public:
     GeoObject(QString fname, int ty, vtkDataSetReader* rder, bool vis)
+        : fileName(fname), type(ty), reader(rder), visibility(vis), Modified(false)
     {
-        fileName = fname;
-        this->type = ty;
-        reader=rder;
-        visibility=vis;
-        Modified = false;
-    };
+    }
+
     ~GeoObject()
     {
     }
+
     QString getName() const {return fileName;}
     int getType() {return this->type;}
     bool getVisibility() {return visibility;}
@@ -49,17 +43,39 @@ public:
     void setModified(bool isModified) {this->Modified = isModified;}
     void setObjColor(int r, int g, int b);
     void getObjColor(int* r, int* g, int* b);
+
+public:
+    GeoObject operator=(GeoObject& geoObj)
+    {
+        return GeoObject(geoObj.getName(),
+                         geoObj.getType(),
+                         geoObj.reader,
+                         geoObj.getVisibility());
+    }
+
 } GeoObject;
 
 typedef struct Model
 {
 public:
     Model(QString modelName)
+        : name(modelName), hasModified(false)
     {
-        name = modelName;
-        hasModified = false;
     }
-    QString name;
+
+    QString getModelName() {return name;}
+    vector<GeoObject>* getVecOfGeoObjs() {return &vecOfGeoObjs;}
+    void setModified(bool isModified) {this->hasModified = isModified;}
+    bool getModified() {return hasModified;}
+
+public:
+    Model operator=(Model& model)
+    {
+        throw std::exception("This function could not be invoked.");
+        return Model(model.getModelName());
+    }
+private:
+    const QString name;
     vector<GeoObject> vecOfGeoObjs;
     bool hasModified;
 } Model;
@@ -118,12 +134,11 @@ public:
 
     FavItem* findFavItem(QString itemName);
 
-public:
-    vector<FavItem> vecOfItems;
+    vector<FavItem>* getVecOfItems() {return &vecOfItems;}
 
 private:
     std::string groupName;
-
+    vector<FavItem> vecOfItems;
     bool hasModified;
 } FavGroup;
 
@@ -169,6 +184,7 @@ public:
     bool addFavGroup(QString groupName);
     bool removeGroup(QString groupName);
     bool addFavItem(QString groupName, FavItem& favItem);
+    bool removeFavItem(QString groupName, QString favItemName);
 
 public slots:
     void OnObjUpdateFinished();
