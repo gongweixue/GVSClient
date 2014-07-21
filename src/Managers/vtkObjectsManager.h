@@ -185,6 +185,11 @@ public:
     bool removeGroup(QString groupName);
     bool addFavItem(QString groupName, FavItem& favItem);
     bool removeFavItem(QString groupName, QString favItemName);
+    bool updateFavItem(QString groupName,
+                       QString oldFavItemName,
+                       QString newFavItemName,
+                       QString newModelName,
+                       QString newObjName);
 
 public slots:
     void OnObjUpdateFinished();

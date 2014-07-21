@@ -130,7 +130,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>新建项名称：</string>
+    <string>收藏项名称：</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="favItemLineEdit">

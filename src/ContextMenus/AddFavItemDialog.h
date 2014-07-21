@@ -18,6 +18,7 @@ public:
     QLineEdit* getFavItemLineEdit() {return this->ui.favItemLineEdit;}
     QComboBox* getModelComboBox() {return this->ui.modelNameComboBox;}
     QComboBox* getObjComboBox() {return this->ui.objNameComboBox;}
+    QPushButton* getOkBtn() {return this->ui.okButton;}
 
 public slots:
     virtual void accept();

@@ -103,6 +103,7 @@ public slots:
     void OnRenameGroup(GVSPrjTreeWidgetItem& currTreeItem);
     void OnRemoveGroup(GVSPrjTreeWidgetItem& groupRemoved);
     void OnRemoveFavItem(GVSPrjTreeWidgetItem& favItemRemoved);
+    void OnEditFavItem(GVSPrjTreeWidgetItem& favItem);
 public:
     Ui::MainWindowClass ui;
 

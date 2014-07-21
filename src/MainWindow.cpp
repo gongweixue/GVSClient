@@ -905,6 +905,8 @@ void MainWindow::bindingActionsWithSlots()
             this, SLOT(OnRemoveGroup(GVSPrjTreeWidgetItem&)));
     connect(m_prjTreeWidget, SIGNAL(sigRemoveFavItem(GVSPrjTreeWidgetItem&)),
             this, SLOT(OnRemoveFavItem(GVSPrjTreeWidgetItem&)));
+    connect(m_prjTreeWidget, SIGNAL(sigEditFavItem(GVSPrjTreeWidgetItem&)),
+            this, SLOT(OnEditFavItem(GVSPrjTreeWidgetItem&)));
 }
 
 void MainWindow::OnOpenProject()
@@ -1747,6 +1749,7 @@ void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
             if (!(objManager->addFavItem(newGroupName, newFavItem)))
             {
                 QMessageBox::information(NULL, tr("错误"), tr("插入新记录失败。"));
+                return;
             }
 
             //find the group node and add an item of tree.
@@ -1813,6 +1816,10 @@ void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
 
 void MainWindow::OnRenameGroup(GVSPrjTreeWidgetItem& currTreeItem)
 {
+    if (currTreeItem.getType() != PRJ_TREE_ITEM_TYPE_FAV_GROUP)
+    {
+        return;
+    }
     disconnect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
                this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
 
@@ -1870,6 +1877,10 @@ void MainWindow::OnRenameGroup(GVSPrjTreeWidgetItem& currTreeItem)
 
 void MainWindow::OnRemoveGroup( GVSPrjTreeWidgetItem& groupRemoved )
 {
+    if (groupRemoved.getType() != PRJ_TREE_ITEM_TYPE_FAV_GROUP)
+    {
+        return;
+    }
     disconnect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
                this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
 
@@ -1918,6 +1929,10 @@ void MainWindow::OnRemoveGroup( GVSPrjTreeWidgetItem& groupRemoved )
 
 void MainWindow::OnRemoveFavItem(GVSPrjTreeWidgetItem& favItemRemoved)
 {
+    if (favItemRemoved.getType() != PRJ_TREE_ITEM_TYPE_FAV_ITEM)
+    {
+        return;
+    }
     disconnect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
             this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
 
@@ -1952,5 +1967,117 @@ void MainWindow::OnRemoveFavItem(GVSPrjTreeWidgetItem& favItemRemoved)
 
     connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
             this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+}
+
+void MainWindow::OnEditFavItem(GVSPrjTreeWidgetItem& favItem)
+{
+    if (favItem.getType() != PRJ_TREE_ITEM_TYPE_FAV_ITEM)
+    {
+        return;
+    }
+
+    ObjectManager* objManager = m_pDoc->GetObjManager();
+    AddFavItemDialog editDlg(objManager);
+    editDlg.setWindowTitle(tr("编辑收藏项"));
+    editDlg.getOkBtn()->setText(tr("确定"));
+
+    //prepare group combo box ctrl.
+    editDlg.getGroupComboBox()->addItem(favItem.parent()->text(0));
+    editDlg.getGroupComboBox()->setCurrentIndex(0);
+    editDlg.getGroupComboBox()->setEnabled(false);
+
+    //prepare fav item name ctrl.
+    editDlg.getFavItemLineEdit()->setText(favItem.text(0));
+
+    //prepare model combo box ctrl.
+    vector<Model>* objTree = objManager->getObjTree();
+    for (unsigned int i = 0; i < objTree->size(); ++i)
+    {
+        QString tmpModelName(objTree->at(i).getModelName());
+        editDlg.getModelComboBox()->addItem(tmpModelName);
+    }
+    //prepare obj combo box ctrl.
+    QString currModelName = editDlg.getModelComboBox()->currentText();
+    Model* pModel = objManager->findModelByName(currModelName);
+    if (NULL == pModel)
+    {
+        QMessageBox::information(NULL, tr("错误"), tr("模型名错误。"));
+        return;
+    }
+    for (unsigned int i = 0; i < pModel->getVecOfGeoObjs()->size(); ++i)
+    {
+        QString tmpObjName(pModel->getVecOfGeoObjs()->at(i).getName());
+        editDlg.getObjComboBox()->addItem(tmpObjName);
+    }
+
+    editDlg.exec();
+    if (editDlg.result() != QDialog::Accepted)
+    {
+        return;
+    }
+
+    QString oldGroupName(favItem.parent()->text(0));
+    QString oldFavItemName(favItem.text(0));
+    FavItem* favItemInDoc = objManager->findFavItemByName(oldGroupName, oldFavItemName);
+    QString oldModelName(favItemInDoc->getModelName());
+    QString oldObjName(favItemInDoc->getObjName());
+
+    QString newFavItemName(editDlg.getFavItemLineEdit()->text());
+    QString newModelName(editDlg.getModelComboBox()->currentText());
+    QString newObjName(editDlg.getObjComboBox()->currentText());
+
+    if (oldModelName == newModelName &&
+        oldObjName == newObjName &&
+        oldFavItemName == newFavItemName)
+    {
+        return;
+    }
+
+    //write back into fav tree in doc.
+    bool updateOk = objManager->updateFavItem(oldGroupName,
+                                              oldFavItemName,
+                                              newFavItemName,
+                                              newModelName,
+                                              newObjName);
+    if(!updateOk)
+    {
+        QMessageBox::information(NULL, tr("错误"), tr("更新记录失败。"));
+        return;
+    }
+
+    //update text in prj tree.
+    if (oldFavItemName != newFavItemName)
+    {
+        favItem.setText(0, newFavItemName);
+    }
+
+    //update icon of item which in prj tree
+    GeoObject* obj = objManager->findObjByName(newModelName, newObjName);
+    if (obj)
+    {
+        QString iconFileName;
+        switch (obj->getType())
+        {
+        case GEO_OBJECT_TYPE_POINT:
+            iconFileName = tr(":/Resources/PrjExplorer/PointObj.png");
+            break;
+        case GEO_OBJECT_TYPE_LINE:
+            iconFileName = tr(":/Resources/PrjExplorer/LineObj.png");
+            break;
+        case GEO_OBJECT_TYPE_SURFACE:
+            iconFileName = tr(":/Resources/PrjExplorer/SurfaceObj.png");
+            break;
+        }
+        favItem.setIcon(0, QIcon(iconFileName));
+
+        bool isVis = obj->getVisibility();
+        favItem.setCheckState(0, isVis ? Qt::Checked : Qt::Unchecked);
+    }
+    else
+    {
+        favItem.setIcon(0, QIcon(":/Resources/PrjExplorer/NoObj.png"));
+        favItem.setCheckState(0, Qt::Unchecked);
+    }
+
 }
 

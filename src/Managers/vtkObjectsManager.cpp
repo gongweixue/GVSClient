@@ -411,6 +411,26 @@ bool ObjectManager::removeFavItem(QString groupName, QString favItemName)
     return false;
 }
 
+bool ObjectManager::updateFavItem(QString groupName,
+                                  QString oldFavItemName,
+                                  QString newFavItemName,
+                                  QString newModelName,
+                                  QString newObjName)
+{
+    FavItem* favItem = findFavItemByName(groupName, oldFavItemName);
+    if (NULL == favItem)
+    {
+        return false;
+    }
+    favItem->setName(newFavItemName);
+    favItem->setModelName(newModelName);
+    favItem->setObjName(newObjName);
+    favItem->setModified(true);
+    findFavGroupByName(groupName)->setModified(true);
+    setFavTreeModified(true);
+    return true;
+}
+
 void ReaderUpdater::run()
 {
     m_reader->Update();

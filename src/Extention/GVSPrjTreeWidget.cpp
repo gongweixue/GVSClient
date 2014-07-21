@@ -30,6 +30,8 @@ GVSPrjTreeWidget::GVSPrjTreeWidget(QWidget *parent)
 
     this->actionRemoveFavItem = new QAction(tr("删除收藏项"), this);
     connect(actionRemoveFavItem, SIGNAL(triggered()), this, SLOT(OnRemoveFavItem()));
+    this->actionEditFavItem = new QAction(tr("编译收藏项"), this);
+    connect(actionEditFavItem, SIGNAL(triggered()), this, SLOT(OnEditFavItem()));
 }
 
 GVSPrjTreeWidget::~GVSPrjTreeWidget()
@@ -40,6 +42,7 @@ GVSPrjTreeWidget::~GVSPrjTreeWidget()
     delete this->actionRenameGroup;
     delete this->actionRemoveGroup;
     delete this->actionRemoveFavItem;
+    delete this->actionEditFavItem;
     delete this->popMenu;
 }
 
@@ -82,6 +85,7 @@ void GVSPrjTreeWidget::contextMenuEvent(QContextMenuEvent* event)
 
     case PRJ_TREE_ITEM_TYPE_FAV_ITEM:
         this->popMenu->clear();
+        this->popMenu->addAction(actionEditFavItem);
         this->popMenu->addAction(actionRemoveFavItem);
         this->popMenu->exec(QCursor::pos());
         event->accept();
@@ -137,5 +141,13 @@ void GVSPrjTreeWidget::OnRemoveFavItem()
             dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
 
     emit sigRemoveFavItem(*currentItem);
+}
+
+void GVSPrjTreeWidget::OnEditFavItem()
+{
+    GVSPrjTreeWidgetItem* currentItem =
+            dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
+
+    emit sigEditFavItem(*currentItem);
 }
 
