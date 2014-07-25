@@ -1328,7 +1328,6 @@ void MainWindow::prjExplorerFavItemChanged(GVSPrjTreeWidgetItem* item)
     QString modelName = favItemInDoc->getModelName();
     QString objName = favItemInDoc->getObjName();
 
-    updateObjItem(modelName, objName, (item->checkState(0) == Qt::Checked) ? true:false);
 
     //change obj item check state in main window.
     QTreeWidgetItem* objItemInView = findObjItemInPrjTree(modelName, objName);
@@ -1337,6 +1336,8 @@ void MainWindow::prjExplorerFavItemChanged(GVSPrjTreeWidgetItem* item)
         return;
     }
     objItemInView->setCheckState(0, item->checkState(0));
+
+    updateObjItem(modelName, objName, (item->checkState(0) == Qt::Checked) ? true:false);
 
     //refresh model check state
     refreshModelCheckState(objItemInView->parent());
@@ -1694,6 +1695,9 @@ void MainWindow::OnAddFavGroup()
 
 void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
 {
+    disconnect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+            this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
+
     if (currTreeItem.getType() == PRJ_TREE_ITEM_TYPE_FAV_GROUP ||
         currTreeItem.getType() == PRJ_TREE_ITEM_TYPE_FAV_ROOT)
     {
@@ -1728,7 +1732,7 @@ void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
         if (NULL == pModel)
         {
             QMessageBox::information(NULL, tr("错误"), tr("模型名错误。"));
-            return;
+            goto bail;
         }
         for (unsigned int i = 0; i < pModel->getVecOfGeoObjs()->size(); ++i)
         {
@@ -1749,7 +1753,7 @@ void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
             if (!(objManager->addFavItem(newGroupName, newFavItem)))
             {
                 QMessageBox::information(NULL, tr("错误"), tr("插入新记录失败。"));
-                return;
+                goto bail;
             }
 
             //find the group node and add an item of tree.
@@ -1761,7 +1765,7 @@ void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
             if (itemList.size() != 1)
             {
                 QMessageBox::information(NULL, tr("错误"), tr("Favorite节点出错。"));
-                return;
+                goto bail;
             }
 
             GVSPrjTreeWidgetItem* favRootItem =
@@ -1811,6 +1815,10 @@ void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
             }
         }
     }
+
+bail:
+    connect(m_prjTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+            this, SLOT(OnPrjExplorerTreeItemChanged(QTreeWidgetItem*, int)));
     return;
 }
 

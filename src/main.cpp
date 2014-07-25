@@ -3,6 +3,10 @@
 #include "GVSInitializer.h"
 #include "MainWindow.h"
 
+//#define __GVS_USE_VLD__
+#ifdef  __GVS_USE_VLD__
+#include <vld.h>
+#endif
 
 int main(int argc, char *argv[])
 {
