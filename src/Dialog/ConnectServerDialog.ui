@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>ConnectServerDialog</class>
  <widget class="QDialog" name="ConnectServerDialog">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -54,7 +57,7 @@
     <string>请选择需要连接的服务器：</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -93,7 +96,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -111,11 +114,15 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="usrNameEdit"/>
+     <widget class="QLineEdit" name="usrNameEdit">
+      <property name="inputMask">
+       <string>ftpuser; </string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -134,6 +141,9 @@
     </item>
     <item>
      <widget class="QLineEdit" name="passwdEdit">
+      <property name="inputMask">
+       <string>123456; </string>
+      </property>
       <property name="echoMode">
        <enum>QLineEdit::Password</enum>
       </property>

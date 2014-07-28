@@ -18,28 +18,40 @@ public:
 
 private:
     void init();
-    void clearQFiles();
     DownloadProjectDialog(QWidget* parent = 0);
-    void downLoadFiles(QString, QString);
+    void installSignalSlots();
+    void uninstallSignalSlots();
+    void initPrjList();
+    void downloadProjectToLocal(QString fileName, QString localToStore);
+    void downloadDataToPrjDir(QString PrjDataPath);
 
 private slots:
-    void initSignalSlots();
-    void ftpCmdFinished(int id, bool error);
-    void addProjectItem(const QUrlInfo& urlInfo);
+    void fillPrjList(const QUrlInfo& urlInfo);
     void OnClickDownload(bool checked);
-    void OnDone(bool err);
-    void OnListInfo(const QUrlInfo& urlInfo);
-
+    void ftpListInfo(const QUrlInfo& urlInfo);
+    void ftpDone(bool error);
+    
 private:
     Ui::DownloadProjectDialog ui;
     QFtp* ftp;
-    QList<QFile*> modelFileList;
-    QFile* projectFile;
-    QStringList modelNameList;
-    int idListModels;
-    bool isInModelDir;
-    QString strLocalPath;
-    QString strProjectFileName;
+    QFile projectFile;
+    int initListCmdID;
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////
+private:
+    void getDirectory(QString remotePrjDataDir);
+
+signals:
+    void done();
+private:
+    void processNextDirectory();
+    QList<QFile *> openedFiles;
+    QString currentDir;
+    QString currentLocalDir;
+    QStringList pendingDirs;
+    QString localDir;
 };
 
 #endif // DOWNLOAD_PROJECT_DIALOG_H
