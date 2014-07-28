@@ -116,7 +116,7 @@
     <item>
      <widget class="QLineEdit" name="usrNameEdit">
       <property name="inputMask">
-       <string>ftpuser; </string>
+       <string/>
       </property>
      </widget>
     </item>
@@ -142,7 +142,7 @@
     <item>
      <widget class="QLineEdit" name="passwdEdit">
       <property name="inputMask">
-       <string>123456; </string>
+       <string/>
       </property>
       <property name="echoMode">
        <enum>QLineEdit::Password</enum>

@@ -1,7 +1,10 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QProcess>
 #include "DownloadProjectDialog.h"
+#include "quazip.h"
+#include "quazipfile.h"
 
 using namespace std;
 
@@ -17,7 +20,6 @@ DownloadProjectDialog::DownloadProjectDialog(QFtp* pFtp, QWidget *parent)
     ui.setupUi(this);
     ftp = pFtp;
     init();
-    connect(ui.downLoadBtn, SIGNAL(clicked(bool)), this, SLOT(OnClickDownload(bool)));
 }
 
 DownloadProjectDialog::~DownloadProjectDialog()
@@ -35,15 +37,22 @@ void DownloadProjectDialog::init()
 
     ui.projectList->setHeaderLabels(QStringList() << tr("名称") << tr("时间"));
 
+    initSignalSlot();
     initPrjList();
+}
+
+void DownloadProjectDialog::initSignalSlot()
+{
+    connect(ui.downLoadBtn, SIGNAL(clicked(bool)), this, SLOT(OnClickDownload(bool)));
+    connect(ftp, SIGNAL(listInfo(const QUrlInfo&)),
+            this, SLOT(fillPrjList(const QUrlInfo&)));
+    connect(ftp, SIGNAL(done(bool)), this, SLOT(ftpDone(bool)));
 }
 
 void DownloadProjectDialog::initPrjList()
 {
-    connect(ftp, SIGNAL(listInfo(const QUrlInfo&)), this, SLOT(fillPrjList(const QUrlInfo&)));
-    connect(ftp, SIGNAL(commandFinished(int, bool)), this, SLOT(ftpCmdFinished(int, bool)));
     ftp->cd("/");
-    initListCmdID = ftp->list();
+    ftp->list();
 }
 
 void DownloadProjectDialog::fillPrjList( const QUrlInfo& urlInfo )
@@ -53,31 +62,20 @@ void DownloadProjectDialog::fillPrjList( const QUrlInfo& urlInfo )
         qint64 size = urlInfo.size();
         QDateTime modifiedTime = urlInfo.lastModified();
         QTreeWidgetItem* item = new QTreeWidgetItem();
-        item->setText(0, urlInfo.name());
+        QStringList list = urlInfo.name().split(".");
+        QString prjName;
+        for (int i = 0; i < list.count() - 1; ++i)
+        {
+            prjName.append(list.at(i));
+        }
+        item->setText(0, prjName);
         item->setText(1, urlInfo.lastModified().toString("hh:mm:ss yyyy-MM-dd"));
         ui.projectList->addTopLevelItem(item);
     }
 }
 
-void DownloadProjectDialog::installSignalSlots()
-{
-    //disconnect fillPrjList with listInfo signal if it exists.
-    disconnect(ftp, SIGNAL(listInfo(const QUrlInfo&)), this, SLOT(fillPrjList(const QUrlInfo&)));
-
-    connect(ftp, SIGNAL(done(bool)), this, SLOT(ftpDone(bool)));
-    connect(ftp, SIGNAL(listInfo(const QUrlInfo&)), this, SLOT(ftpListInfo(const QUrlInfo&)));
-}
-
-void DownloadProjectDialog::uninstallSignalSlots()
-{
-    disconnect(ftp, SIGNAL(done(bool)), this, SLOT(ftpDone(bool)));
-    disconnect(ftp, SIGNAL(listInfo(const QUrlInfo&)), this, SLOT(OnListInfo(const QUrlInfo&)));
-}
-
 void DownloadProjectDialog::OnClickDownload(bool checked)
 {
-    installSignalSlots();
-
     QList<QTreeWidgetItem*> items = (ui.projectList->selectedItems());
     if (items.isEmpty())
     {
@@ -86,13 +84,7 @@ void DownloadProjectDialog::OnClickDownload(bool checked)
     else
     {
         //get the name of project
-        QString fileName = items[0]->text(0);
-        QStringList strSplit = fileName.split('.');
-        QString projectName;
-        for (int i = 0; i < strSplit.count() - 1; ++i)
-        {
-            projectName.append(strSplit[i]);
-        }
+        QString projectName(items[0]->text(0));
 
         //get the path to store
         QString localToStore = QFileDialog::getExistingDirectory(this,
@@ -104,55 +96,31 @@ void DownloadProjectDialog::OnClickDownload(bool checked)
         {
             goto bail;
         }
+        this->ui.downLoadBtn->setEnabled(false);
         localToStore.append("/");
+        compressFileName = projectName + ".zip";
+        this->localToStore = localToStore;
 
         ftp->cd("/");
-
-        downloadProjectToLocal(fileName, localToStore);
+        downloadCompressPrjToLocal(projectName, localToStore);
     }
-
 bail:
-    uninstallSignalSlots();
     return;
 }
 
-void DownloadProjectDialog::downloadProjectToLocal(QString fileName, QString localToStore)
+void DownloadProjectDialog::downloadCompressPrjToLocal(QString projectName, QString localToStore)
 {
-    QStringList strSplit = fileName.split('.');
-    QString projectName;
-    for (int i = 0; i < strSplit.count() - 1; ++i)
-    {
-        projectName.append(strSplit[i]);
-    }
-
     //down project file
-    projectFile.setFileName(localToStore + fileName);
+    compressFile.setFileName(localToStore + projectName + ".zip");
     
-    if (!projectFile.open(QIODevice::ReadWrite))
+    if (!compressFile.open(QIODevice::ReadWrite))
     {
-        QMessageBox::information(this, tr("错误"), tr("无法创建项目") + projectName);
+        QMessageBox::information(this, tr("错误"), tr("无法创建项目文件") + projectName);
         ftp->abort();
         return;
     }
     ftp->cd("/");
-    ftp->get(fileName, &projectFile);
-
-     //create prj dir.
-     QString strPrjDataDir(localToStore + projectName + "/");
-     localDir = localToStore;
-     //QDir().mkdir(strPrjDataDir);
-     //cd prj data dir remote.
-     //ftp->cd(projectName);
-
-     //get remote prj data
-     QString remoteDir("/" + projectName + "/");
-     getDirectory(remoteDir);
-}
-
-void DownloadProjectDialog::getDirectory(QString remotePrjDataDir)
-{
-    pendingDirs.append(remotePrjDataDir);
-    processNextDirectory();
+    ftp->get(projectName + ".zip", &compressFile);
 }
 
 void DownloadProjectDialog::ftpDone(bool error)
@@ -162,56 +130,70 @@ void DownloadProjectDialog::ftpDone(bool error)
         QMessageBox::information(this, tr("出错啦"), ftp->errorString());
         ftp->cd("/");
         ftp->abort();
-        return;
     }
+    this->compressFile.close();
 
-    qDeleteAll(openedFiles);
-    openedFiles.clear();
 
-    processNextDirectory();
-}
-
-void DownloadProjectDialog::ftpListInfo(const QUrlInfo &urlInfo)
-{
-    if (urlInfo.isFile())
+    if (localToStore.isEmpty() == false && compressFileName.isEmpty() == false)
     {
-        if (urlInfo.isReadable())
+        uncompressPrj();
+        if (!QFile::remove(localToStore + compressFileName))
         {
-            QString fileName(urlInfo.name());
-            QFile *file = new QFile(currentLocalDir + "/" + fileName);
-            if (!file->open(QIODevice::WriteOnly))
-            {
-                QMessageBox::information(this, tr("错误"), tr("无法拷贝") + fileName);
-                ftp->abort();
-                return;
-            }
-
-            ftp->get(fileName, file);
-            openedFiles.append(file);
+            QMessageBox::information(NULL, tr("错误"), tr("移除archive失败。"));
         }
     }
-    else if (urlInfo.isDir() && !urlInfo.isSymLink())
-    {
-        pendingDirs.append(currentDir + "/" + urlInfo.name());
-    }
+
+    compressFileName = "";
+    localToStore = "";
+    this->ui.downLoadBtn->setEnabled(true);
 }
 
-void DownloadProjectDialog::processNextDirectory()
+bool DownloadProjectDialog::uncompressPrj()
 {
-    if (!pendingDirs.isEmpty())
-    {
-        currentDir = pendingDirs.takeFirst();
-        currentLocalDir = localDir + currentDir;
-        QDir().mkpath(currentLocalDir);
+    QString compressFileFullPath(localToStore + compressFileName);
 
-        ftp->cd(currentDir);
-        ftp->list();
-    }
-    else
+    QuaZip archive(compressFileFullPath);
+    if (!archive.open(QuaZip::mdUnzip))
     {
-        emit done();
+        QMessageBox::information(NULL, tr("错误"), tr("打开：") + compressFileFullPath);
     }
+
+    QString path = localToStore;
+    if (!path.endsWith("/") && !localToStore.endsWith("\\"))
+        path += "/";
+
+    QDir dir(localToStore);
+    if (!dir.exists())
+        dir.mkpath(localToStore);
+
+    for(bool f = archive.goToFirstFile(); f; f = archive.goToNextFile())
+    {
+        QString filePath = archive.getCurrentFileName();
+        QuaZipFile zFile(archive.getZipName(), filePath);
+        zFile.open(QIODevice::ReadOnly );
+        QByteArray ba = zFile.readAll();
+        zFile.close();
+
+        if (filePath.endsWith("/"))
+        {
+            dir.mkpath(filePath);
+        }
+        else
+        {
+            QFile dstFile(path + filePath);
+            if (!dstFile.open(QIODevice::WriteOnly))
+            {
+                QMessageBox::information(NULL, tr("错误"), tr("写入") + path + filePath);
+                return false;
+            }
+            dstFile.write(ba);
+            dstFile.close();
+        }
+    }
+
+    return true;
 }
+
 
 
 

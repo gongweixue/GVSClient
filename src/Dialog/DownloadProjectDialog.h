@@ -17,41 +17,30 @@ public:
     ~DownloadProjectDialog();
 
 private:
-    void init();
     DownloadProjectDialog(QWidget* parent = 0);
-    void installSignalSlots();
-    void uninstallSignalSlots();
+
+    void init();
+    void initSignalSlot();
     void initPrjList();
-    void downloadProjectToLocal(QString fileName, QString localToStore);
-    void downloadDataToPrjDir(QString PrjDataPath);
+    void downloadCompressPrjToLocal(QString projectName, QString localToStore);
+    bool uncompressPrj();
 
 private slots:
     void fillPrjList(const QUrlInfo& urlInfo);
     void OnClickDownload(bool checked);
-    void ftpListInfo(const QUrlInfo& urlInfo);
     void ftpDone(bool error);
-    
+    void getFinished( int id, bool err ) 
+    {
+        throw std::exception("The method or operation is not implemented.");
+    }
+
 private:
     Ui::DownloadProjectDialog ui;
     QFtp* ftp;
-    QFile projectFile;
-    int initListCmdID;
-
-    //////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////
-private:
-    void getDirectory(QString remotePrjDataDir);
-
-signals:
-    void done();
-private:
-    void processNextDirectory();
-    QList<QFile *> openedFiles;
-    QString currentDir;
-    QString currentLocalDir;
-    QStringList pendingDirs;
-    QString localDir;
+    QFile compressFile;
+    QString compressFileName;
+    QString localToStore;
+    int getCMDId;
 };
 
 #endif // DOWNLOAD_PROJECT_DIALOG_H
