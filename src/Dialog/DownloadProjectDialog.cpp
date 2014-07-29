@@ -3,8 +3,8 @@
 #include <QMessageBox>
 #include <QProcess>
 #include "DownloadProjectDialog.h"
-#include "quazip.h"
-#include "quazipfile.h"
+#include "3rdparty/quazip/quazip.h"
+#include "3rdparty/quazip/quazipfile.h"
 
 using namespace std;
 

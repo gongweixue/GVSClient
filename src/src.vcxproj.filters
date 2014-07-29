@@ -105,6 +105,18 @@
     <Filter Include="Source Files\ContextMenus">
       <UniqueIdentifier>{317fd75d-0e1e-4336-99c8-0a6e79e68dbb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\3rdparty">
+      <UniqueIdentifier>{26441da9-1c29-4e6e-b1ca-13221748019a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\3rdparty\quazip">
+      <UniqueIdentifier>{0bd1d0e6-7159-451c-8cf5-72829dea5c24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rdparty">
+      <UniqueIdentifier>{bdfdc6d4-01b0-4c4e-a386-b2847beecdd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3rdparty\quazip">
+      <UniqueIdentifier>{25416fab-155d-4691-92e6-8f8f75f7e9d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -287,6 +299,63 @@
     <ClCompile Include="ContextMenus\AddFavItemDialog.cpp">
       <Filter>Source Files\ContextMenus</Filter>
     </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_quazipfile.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_quazipfile.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_quaziodevice.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_quaziodevice.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Debug\moc_quagzipfile.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\build\Qt\GeneratedFiles\Release\moc_quagzipfile.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\quazip\quazipnewinfo.cpp">
+      <Filter>Source Files\3rdparty\quazip</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\quazip\quazipfileinfo.cpp">
+      <Filter>Source Files\3rdparty\quazip</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\quazip\quazipfile.cpp">
+      <Filter>Source Files\3rdparty\quazip</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\quazip\quazipdir.cpp">
+      <Filter>Source Files\3rdparty\quazip</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\quazip\quazip.cpp">
+      <Filter>Source Files\3rdparty\quazip</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\quazip\quaziodevice.cpp">
+      <Filter>Source Files\3rdparty\quazip</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\quazip\quagzipfile.cpp">
+      <Filter>Source Files\3rdparty\quazip</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\quazip\quacrc32.cpp">
+      <Filter>Source Files\3rdparty\quazip</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\quazip\quaadler32.cpp">
+      <Filter>Source Files\3rdparty\quazip</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\quazip\qioapi.cpp">
+      <Filter>Source Files\3rdparty\quazip</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\quazip\JlCompress.cpp">
+      <Filter>Source Files\3rdparty\quazip</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\quazip\zip.c">
+      <Filter>Source Files\3rdparty\quazip</Filter>
+    </ClCompile>
+    <ClCompile Include="3rdparty\quazip\unzip.c">
+      <Filter>Source Files\3rdparty\quazip</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.h">
@@ -376,6 +445,15 @@
     <CustomBuild Include="ContextMenus\AddFavItemDialog.ui">
       <Filter>Form Files\Dialogs\ContextMenus</Filter>
     </CustomBuild>
+    <CustomBuild Include="3rdparty\quazip\quagzipfile.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </CustomBuild>
+    <CustomBuild Include="3rdparty\quazip\quaziodevice.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </CustomBuild>
+    <CustomBuild Include="3rdparty\quazip\quazipfile.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\build\Qt\GeneratedFiles\ui_MainWindow.h">
@@ -446,6 +524,45 @@
     </ClInclude>
     <ClInclude Include="..\build\Qt\GeneratedFiles\ui_AddFavItemDialog.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\quazip\crypt.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\quazip\ioapi.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\quazip\JlCompress.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\quazip\quaadler32.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\quazip\quacrc32.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\quazip\quachecksum32.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\quazip\quazip.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\quazip\quazip_global.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\quazip\quazipdir.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\quazip\quazipfileinfo.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\quazip\quazipnewinfo.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\quazip\unzip.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
+    </ClInclude>
+    <ClInclude Include="3rdparty\quazip\zip.h">
+      <Filter>Header Files\3rdparty\quazip</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

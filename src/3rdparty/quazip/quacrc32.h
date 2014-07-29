@@ -1,8 +1,7 @@
-#ifndef QUAADLER32_H
-#define QUAADLER32_H
+#ifndef QUACRC32_H
+#define QUACRC32_H
 
 /*
-Copyright (C) 2010 Adam Walczak
 Copyright (C) 2005-2014 Sergey A. Tachenov
 
 This file is part of QuaZIP.
@@ -26,20 +25,17 @@ Original ZIP package is copyrighted by Gilles Vollant and contributors,
 see quazip/(un)zip.h files for details. Basically it's the zlib license.
 */
 
-#include <QByteArray>
-
 #include "quachecksum32.h"
 
-/// Adler32 checksum
-/** \class QuaAdler32 quaadler32.h <quazip/quaadler32.h>
- * This class wrappers the adler32 function with the QuaChecksum32 interface.
- * See QuaChecksum32 for more info.
- */
-class QUAZIP_EXPORT QuaAdler32 : public QuaChecksum32
-{
+///CRC32 checksum
+/** \class QuaCrc32 quacrc32.h <quazip/quacrc32.h>
+* This class wrappers the crc32 function with the QuaChecksum32 interface.
+* See QuaChecksum32 for more info.
+*/
+class QuaCrc32 : public QuaChecksum32 {
 
 public:
-	QuaAdler32();
+	QuaCrc32();
 
 	quint32 calculate(const QByteArray &data);
 
@@ -51,4 +47,4 @@ private:
 	quint32 checksum;
 };
 
-#endif //QUAADLER32_H
+#endif //QUACRC32_H

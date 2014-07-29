@@ -1,5 +1,5 @@
-#ifndef QUACRC32_H
-#define QUACRC32_H
+#ifndef QUAZIP_GLOBAL_H
+#define QUAZIP_GLOBAL_H
 
 /*
 Copyright (C) 2005-2014 Sergey A. Tachenov
@@ -25,26 +25,38 @@ Original ZIP package is copyrighted by Gilles Vollant and contributors,
 see quazip/(un)zip.h files for details. Basically it's the zlib license.
 */
 
-#include "quachecksum32.h"
+#include <QtCore/qglobal.h>
 
-///CRC32 checksum
-/** \class QuaCrc32 quacrc32.h <quazip/quacrc32.h>
-* This class wrappers the crc32 function with the QuaChecksum32 interface.
-* See QuaChecksum32 for more info.
-*/
-class QUAZIP_EXPORT QuaCrc32 : public QuaChecksum32 {
+/**
+  This is automatically defined when building a static library, but when
+  including QuaZip sources directly into a project, QUAZIP_STATIC should
+  be defined explicitly to avoid possible troubles with unnecessary
+  importing/exporting.
+  */
+  
+#define QUAZIP_STATIC
 
-public:
-	QuaCrc32();
+#ifdef QUAZIP_STATIC
+#define QUAZIP_EXPORT
+#else
+/**
+ * When building a DLL with MSVC, QUAZIP_BUILD must be defined.
+ * qglobal.h takes care of defining Q_DECL_* correctly for msvc/gcc.
+ */
+#if defined(QUAZIP_BUILD)
+	#define QUAZIP_EXPORT Q_DECL_EXPORT
+#else
+	#define QUAZIP_EXPORT Q_DECL_IMPORT
+#endif
+#endif // QUAZIP_STATIC
 
-	quint32 calculate(const QByteArray &data);
+#ifdef __GNUC__
+#define UNUSED __attribute__((__unused__))
+#else
+#define UNUSED
+#endif
 
-	void reset();
-	void update(const QByteArray &buf);
-	quint32 value();
+#define QUAZIP_EXTRA_NTFS_MAGIC 0x000Au
+#define QUAZIP_EXTRA_NTFS_TIME_MAGIC 0x0001u
 
-private:
-	quint32 checksum;
-};
-
-#endif //QUACRC32_H
+#endif // QUAZIP_GLOBAL_H
