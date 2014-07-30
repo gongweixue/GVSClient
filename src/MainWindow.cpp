@@ -362,7 +362,6 @@ void MainWindow::RenderOriginal()
         {
             //in case of the name including more than 1 '.', like "abc.def.vtk".
             string objName = obj_iter->getName().toStdString();
-            QStringList spltList = QString(objName.c_str()).split('.');
             string actorName = modelName + "/" + objName;
             m_sceneManager.InsertActorRcrd(MapToActor(obj_iter->reader->GetOutput()),
                                           actorName,

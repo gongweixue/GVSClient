@@ -6,6 +6,9 @@
 #include <QFtp>
 #include "ui_UploadProjectDialog.h"
 
+class QDir;
+class QFileInfo;
+
 class UploadProjectDialog : public QDialog
 {
     Q_OBJECT
@@ -17,19 +20,20 @@ public:
 private:
     UploadProjectDialog(QWidget* parent = 0);
     void init();
-    void clearQFiles();
+    bool compressPRJFiles(QString prjName);
+    static void recurseAddDir(QDir d, QStringList & list);
+    static bool compressPrj(const QFileInfo& gvpFI);
 
 public slots:
     void OnBrowse();
     void OnUpload();
     void OnDone(bool err);
-    void OnCmdFinished(int id, bool err);
     void EnableUploadBtn(const QString& text);
+
 private:
     Ui::UploadProjectDialog ui;
     QFtp* ftp;
-    QList<QFile*> modelFileList;
-    QFile* projectFile;
+    QFile* compressFile;
 };
 
 #endif // UPLOAD_PROJECT_DIALOG_H

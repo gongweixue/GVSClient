@@ -43,7 +43,11 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="pathEdit"/>
+     <widget class="QLineEdit" name="pathEdit">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QPushButton" name="browseBtn">

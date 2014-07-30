@@ -64,10 +64,11 @@ void DownloadProjectDialog::fillPrjList( const QUrlInfo& urlInfo )
         QTreeWidgetItem* item = new QTreeWidgetItem();
         QStringList list = urlInfo.name().split(".");
         QString prjName;
-        for (int i = 0; i < list.count() - 1; ++i)
+        for (int i = 0; i < list.count() - 2; ++i)
         {
-            prjName.append(list.at(i));
+            prjName.append(list.at(i) + ".");
         }
+        prjName.append(list.at(list.count() - 2));
         item->setText(0, prjName);
         item->setText(1, urlInfo.lastModified().toString("hh:mm:ss yyyy-MM-dd"));
         ui.projectList->addTopLevelItem(item);
@@ -153,6 +154,7 @@ bool DownloadProjectDialog::uncompressPrj()
     QString compressFileFullPath(localToStore + compressFileName);
 
     QuaZip archive(compressFileFullPath);
+    archive.setFileNameCodec("IBM866");
     if (!archive.open(QuaZip::mdUnzip))
     {
         QMessageBox::information(NULL, tr("´íÎó"), tr("´ò¿ª£º") + compressFileFullPath);
