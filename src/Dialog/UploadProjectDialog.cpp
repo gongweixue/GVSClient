@@ -148,7 +148,7 @@ void UploadProjectDialog::recurseAddDir(QDir d, QStringList & list)
 
         if (finfo.isDir())
         {
-            list << QDir::toNativeSeparators(finfo.filePath());
+            list << QDir::toNativeSeparators(finfo.filePath() + "/");
             QString dirname = finfo.fileName();
             QDir sd(finfo.filePath());
 

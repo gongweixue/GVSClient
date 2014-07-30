@@ -176,13 +176,14 @@ bool DownloadProjectDialog::uncompressPrj()
         QByteArray ba = zFile.readAll();
         zFile.close();
 
-        if (filePath.endsWith("/"))
+        if (filePath.endsWith("/") || filePath.endsWith("\\"))
         {
             dir.mkpath(filePath);
         }
         else
         {
             QFile dstFile(path + filePath);
+            dir.mkpath(QFileInfo(path + filePath).absolutePath());
             if (!dstFile.open(QIODevice::WriteOnly))
             {
                 QMessageBox::information(NULL, tr("¥ÌŒÛ"), tr("–¥»Î") + path + filePath);
