@@ -136,15 +136,15 @@ void UploadProjectDialog::EnableUploadBtn(const QString& text)
 
 void UploadProjectDialog::recurseAddDir(QDir d, QStringList & list)
 {
-
     QStringList qsl = d.entryList(QDir::NoDotAndDotDot | QDir::Dirs | QDir::Files);
 
-    foreach (QString file, qsl) {
-
+    foreach (QString file, qsl)
+    {
         QFileInfo finfo(QString("%1/%2").arg(d.path()).arg(file));
-
         if (finfo.isSymLink())
+        {
             return;
+        }
 
         if (finfo.isDir())
         {
@@ -153,8 +153,7 @@ void UploadProjectDialog::recurseAddDir(QDir d, QStringList & list)
             QDir sd(finfo.filePath());
 
             recurseAddDir(sd, list);
-
-        } 
+        }
         else
         {
             list << QDir::toNativeSeparators(finfo.filePath());
@@ -170,12 +169,14 @@ bool UploadProjectDialog::compressPrj(const QFileInfo& gvpFI)
 
     if (!zip.open(QuaZip::mdCreate))
     {
+        QMessageBox::information(NULL, tr("´íÎó"), tr("ÎÞ·¨´´½¨archive¡£"));
         return false;
     }
     QString dirPath(gvpFI.absolutePath() + "/" + gvpFI.completeBaseName());
     QDir dirBeZipped(dirPath);
     if (!dirBeZipped.exists())
     {
+        QMessageBox::information(NULL, tr("´íÎó"), tr("ÏîÄ¿ÎÄ¼þ¼Ð²»´æÔÚ¡£"));
         return false;
     }
 
@@ -201,12 +202,14 @@ bool UploadProjectDialog::compressPrj(const QFileInfo& gvpFI)
 
         if (!inFile.open(QIODevice::ReadOnly))
         {
+            QMessageBox::information(NULL, tr("´íÎó"), tr("¶ÁÈ¡Ê§°Ü") + inFile.fileName());
             return false;
         }
 
         if (!outFile.open(QIODevice::WriteOnly,
             QuaZipNewInfo(fileNameWithRelativePath, fileInfo.filePath())))
         {
+            QMessageBox::information(NULL, tr("´´½¨Ñ¹ËõÊ§°Ü"), fileNameWithRelativePath);
             return false;
         }
 
@@ -214,6 +217,7 @@ bool UploadProjectDialog::compressPrj(const QFileInfo& gvpFI)
 
         if (outFile.getZipError() != UNZ_OK)
         {
+            QMessageBox::information(NULL, tr("´íÎó"), tr("Ñ¹ËõarchiveÊ§°Ü"));
             return false;
         }
 
@@ -231,6 +235,7 @@ bool UploadProjectDialog::compressPrj(const QFileInfo& gvpFI)
 
     if (zip.getZipError() != 0)
     {
+        QMessageBox::information(NULL, tr("´íÎó"), tr("¹Ø±ÕarchiveÊ§°Ü"));
         return false;
     }
 
