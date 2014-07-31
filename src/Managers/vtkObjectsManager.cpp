@@ -146,7 +146,7 @@ void ObjectManager::OnObjUpdateFinished()
     progressValueMutex.unlock();
 }
 
-GeoObject* ObjectManager::findObjByName(QString modelName, QString objName)
+GeoObject* ObjectManager::findObj(QString modelName, QString objName)
 {
     //time complexity: m + n
     vector<Model>::iterator modelIter = treeOfGeoObjs.begin();
@@ -183,9 +183,9 @@ bool ObjectManager::setModelModified(QString modelName, bool hasModified)
     return false;
 }
 
-bool ObjectManager::setObjVisByName(QString modelName, QString objName, bool vis)
+bool ObjectManager::setObjVis(QString modelName, QString objName, bool vis)
 {
-    GeoObject* obj = findObjByName(modelName, objName);
+    GeoObject* obj = findObj(modelName, objName);
     if (obj)
     {
         obj->setVisibility(vis);
@@ -198,9 +198,9 @@ bool ObjectManager::setObjVisByName(QString modelName, QString objName, bool vis
     return false;
 }
 
-bool ObjectManager::setObjColorByName(QString modelName, QString objName, int r, int g, int b)
+bool ObjectManager::setObjColor(QString modelName, QString objName, int r, int g, int b)
 {
-    GeoObject* obj = findObjByName(modelName, objName);
+    GeoObject* obj = findObj(modelName, objName);
     if (obj)
     {
         //get the color of this obj.
@@ -220,7 +220,7 @@ bool ObjectManager::setObjColorByName(QString modelName, QString objName, int r,
     return false;
 }
 
-bool ObjectManager::getObjVisByName(QString modelName, QString objName)
+bool ObjectManager::getObjVis(QString modelName, QString objName)
 {
     vector<Model>::iterator modelIter = this->getObjTree()->begin();
     for ( ; modelIter < this->getObjTree()->end(); modelIter++)
@@ -240,15 +240,15 @@ bool ObjectManager::getObjVisByName(QString modelName, QString objName)
     return false; //in case of obj not existed.
 }
 
-bool ObjectManager::getObjColorByName( QString modelName, QString objName, int rgb[3] )
+bool ObjectManager::getObjColor( QString modelName, QString objName, int rgb[3] )
 {
-    GeoObject* obj = findObjByName(modelName, objName);
+    GeoObject* obj = findObj(modelName, objName);
     if (obj)
     {
         obj->getObjColor(rgb, rgb+1, rgb+2);
         if (QColor(rgb[0], rgb[1], rgb[2]).isValid())
         {
-            findModelByName(modelName)->setModified(true);
+            findModel(modelName)->setModified(true);
             return true;
         }
 
@@ -307,7 +307,7 @@ void GeoObject::getObjColor( int* r, int* g, int* b )
     *g = sumG / 3;
 }
 
-FavGroup* ObjectManager::findFavGroupByName(QString groupName)
+FavGroup* ObjectManager::findFavGroup(QString groupName)
 {
     vector<FavGroup>::iterator group_iter = treeOfFav.begin();
     for ( ; group_iter < treeOfFav.end(); group_iter++)
@@ -339,7 +339,7 @@ bool ObjectManager::removeGroup(QString groupName)
 
 bool ObjectManager::addFavGroup(QString groupName)
 {
-    if (NULL != this->findFavGroupByName(groupName))
+    if (NULL != this->findFavGroup(groupName))
     {
         return false;
     }
@@ -349,7 +349,7 @@ bool ObjectManager::addFavGroup(QString groupName)
     return true;
 }
 
-Model* ObjectManager::findModelByName(QString modelName)
+Model* ObjectManager::findModel(QString modelName)
 {
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
     for ( ; model_iter < treeOfGeoObjs.end(); model_iter++)
@@ -363,9 +363,9 @@ Model* ObjectManager::findModelByName(QString modelName)
     return NULL;
 }
 
-FavItem* ObjectManager::findFavItemByName(QString groupName, QString favItemName)
+FavItem* ObjectManager::findFavItem(QString groupName, QString favItemName)
 {
-    FavGroup* pGroup = findFavGroupByName(groupName);
+    FavGroup* pGroup = findFavGroup(groupName);
     if (pGroup)
     {
         return (pGroup->findFavItem(favItemName));
@@ -376,7 +376,7 @@ FavItem* ObjectManager::findFavItemByName(QString groupName, QString favItemName
 
 bool ObjectManager::addFavItem(QString groupName, FavItem& favItem)
 {
-    FavGroup* pGroup = findFavGroupByName(groupName);
+    FavGroup* pGroup = findFavGroup(groupName);
     if (NULL == pGroup)
     {
         return false;
@@ -395,7 +395,11 @@ bool ObjectManager::addFavItem(QString groupName, FavItem& favItem)
 
 bool ObjectManager::removeFavItem(QString groupName, QString favItemName)
 {
-    FavGroup* group = findFavGroupByName(groupName);
+    FavGroup* group = findFavGroup(groupName);
+    if (!group)
+    {
+        return false;
+    }
     vector<FavItem>::iterator item_Iter = group->getVecOfItems()->begin();
     for ( ; item_Iter < group->getVecOfItems()->end(); item_Iter++)
     {
@@ -417,7 +421,7 @@ bool ObjectManager::updateFavItem(QString groupName,
                                   QString newModelName,
                                   QString newObjName)
 {
-    FavItem* favItem = findFavItemByName(groupName, oldFavItemName);
+    FavItem* favItem = findFavItem(groupName, oldFavItemName);
     if (NULL == favItem)
     {
         return false;
@@ -426,9 +430,32 @@ bool ObjectManager::updateFavItem(QString groupName,
     favItem->setModelName(newModelName);
     favItem->setObjName(newObjName);
     favItem->setModified(true);
-    findFavGroupByName(groupName)->setModified(true);
+    findFavGroup(groupName)->setModified(true);
     setFavTreeModified(true);
     return true;
+}
+
+bool ObjectManager::removeObj(const QString modelName, const QString objName)
+{
+    Model* model = findModel(modelName);
+    if (!model)
+    {
+        return false;
+    }
+    vector<GeoObject>::iterator obj_iter = model->getVecOfGeoObjs()->begin();
+    for ( ; obj_iter < model->getVecOfGeoObjs()->end(); obj_iter++)
+    {
+        if (0 == obj_iter->getName().compare(objName))
+        {
+            DeleteVTKPointer(obj_iter->reader);
+            model->getVecOfGeoObjs()->erase(obj_iter);
+            model->setModified(true);
+            this->setObjTreeModified(true);
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void ReaderUpdater::run()

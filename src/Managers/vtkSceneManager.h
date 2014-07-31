@@ -49,15 +49,16 @@ public:
                            bool visible = 1);
     void AddCrrtStatActrToRnder(vtkRenderer* renderer);
     void AddActorsByState(vtkRenderer* renderer, int state);
-    void RemoveActorsByState(vtkRenderer* renderer, int state);
+    void RemoveActorsFromRendererByState(vtkRenderer* renderer, int state);
     void SetActorVisibleByName(const char* name, bool visible);
+    bool deleteActorByName(const string actorName);
 
     vector<ActorRecord>* GetActorRecordTable();
     void DeleteAllActors();
     void ClearActorTable();
 
     void SetSceneState(int sceneState);
-    int   GetSceneState();
+    int  GetSceneState();
 
     void SetSceneBounds(double bounds[6]);
     void SetSceneBounds(double xmin,double xmax,
@@ -69,7 +70,8 @@ public:
     double* GetSceneCenter();
 
     vtkLookupTable* GetLookupTable();
-    ActorRecord* getActorRecordByName(std::string actorName);
+    ActorRecord* getActorRecordByName(const std::string actorName);
+
 private:
     vector<ActorRecord> m_ActorRecordTable;
     int m_CurrentSceneState;

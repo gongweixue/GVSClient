@@ -90,7 +90,7 @@ int AddFavItemDialog::checkInfoValid()
 void AddFavItemDialog::reloadObjComboBoxItems(int index)
 {
     QString currModelName = this->ui.modelNameComboBox->currentText();
-    Model* pModel = objManager->findModelByName(currModelName);
+    Model* pModel = objManager->findModel(currModelName);
     if (NULL == pModel)
     {
         QMessageBox::information(NULL, tr("´íÎó"), tr("Ä£ÐÍÃû´íÎó¡£"));
@@ -110,7 +110,7 @@ bool AddFavItemDialog::favItemExisted()
 {
     QString groupName(this->ui.favGroupComboBox->currentText());
     QString favItemName(this->ui.favItemLineEdit->text());
-    if (NULL == this->objManager->findFavItemByName(groupName, favItemName))
+    if (NULL == this->objManager->findFavItem(groupName, favItemName))
     {
         return false;
     }

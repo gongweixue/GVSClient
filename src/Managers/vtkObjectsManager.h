@@ -162,13 +162,13 @@ public:
     vector<Model>* getObjTree() {return &treeOfGeoObjs;}
     vector<FavGroup>* getFavTree() {return &treeOfFav;}
 
-    GeoObject* findObjByName(QString modelName, QString objName);
-    Model* findModelByName(QString modelName);
-    FavGroup* findFavGroupByName(QString groupName);
-    FavItem* findFavItemByName(QString groupName, QString favItemName);
+    GeoObject* findObj(QString modelName, QString objName);
+    Model* findModel(QString modelName);
+    FavGroup* findFavGroup(QString groupName);
+    FavItem* findFavItem(QString groupName, QString favItemName);
 
-    bool setObjVisByName(QString modelName, QString objName, bool vis);
-    bool getObjVisByName(QString modelName, QString objName);
+    bool setObjVis(QString modelName, QString objName, bool vis);
+    bool getObjVis(QString modelName, QString objName);
 
     bool setModelModified(QString modelName, bool hasModified);
 
@@ -178,8 +178,8 @@ public:
     void setFavTreeModified(bool isModified) {this->favTreeModified = isModified;}
     bool getFavTreeModified() {return this->favTreeModified;}
 
-    bool setObjColorByName(QString modelName, QString objName, int r, int g, int b);
-    bool getObjColorByName(QString modelName, QString objName, int rgb[3]);
+    bool setObjColor(QString modelName, QString objName, int r, int g, int b);
+    bool getObjColor(QString modelName, QString objName, int rgb[3]);
 
     bool addFavGroup(QString groupName);
     bool removeGroup(QString groupName);
@@ -190,6 +190,7 @@ public:
                        QString newFavItemName,
                        QString newModelName,
                        QString newObjName);
+    bool removeObj(const QString modelName, const QString objName);
 
 public slots:
     void OnObjUpdateFinished();

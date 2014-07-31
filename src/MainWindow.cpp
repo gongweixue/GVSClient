@@ -906,6 +906,8 @@ void MainWindow::bindingActionsWithSlots()
             this, SLOT(OnRemoveFavItem(GVSPrjTreeWidgetItem&)));
     connect(m_prjTreeWidget, SIGNAL(sigEditFavItem(GVSPrjTreeWidgetItem&)),
             this, SLOT(OnEditFavItem(GVSPrjTreeWidgetItem&)));
+    connect(m_prjTreeWidget, SIGNAL(sigRemoveObj(GVSPrjTreeWidgetItem&)),
+            this, SLOT(OnRemoveObj(GVSPrjTreeWidgetItem&)));
 }
 
 void MainWindow::OnOpenProject()
@@ -1250,7 +1252,7 @@ void MainWindow::prjExplorerObjItemChanged(GVSPrjTreeWidgetItem* item)
 
     //update obj and actor state.
     bool objVisible = (item->checkState(0) == Qt::Checked) ? true : false;
-    updateObjItem(item->parent()->text(0), item->text(0), objVisible);
+    updateObjItemVis(item->parent()->text(0), item->text(0), objVisible);
 
     //update model check state
     refreshModelCheckState(item->parent());
@@ -1317,7 +1319,7 @@ void MainWindow::prjExplorerFavItemChanged(GVSPrjTreeWidgetItem* item)
     //find Fav record in doc
     ObjectManager* objManager = m_pDoc->GetObjManager();
     FavItem* favItemInDoc =
-            objManager->findFavItemByName(item->parent()->text(0), item->text(0));
+            objManager->findFavItem(item->parent()->text(0), item->text(0));
     if (NULL == favItemInDoc)
     {
         return;
@@ -1336,7 +1338,7 @@ void MainWindow::prjExplorerFavItemChanged(GVSPrjTreeWidgetItem* item)
     }
     objItemInView->setCheckState(0, item->checkState(0));
 
-    updateObjItem(modelName, objName, (item->checkState(0) == Qt::Checked) ? true:false);
+    updateObjItemVis(modelName, objName, (item->checkState(0) == Qt::Checked) ? true:false);
 
     //refresh model check state
     refreshModelCheckState(objItemInView->parent());
@@ -1448,13 +1450,13 @@ void MainWindow::prjExplorerModelChanged(GVSPrjTreeWidgetItem* item_clicked)
     }
 }
 
-void MainWindow::updateObjItem(QString modelName, QString objName, bool vis)
+void MainWindow::updateObjItemVis(QString modelName, QString objName, bool vis)
 {
-    if (m_pDoc->GetObjManager()->getObjVisByName(modelName, objName) == vis)
+    if (m_pDoc->GetObjManager()->getObjVis(modelName, objName) == vis)
     {
         return;
     }
-    bool setVisOk = m_pDoc->GetObjManager()->setObjVisByName(modelName, objName, vis);
+    bool setVisOk = m_pDoc->GetObjManager()->setObjVis(modelName, objName, vis);
 
     if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL && true == setVisOk)
     {
@@ -1570,7 +1572,7 @@ void MainWindow::initFavItems()
             ObjectManager* objManager = m_pDoc->GetObjManager();
             QString modelName = favItem_Iter->getModelName();
             QString objName = favItem_Iter->getObjName();
-            GeoObject* obj = objManager->findObjByName(modelName, objName);
+            GeoObject* obj = objManager->findObj(modelName, objName);
 
             if (obj)
             {
@@ -1608,7 +1610,7 @@ void MainWindow::initFavItems()
 void MainWindow::OnChangingObjColor(QString& modelName, QString& objName)
 {
     int oldRGB[3];
-    if (m_pDoc->GetObjManager()->getObjColorByName(modelName, objName, oldRGB))
+    if (m_pDoc->GetObjManager()->getObjColor(modelName, objName, oldRGB))
     {
         QColor color = QColorDialog::getColor(QColor(oldRGB[0], oldRGB[1], oldRGB[2]));
         if (color.isValid())
@@ -1621,7 +1623,7 @@ void MainWindow::OnChangingObjColor(QString& modelName, QString& objName)
                 return;
             }
 
-            bool setOk = m_pDoc->GetObjManager()->setObjColorByName(modelName, objName,
+            bool setOk = m_pDoc->GetObjManager()->setObjColor(modelName, objName,
                                                                     color.red(),
                                                                     color.green(),
                                                                     color.blue());
@@ -1655,7 +1657,7 @@ void MainWindow::OnAddFavGroup()
     {
         QString groupName(dlgAddFavGroup.getGroupName());
 
-        if (NULL != m_pDoc->GetObjManager()->findFavGroupByName(groupName))
+        if (NULL != m_pDoc->GetObjManager()->findFavGroup(groupName))
         {
             QMessageBox::information(NULL, tr("非法名称"), tr("已经存在该收藏夹。"));
 
@@ -1727,7 +1729,7 @@ void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
         }
         //prepare obj combo box ctrl.
         QString currModelName = addFavItemDlg.getModelComboBox()->currentText();
-        Model* pModel = objManager->findModelByName(currModelName);
+        Model* pModel = objManager->findModel(currModelName);
         if (NULL == pModel)
         {
             QMessageBox::information(NULL, tr("错误"), tr("模型名错误。"));
@@ -1782,7 +1784,7 @@ void MainWindow::OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem)
                                       Qt::ItemIsEnabled |
                                       Qt::ItemIsSelectable);
 
-                    GeoObject* obj = objManager->findObjByName(newModelName, newObjName);
+                    GeoObject* obj = objManager->findObj(newModelName, newObjName);
                     if (obj)
                     {
                         QString iconFileName;
@@ -1848,7 +1850,7 @@ void MainWindow::OnRenameGroup(GVSPrjTreeWidgetItem& currTreeItem)
             return;
         }
 
-        if (NULL != m_pDoc->GetObjManager()->findFavGroupByName(newGroupName))
+        if (NULL != m_pDoc->GetObjManager()->findFavGroup(newGroupName))
         {
             QMessageBox::information(NULL, tr("非法名称"), tr("已经存在该收藏夹。"));
 
@@ -1859,7 +1861,7 @@ void MainWindow::OnRenameGroup(GVSPrjTreeWidgetItem& currTreeItem)
 
         //change name in doc
         ObjectManager* objManager = m_pDoc->GetObjManager();
-        FavGroup* groupInDoc = objManager->findFavGroupByName(oldGroupName);
+        FavGroup* groupInDoc = objManager->findFavGroup(oldGroupName);
         if (NULL == groupInDoc)
         {
             QMessageBox::information(NULL, tr("错误"), tr("无法找到收藏夹。"));
@@ -2005,7 +2007,7 @@ void MainWindow::OnEditFavItem(GVSPrjTreeWidgetItem& favItem)
     }
     //prepare obj combo box ctrl.
     QString currModelName = editDlg.getModelComboBox()->currentText();
-    Model* pModel = objManager->findModelByName(currModelName);
+    Model* pModel = objManager->findModel(currModelName);
     if (NULL == pModel)
     {
         QMessageBox::information(NULL, tr("错误"), tr("模型名错误。"));
@@ -2025,7 +2027,7 @@ void MainWindow::OnEditFavItem(GVSPrjTreeWidgetItem& favItem)
 
     QString oldGroupName(favItem.parent()->text(0));
     QString oldFavItemName(favItem.text(0));
-    FavItem* favItemInDoc = objManager->findFavItemByName(oldGroupName, oldFavItemName);
+    FavItem* favItemInDoc = objManager->findFavItem(oldGroupName, oldFavItemName);
     QString oldModelName(favItemInDoc->getModelName());
     QString oldObjName(favItemInDoc->getObjName());
 
@@ -2059,7 +2061,7 @@ void MainWindow::OnEditFavItem(GVSPrjTreeWidgetItem& favItem)
     }
 
     //update icon of item which in prj tree
-    GeoObject* obj = objManager->findObjByName(newModelName, newObjName);
+    GeoObject* obj = objManager->findObj(newModelName, newObjName);
     if (obj)
     {
         QString iconFileName;
@@ -2086,5 +2088,48 @@ void MainWindow::OnEditFavItem(GVSPrjTreeWidgetItem& favItem)
         favItem.setCheckState(0, Qt::Unchecked);
     }
 
+}
+
+void MainWindow::OnRemoveObj(GVSPrjTreeWidgetItem& item)
+{
+    const QString objName(item.text(0));
+    const QString modelName(item.parent()->text(0));
+
+    if (!m_pDoc->GetObjManager()->removeObj(modelName, objName))
+    {
+        QMessageBox::warning(NULL, tr("出错啦"), tr("无法删除地层对象！"));
+    }
+
+    QTreeWidgetItem* modelInView = item.parent();
+    modelInView->removeChild(&item);
+    refreshModelCheckState(modelInView);
+
+    //update renderer.
+    if (m_sceneManager.GetSceneState() == SCENE_STATE_ORIGINAL)
+    {
+        QString actorName(modelName + "/" + objName);
+        //remove from renderer.
+        ActorRecord* actorRecord =
+                m_sceneManager.getActorRecordByName(actorName.toStdString());
+        if (NULL == actorRecord)
+        {
+            QMessageBox::information(NULL, tr("错误"), tr("场景中没有指定的地层对象"));
+            return;
+        }
+        this->m_mainRenderer->RemoveActor(actorRecord->actor);
+
+        //delete from scene.
+        if (!(this->m_sceneManager.deleteActorByName(actorName.toStdString())))
+        {
+            QMessageBox::information(NULL, tr("错误"), tr("场景中没有指定的地层对象"));
+            return;
+        }
+
+        //refresh
+        if (qvtkWidget->GetRenderWindow())
+        {
+            qvtkWidget->GetRenderWindow()->Render();
+        }
+    }
 }
 

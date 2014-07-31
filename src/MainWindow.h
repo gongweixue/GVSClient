@@ -48,8 +48,7 @@ private:
     void initPrjExplorer();
     void initObjectItems();
     void initFavItems();
-//     void updateFavItem(QTreeWidgetItem* favItem);
-     void updateObjItem(QString modelName, QString objName, bool objVisible);
+    void updateObjItemVis(QString modelName, QString objName, bool objVisible);
 
     void prjExplorerObjItemChanged(GVSPrjTreeWidgetItem* item);
     void prjExplorerFavItemChanged(GVSPrjTreeWidgetItem* item);
@@ -104,6 +103,8 @@ public slots:
     void OnRemoveGroup(GVSPrjTreeWidgetItem& groupRemoved);
     void OnRemoveFavItem(GVSPrjTreeWidgetItem& favItemRemoved);
     void OnEditFavItem(GVSPrjTreeWidgetItem& favItem);
+    void OnRemoveObj(GVSPrjTreeWidgetItem& item);
+
 public:
     Ui::MainWindowClass ui;
 

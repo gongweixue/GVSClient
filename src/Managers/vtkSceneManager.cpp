@@ -150,7 +150,7 @@ void SceneManager::AddActorsByState(vtkRenderer* renderer, int state)
     }
 }
 
-void SceneManager::RemoveActorsByState(vtkRenderer* renderer, int state)
+void SceneManager::RemoveActorsFromRendererByState(vtkRenderer* renderer, int state)
 {
     vector<ActorRecord>::iterator iter_actorRecord = m_ActorRecordTable.begin();
     for ( ; iter_actorRecord != m_ActorRecordTable.end(); iter_actorRecord++)
@@ -160,7 +160,7 @@ void SceneManager::RemoveActorsByState(vtkRenderer* renderer, int state)
     }
 }
 
-ActorRecord* SceneManager::getActorRecordByName( std::string actorName )
+ActorRecord* SceneManager::getActorRecordByName(const std::string actorName)
 {
     vector<ActorRecord>::iterator iter = m_ActorRecordTable.begin();
     for ( ; iter < m_ActorRecordTable.end(); iter++)
@@ -172,5 +172,32 @@ ActorRecord* SceneManager::getActorRecordByName( std::string actorName )
     }
 
     return NULL;
+}
+
+bool SceneManager::deleteActorByName(const string actorName)
+{
+    ActorRecord* actorRecord = getActorRecordByName(actorName);
+    if (NULL == actorRecord)
+    {
+        return false;
+    }
+    if (NULL !=actorRecord->actor)
+    {
+        actorRecord->actor->Delete();
+    }
+
+    actorRecord->actor = NULL;
+
+    vector<ActorRecord>::iterator iter = m_ActorRecordTable.begin();
+    for ( ; iter < m_ActorRecordTable.end(); iter++)
+    {
+        if (0 == iter->name.compare(actorName))
+        {
+            m_ActorRecordTable.erase(iter);
+            return true;
+        }
+    }
+
+    return false;
 }
 
