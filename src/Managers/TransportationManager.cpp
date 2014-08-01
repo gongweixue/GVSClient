@@ -7,10 +7,8 @@
 #include "TransportationManager.h"
 
 TransportationManager::TransportationManager(MainWindow* window, QObject* parent)
-    : QObject(parent)
+    : QObject(parent), mainWindow(window), ftp(NULL)
 {
-    this->mainWindow = window;
-    ftp = NULL;
     connList.clear();
     connectSignalSlots();
     initServerList();

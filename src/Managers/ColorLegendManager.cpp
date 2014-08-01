@@ -14,9 +14,8 @@ ColorLegendManager::ColorLegendManager(QObject* parent)
 
 ColorLegendManager::ColorLegendManager(QListWidget* pListWidget,
     string path, QObject* parent)
-    : QObject(parent)
+    : QObject(parent), m_pListWidget(pListWidget)
 {
-    m_pListWidget = pListWidget;
     vecOfLegendRecord.clear();
     vecOfLegendItem.clear();
 
@@ -30,7 +29,7 @@ ColorLegendManager::~ColorLegendManager()
 {
 }
 
-void ColorLegendManager::initOrUpdateLegend(string gvpFullFileName)
+void ColorLegendManager::initOrUpdateLegend(const string& gvpFullFileName)
 {
     vecOfLegendRecord.clear();
     vecOfLegendItem.clear();
@@ -43,7 +42,7 @@ void ColorLegendManager::initOrUpdateLegend(string gvpFullFileName)
     fillLegendDock();
 }
 
-void ColorLegendManager::parseLegendNames(string gvpFullFileName)
+void ColorLegendManager::parseLegendNames(const string& gvpFullFileName)
 {
     if(gvpFullFileName.empty())
         return;
@@ -143,7 +142,8 @@ void ColorLegendManager::fillLegendDock()
     }
 }
 
-bool ColorLegendManager::insertItemToFile(string name, QColor rgb, string description)
+bool ColorLegendManager::insertItemToFile(const string& name, const QColor& rgb,
+                                          const string& description)
 {
     if(projectFilePath.empty())
         return false;
@@ -226,7 +226,8 @@ bool ColorLegendManager::insertItemToFile(string name, QColor rgb, string descri
     return true;
 }
 
-bool ColorLegendManager::editItemInFile(string name, QColor rgb, string description)
+bool ColorLegendManager::editItemInFile(const string& name, const QColor& rgb,
+                                        const string& description)
 {
     if(projectFilePath.empty())
         return false;

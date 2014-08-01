@@ -22,7 +22,8 @@ private:
     void init();
     void initSignalSlot();
     void initPrjList();
-    void downloadCompressPrjToLocal(QString projectName, QString localToStore);
+    void downloadCompressPrjToLocal(const QString& projectName,
+                                    const QString& localToStore);
     bool uncompressPrj();
 
 private slots:

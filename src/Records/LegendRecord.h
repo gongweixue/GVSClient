@@ -12,7 +12,7 @@ public:
     string name;
     QColor rgb;
     string description;
-    LegendRecord(string lrName, QColor lrRGB, string lrDesc);
+    LegendRecord(const string& lrName, const QColor& lrRGB, const string& lrDesc);
 
     LegendRecord();
 };

@@ -13,11 +13,9 @@ UploadProjectDialog::UploadProjectDialog(QWidget* parent)
 }
 
 UploadProjectDialog::UploadProjectDialog(QFtp* pFtp, QWidget* parent)
-    : QDialog(parent)
+    : QDialog(parent), ftp(pFtp), compressFile(NULL)
 {
     ui.setupUi(this);
-    this->ftp = pFtp;
-    this->compressFile = NULL;
     ui.upLoadBtn->setEnabled(false);
     init();
 }

@@ -16,9 +16,9 @@ DownloadProjectDialog::DownloadProjectDialog(QWidget* parent)
 }
 
 DownloadProjectDialog::DownloadProjectDialog(QFtp* pFtp, QWidget *parent)
+    :QDialog(parent), ftp(pFtp)
 {
     ui.setupUi(this);
-    ftp = pFtp;
     init();
 }
 
@@ -109,7 +109,8 @@ bail:
     return;
 }
 
-void DownloadProjectDialog::downloadCompressPrjToLocal(QString projectName, QString localToStore)
+void DownloadProjectDialog::downloadCompressPrjToLocal(const QString& projectName,
+                                                       const QString& localToStore)
 {
     //down project file
     compressFile.setFileName(localToStore + projectName + ".zip");

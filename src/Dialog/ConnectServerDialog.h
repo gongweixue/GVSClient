@@ -18,7 +18,9 @@ class ConnectServerDialog : public QDialog
     Q_OBJECT
 
 public:
-    ConnectServerDialog(std::vector<ConnectionRecord>* connList, QFtp* ftpConn, QWidget* parent = 0);
+    ConnectServerDialog(std::vector<ConnectionRecord>* connList,
+                        QFtp* ftpConn,
+                        QWidget* parent = 0);
     ~ConnectServerDialog();
 
 private slots:

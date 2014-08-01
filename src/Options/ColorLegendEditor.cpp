@@ -11,10 +11,9 @@ ColorLegendEditor::ColorLegendEditor(QWidget* parent)
 }
 
 ColorLegendEditor::ColorLegendEditor(ColorLegendManager* manager, QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent), m_manager(manager)
 {
     ui.setupUi(this);
-    m_manager = manager;
     connectSignalSlots();
     initUpdate();
 }

@@ -48,7 +48,9 @@ private:
     void initPrjExplorer();
     void initObjectItems();
     void initFavItems();
-    void updateObjItemVis(QString modelName, QString objName, bool objVisible);
+    void updateObjItemVis(const QString& modelName,
+                          const QString& objName,
+                          bool vis);
 
     void prjExplorerObjItemChanged(GVSPrjTreeWidgetItem* item);
     void prjExplorerFavItemChanged(GVSPrjTreeWidgetItem* item);
@@ -57,10 +59,12 @@ private:
     void refreshGroupCheckState(QTreeWidgetItem* groupWidget);
     void refreshModelCheckState(QTreeWidgetItem* modelWidget);
 
-    QTreeWidgetItem* findObjItemInPrjTree(QString modelName, QString objName);
-    QTreeWidgetItem* findFavItemInPrjTree(QString groupName, QString favName);
+    QTreeWidgetItem* findObjItemInPrjTree(const QString& modelName,
+                                          const QString& objName);
+    QTreeWidgetItem* findFavItemInPrjTree(const QString& groupName,
+                                          const QString& favName);
 
-    bool setActorVisByName(QString actorName, bool vis);
+    bool setActorVisByName(const QString& actorName, bool vis);
 
     void onInitialUpdate();
     void showOrientationMarker();
@@ -96,7 +100,7 @@ public slots:
     void OnProjectExplorer();
     void OnEditColorLegend();
     void OnPrjExplorerTreeItemChanged(QTreeWidgetItem* item, int column);
-    void OnChangingObjColor(QString& modelName, QString& objName);
+    void OnChangingObjColor(const QString& modelName, const QString& objName);
     void OnAddFavGroup();
     void OnAddFavItem(GVSPrjTreeWidgetItem& currTreeItem);
     void OnRenameGroup(GVSPrjTreeWidgetItem& currTreeItem);

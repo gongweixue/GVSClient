@@ -7,14 +7,25 @@
 
 using namespace std;
 
-#define  SCENE_STATE_NULL           0
-#define  SCENE_STATE_SHOW_LABEL     1000
-#define  SCENE_STATE_ORIGINAL       2000
-#define  SCENE_STATE_PLANE_CLIP     3000
-#define  SCENE_STATE_EXPLODE        4000
-#define  SCENE_STATE_STD_EXPLODE    4100
-#define  SCENE_STATE_BOX_CLIP       5000
-#define  SCENE_STATE_PRISM_CLIP     6000
+// #define  SCENE_STATE_NULL           0
+// #define  SCENE_STATE_SHOW_LABEL     1000
+// #define  SCENE_STATE_ORIGINAL       2000
+// #define  SCENE_STATE_PLANE_CLIP     3000
+// #define  SCENE_STATE_EXPLODE        4000
+// #define  SCENE_STATE_STD_EXPLODE    4100
+// #define  SCENE_STATE_BOX_CLIP       5000
+// #define  SCENE_STATE_PRISM_CLIP     6000
+
+enum SceneState {
+    SCENE_STATE_NULL,
+    SCENE_STATE_SHOW_LABEL,
+    SCENE_STATE_ORIGINAL,
+    SCENE_STATE_PLANE_CLIP,
+    SCENE_STATE_EXPLODE,
+    SCENE_STATE_STD_EXPLODE,
+    SCENE_STATE_BOX_CLIP,
+    SCENE_STATE_PRISM_CLIP
+};
 
 typedef struct ActorRecord
 {
@@ -24,16 +35,13 @@ public:
     int sceneStateBelong;
     vtkActor* actor;
 public:
-    ActorRecord(vtkActor* paraAct,
-                string dsName = "",
-                int paraStatebelong = SCENE_STATE_ORIGINAL,
-                bool paraVisible = 1)
-    {
-        actor = paraAct;
-        name = dsName;
-        isVisible = paraVisible;
-        sceneStateBelong = paraStatebelong;
-    };
+    ActorRecord(vtkActor* paraAct, string dsName = "",
+                int paraStatebelong = SCENE_STATE_ORIGINAL, bool paraVisible = 1)
+        :name(dsName),
+         isVisible(paraVisible),
+         sceneStateBelong(paraStatebelong),
+         actor(paraAct)
+    {};
     ~ActorRecord()
     {
     }
@@ -44,14 +52,13 @@ class SceneManager
 public:
     SceneManager(void);
     ~SceneManager(void);
-    void InsertActorRcrd(vtkActor* actor, string dataSetName = "",
-                           int sceneStateBelong = SCENE_STATE_ORIGINAL,
-                           bool visible = 1);
+    void InsertActorRcrd(vtkActor* actor, const string& dataSetName = "",
+                         int sceneStateBelong = SCENE_STATE_ORIGINAL, bool visible = 1);
     void AddCrrtStatActrToRnder(vtkRenderer* renderer);
     void AddActorsByState(vtkRenderer* renderer, int state);
     void RemoveActorsFromRendererByState(vtkRenderer* renderer, int state);
     void SetActorVisibleByName(const char* name, bool visible);
-    bool deleteActorByName(const string actorName);
+    bool deleteActorByName(const string& actorName);
 
     vector<ActorRecord>* GetActorRecordTable();
     void DeleteAllActors();
@@ -70,7 +77,7 @@ public:
     double* GetSceneCenter();
 
     vtkLookupTable* GetLookupTable();
-    ActorRecord* getActorRecordByName(const std::string actorName);
+    ActorRecord* getActorRecordByName(const std::string& actorName);
 
 private:
     vector<ActorRecord> m_ActorRecordTable;

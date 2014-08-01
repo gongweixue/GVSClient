@@ -20,18 +20,18 @@ public:
     ColorLegendManager(QListWidget* pListWidget, string path, QObject* parent = 0);
     ~ColorLegendManager();
     string getFilePath() {return projectFilePath;}
-    bool insertItemToFile(string name, QColor rgb, string description);
-    bool editItemInFile(string name, QColor rgb, string description);
+    bool insertItemToFile(const string& name, const QColor& rgb, const string& description);
+    bool editItemInFile(const string& name, const QColor& rgb, const string& description);
     bool delItemFromFile(const char * name);
 
 public slots:
     //should be called after edit on the legend dock.
-    void initOrUpdateLegend(string gvpFullFileName);
+    void initOrUpdateLegend(const string& gvpFullFileName);
     vector<LegendRecord>* getVecPtrOfRecord() {return &vecOfLegendRecord;}
 
 private:
     ColorLegendManager(QObject* parent);
-    void parseLegendNames(string gvpFullFileName);
+    void parseLegendNames(const string& gvpFullFileName);
     void fillLegendDock();
     void genericItems();
 

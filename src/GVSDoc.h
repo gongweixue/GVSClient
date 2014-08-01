@@ -23,12 +23,12 @@ public slots:
     bool OnCloseDocument();
 
 private:
-    bool LoadProject(std::string gvpFullFileName);
-    bool parseProjectByFileName(std::string gvpFullFileName);
+    bool LoadProject(const std::string& gvpFullFileName);
+    bool parseProjectByFileName(const std::string& gvpFullPath);
     std::string getProjectPathByDlg();
-    bool parseAndLoadModel(std::string gvmFullPath);
-    bool LoadFavTree(std::string filePath);
-    bool LoadObjTree(std::string filePath);
+    bool parseAndLoadModel(const std::string& gvmFullPath);
+    bool LoadFavTree(const std::string& filePath);
+    bool LoadObjTree(const std::string& filePath);
 
 private:
     MainWindow* m_pMainWindow;

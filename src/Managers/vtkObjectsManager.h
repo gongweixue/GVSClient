@@ -84,11 +84,8 @@ typedef struct FavItem
 {
 public:
     FavItem(QString itemName, QString mdlNameVal, QString objNameVal)
+        :name(itemName), modelName(mdlNameVal), objName(objNameVal), hasModified(false)
     {
-        name = itemName;
-        modelName = mdlNameVal;
-        objName = objNameVal;
-        hasModified = false;
     }
 
     void setModified(bool modifiedVal) {this->hasModified = modifiedVal;}
@@ -121,9 +118,8 @@ typedef struct FavGroup
 {
 public:
     FavGroup(std::string name)
+        : groupName(name), hasModified(false)
     {
-        this->groupName = name;
-        this->hasModified = false;
     }
 
     void setGroupName(std::string name) {this->groupName = name;}
@@ -132,7 +128,7 @@ public:
     void setModified(bool modifiedVal) {this->hasModified = modifiedVal;}
     bool getModified() {return hasModified;}
 
-    FavItem* findFavItem(QString itemName);
+    FavItem* findFavItem(const QString& itemName);
 
     vector<FavItem>* getVecOfItems() {return &vecOfItems;}
 
@@ -162,15 +158,15 @@ public:
     vector<Model>* getObjTree() {return &treeOfGeoObjs;}
     vector<FavGroup>* getFavTree() {return &treeOfFav;}
 
-    GeoObject* findObj(QString modelName, QString objName);
-    Model* findModel(QString modelName);
-    FavGroup* findFavGroup(QString groupName);
-    FavItem* findFavItem(QString groupName, QString favItemName);
+    GeoObject* findObj(const QString& modelName, const QString& objName);
+    Model* findModel(const QString& modelName);
+    FavGroup* findFavGroup(const QString& groupName);
+    FavItem* findFavItem(const QString& groupName, const QString& favItemName);
 
-    bool setObjVis(QString modelName, QString objName, bool vis);
-    bool getObjVis(QString modelName, QString objName);
+    bool setObjVis(const QString& modelName, const QString& objName, bool vis);
+    bool getObjVis(const QString& modelName, const QString& objName);
 
-    bool setModelModified(QString modelName, bool hasModified);
+    bool setModelModified(const QString& modelName, bool hasModified);
 
     void setObjTreeModified(bool isModified) {this->objTreeModified = isModified;}
     bool getObjTreeModified() {return this->objTreeModified;}
@@ -178,18 +174,20 @@ public:
     void setFavTreeModified(bool isModified) {this->favTreeModified = isModified;}
     bool getFavTreeModified() {return this->favTreeModified;}
 
-    bool setObjColor(QString modelName, QString objName, int r, int g, int b);
-    bool getObjColor(QString modelName, QString objName, int rgb[3]);
+    bool setObjColor(const QString& modelName,
+                     const QString& objName,
+                     int r, int g, int b);
+    bool getObjColor(const QString& modelName, const QString& objName, int rgb[3]);
 
-    bool addFavGroup(QString groupName);
-    bool removeGroup(QString groupName);
-    bool addFavItem(QString groupName, FavItem& favItem);
-    bool removeFavItem(QString groupName, QString favItemName);
-    bool updateFavItem(QString groupName,
-                       QString oldFavItemName,
-                       QString newFavItemName,
-                       QString newModelName,
-                       QString newObjName);
+    bool addFavGroup(const QString& groupName);
+    bool removeGroup(const QString& groupName);
+    bool addFavItem(const QString& groupName, FavItem& favItem);
+    bool removeFavItem(const QString& groupName, const QString& favItemName);
+    bool updateFavItem(const QString& groupName,
+                       const QString& oldFavItemName,
+                       const QString& newFavItemName,
+                       const QString& newModelName,
+                       const QString& newObjName);
     bool removeObj(const QString modelName, const QString objName);
 
 public slots:

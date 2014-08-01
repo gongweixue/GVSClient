@@ -14,10 +14,9 @@ ConnectServerDialog::ConnectServerDialog(QWidget* parent)
 ConnectServerDialog::ConnectServerDialog(vector<ConnectionRecord>* connList,
                                          QFtp* ftpConn,
                                          QWidget *parent)
+    : QDialog(parent), ftp(ftpConn), pSvrList(connList)
 {
     ui.setupUi(this);
-    ftp = ftpConn;
-    pSvrList = connList;
     init();
 }
 

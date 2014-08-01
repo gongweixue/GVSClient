@@ -146,16 +146,16 @@ void ObjectManager::OnObjUpdateFinished()
     progressValueMutex.unlock();
 }
 
-GeoObject* ObjectManager::findObj(QString modelName, QString objName)
+GeoObject* ObjectManager::findObj(const QString& modelName, const QString& objName)
 {
     //time complexity: m + n
     vector<Model>::iterator modelIter = treeOfGeoObjs.begin();
-    for ( ; modelIter < treeOfGeoObjs.end(); modelIter++)
+    for ( ; modelIter != treeOfGeoObjs.end(); modelIter++)
     {
         if (0 == modelName.compare(modelIter->getModelName()))
         {
             vector<GeoObject>::iterator objIter = modelIter->getVecOfGeoObjs()->begin();
-            for ( ; objIter < modelIter->getVecOfGeoObjs()->end(); objIter++)
+            for ( ; objIter != modelIter->getVecOfGeoObjs()->end(); objIter++)
             {
                 if (0 == objName.compare(objIter->getName()))
                 {
@@ -168,10 +168,10 @@ GeoObject* ObjectManager::findObj(QString modelName, QString objName)
     return NULL;
 }
 
-bool ObjectManager::setModelModified(QString modelName, bool hasModified)
+bool ObjectManager::setModelModified(const QString& modelName, bool hasModified)
 {
     vector<Model>::iterator modelIter = treeOfGeoObjs.begin();
-    for ( ; modelIter < treeOfGeoObjs.end(); modelIter++)
+    for ( ; modelIter != treeOfGeoObjs.end(); modelIter++)
     {
         if (0 == modelName.compare(modelIter->getModelName()))
         {
@@ -183,7 +183,7 @@ bool ObjectManager::setModelModified(QString modelName, bool hasModified)
     return false;
 }
 
-bool ObjectManager::setObjVis(QString modelName, QString objName, bool vis)
+bool ObjectManager::setObjVis(const QString& modelName, const QString& objName, bool vis)
 {
     GeoObject* obj = findObj(modelName, objName);
     if (obj)
@@ -198,7 +198,8 @@ bool ObjectManager::setObjVis(QString modelName, QString objName, bool vis)
     return false;
 }
 
-bool ObjectManager::setObjColor(QString modelName, QString objName, int r, int g, int b)
+bool ObjectManager::setObjColor(const QString& modelName, const QString& objName,
+                                int r, int g, int b)
 {
     GeoObject* obj = findObj(modelName, objName);
     if (obj)
@@ -220,15 +221,15 @@ bool ObjectManager::setObjColor(QString modelName, QString objName, int r, int g
     return false;
 }
 
-bool ObjectManager::getObjVis(QString modelName, QString objName)
+bool ObjectManager::getObjVis(const QString& modelName, const QString& objName)
 {
     vector<Model>::iterator modelIter = this->getObjTree()->begin();
-    for ( ; modelIter < this->getObjTree()->end(); modelIter++)
+    for ( ; modelIter != this->getObjTree()->end(); modelIter++)
     {
         if (0 == modelName.compare(modelIter->getModelName()))
         {
             vector<GeoObject>::iterator objIter = modelIter->getVecOfGeoObjs()->begin();
-            for ( ; objIter < modelIter->getVecOfGeoObjs()->end(); objIter++)
+            for ( ; objIter != modelIter->getVecOfGeoObjs()->end(); objIter++)
             {
                 if (0 == objName.compare(objIter->getName()))
                 {
@@ -240,7 +241,9 @@ bool ObjectManager::getObjVis(QString modelName, QString objName)
     return false; //in case of obj not existed.
 }
 
-bool ObjectManager::getObjColor( QString modelName, QString objName, int rgb[3] )
+bool ObjectManager::getObjColor(const QString& modelName,
+                                const QString& objName,
+                                int rgb[3])
 {
     GeoObject* obj = findObj(modelName, objName);
     if (obj)
@@ -307,10 +310,10 @@ void GeoObject::getObjColor( int* r, int* g, int* b )
     *g = sumG / 3;
 }
 
-FavGroup* ObjectManager::findFavGroup(QString groupName)
+FavGroup* ObjectManager::findFavGroup(const QString& groupName)
 {
     vector<FavGroup>::iterator group_iter = treeOfFav.begin();
-    for ( ; group_iter < treeOfFav.end(); group_iter++)
+    for ( ; group_iter != treeOfFav.end(); group_iter++)
     {
         if (0 == groupName.compare(group_iter->getGroupName().c_str()))
         {
@@ -321,10 +324,10 @@ FavGroup* ObjectManager::findFavGroup(QString groupName)
     return NULL;
 }
 
-bool ObjectManager::removeGroup(QString groupName)
+bool ObjectManager::removeGroup(const QString& groupName)
 {
     vector<FavGroup>::iterator group_iter = treeOfFav.begin();
-    for ( ; group_iter < treeOfFav.end(); group_iter++)
+    for ( ; group_iter != treeOfFav.end(); group_iter++)
     {
         if (0 == groupName.compare(group_iter->getGroupName().c_str()))
         {
@@ -337,7 +340,7 @@ bool ObjectManager::removeGroup(QString groupName)
     return false;
 }
 
-bool ObjectManager::addFavGroup(QString groupName)
+bool ObjectManager::addFavGroup(const QString& groupName)
 {
     if (NULL != this->findFavGroup(groupName))
     {
@@ -349,10 +352,10 @@ bool ObjectManager::addFavGroup(QString groupName)
     return true;
 }
 
-Model* ObjectManager::findModel(QString modelName)
+Model* ObjectManager::findModel(const QString& modelName)
 {
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
-    for ( ; model_iter < treeOfGeoObjs.end(); model_iter++)
+    for ( ; model_iter != treeOfGeoObjs.end(); model_iter++)
     {
         if (0 == modelName.compare(model_iter->getModelName()))
         {
@@ -363,7 +366,7 @@ Model* ObjectManager::findModel(QString modelName)
     return NULL;
 }
 
-FavItem* ObjectManager::findFavItem(QString groupName, QString favItemName)
+FavItem* ObjectManager::findFavItem(const QString& groupName, const QString& favItemName)
 {
     FavGroup* pGroup = findFavGroup(groupName);
     if (pGroup)
@@ -374,7 +377,7 @@ FavItem* ObjectManager::findFavItem(QString groupName, QString favItemName)
     return NULL;
 }
 
-bool ObjectManager::addFavItem(QString groupName, FavItem& favItem)
+bool ObjectManager::addFavItem(const QString& groupName, FavItem& favItem)
 {
     FavGroup* pGroup = findFavGroup(groupName);
     if (NULL == pGroup)
@@ -393,7 +396,7 @@ bool ObjectManager::addFavItem(QString groupName, FavItem& favItem)
     return true;
 }
 
-bool ObjectManager::removeFavItem(QString groupName, QString favItemName)
+bool ObjectManager::removeFavItem(const QString& groupName, const QString& favItemName)
 {
     FavGroup* group = findFavGroup(groupName);
     if (!group)
@@ -401,7 +404,7 @@ bool ObjectManager::removeFavItem(QString groupName, QString favItemName)
         return false;
     }
     vector<FavItem>::iterator item_Iter = group->getVecOfItems()->begin();
-    for ( ; item_Iter < group->getVecOfItems()->end(); item_Iter++)
+    for ( ; item_Iter != group->getVecOfItems()->end(); item_Iter++)
     {
         if (0 == item_Iter->getName().compare(favItemName))
         {
@@ -415,11 +418,11 @@ bool ObjectManager::removeFavItem(QString groupName, QString favItemName)
     return false;
 }
 
-bool ObjectManager::updateFavItem(QString groupName,
-                                  QString oldFavItemName,
-                                  QString newFavItemName,
-                                  QString newModelName,
-                                  QString newObjName)
+bool ObjectManager::updateFavItem(const QString& groupName,
+                                  const QString& oldFavItemName,
+                                  const QString& newFavItemName,
+                                  const QString& newModelName,
+                                  const QString& newObjName)
 {
     FavItem* favItem = findFavItem(groupName, oldFavItemName);
     if (NULL == favItem)
@@ -443,7 +446,7 @@ bool ObjectManager::removeObj(const QString modelName, const QString objName)
         return false;
     }
     vector<GeoObject>::iterator obj_iter = model->getVecOfGeoObjs()->begin();
-    for ( ; obj_iter < model->getVecOfGeoObjs()->end(); obj_iter++)
+    for ( ; obj_iter != model->getVecOfGeoObjs()->end(); obj_iter++)
     {
         if (0 == obj_iter->getName().compare(objName))
         {
@@ -465,10 +468,10 @@ void ReaderUpdater::run()
 }
 
 
-FavItem* FavGroup::findFavItem(QString itemName)
+FavItem* FavGroup::findFavItem(const QString& itemName)
 {
     vector<FavItem>::iterator item_Iter = this->vecOfItems.begin();
-    for ( ; item_Iter < vecOfItems.end(); item_Iter++)
+    for ( ; item_Iter != vecOfItems.end(); item_Iter++)
     {
         if (0 == item_Iter->getName().compare(itemName))
         {

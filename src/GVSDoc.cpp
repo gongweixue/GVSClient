@@ -35,12 +35,12 @@ bool GVSDoc::OnCloseDocument()
     return true;
 }
 
-bool GVSDoc::LoadProject(std::string gvpFullFileName)
+bool GVSDoc::LoadProject(const std::string& gvpFullFileName)
 {
     return parseProjectByFileName(gvpFullFileName);
 }
 
-bool GVSDoc::parseProjectByFileName(std::string gvpFullPath)
+bool GVSDoc::parseProjectByFileName(const std::string& gvpFullPath)
 {
     if (LoadFavTree(gvpFullPath) == false)
     {
@@ -54,7 +54,7 @@ bool GVSDoc::parseProjectByFileName(std::string gvpFullPath)
     return true;
 }
 
-bool GVSDoc::parseAndLoadModel(std::string gvmFullPath)
+bool GVSDoc::parseAndLoadModel(const std::string& gvmFullPath)
 {
     if (gvmFullPath.empty())
         return false;
@@ -163,7 +163,7 @@ std::string GVSDoc::getProjectPathByDlg()
     return fileName.toStdString();
 }
 
-bool GVSDoc::LoadFavTree(std::string filePath)
+bool GVSDoc::LoadFavTree(const std::string& filePath)
 {
     QFileInfo fileInfo(filePath.c_str());
     QString currentDir(fileInfo.absolutePath() + "/");
@@ -227,7 +227,7 @@ bool GVSDoc::LoadFavTree(std::string filePath)
     return true;
 }
 
-bool GVSDoc::LoadObjTree(std::string filePath)
+bool GVSDoc::LoadObjTree(const std::string& filePath)
 {
     QFileInfo fileInfo(filePath.c_str());
     QString currentDir(fileInfo.absolutePath() + "/");

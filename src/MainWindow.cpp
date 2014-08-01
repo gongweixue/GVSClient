@@ -1261,12 +1261,12 @@ void MainWindow::prjExplorerObjItemChanged(GVSPrjTreeWidgetItem* item)
     ObjectManager* objManager = m_pDoc->GetObjManager();
     vector<FavGroup>* favTreeInDoc = objManager->getFavTree();
     vector<FavGroup>::iterator groupIterInDoc = favTreeInDoc->begin();
-    for ( ; groupIterInDoc < favTreeInDoc->end(); groupIterInDoc++)
+    for ( ; groupIterInDoc != favTreeInDoc->end(); groupIterInDoc++)
     {
         QString groupName(groupIterInDoc->getGroupName().c_str());
         vector<FavItem>::iterator favItemInView =
                 groupIterInDoc->getVecOfItems()->begin();
-        for (;favItemInView < groupIterInDoc->getVecOfItems()->end(); favItemInView++)
+        for (;favItemInView != groupIterInDoc->getVecOfItems()->end(); favItemInView++)
         {
             if (0 == favItemInView->getModelName().compare(item->parent()->text(0)) &&
                 0 == favItemInView->getObjName().compare(item->text(0)))
@@ -1286,7 +1286,8 @@ void MainWindow::prjExplorerObjItemChanged(GVSPrjTreeWidgetItem* item)
 
 }
 
-QTreeWidgetItem* MainWindow::findObjItemInPrjTree(QString modelName, QString objName)
+QTreeWidgetItem* MainWindow::findObjItemInPrjTree(const QString& modelName,
+                                                  const QString& objName)
 {
     QList<QTreeWidgetItem*> modelList = m_prjTreeWidget->findItems(modelName,
                                                                    Qt::MatchCaseSensitive
@@ -1344,11 +1345,12 @@ void MainWindow::prjExplorerFavItemChanged(GVSPrjTreeWidgetItem* item)
     refreshModelCheckState(objItemInView->parent());
 }
 
-QTreeWidgetItem* MainWindow::findFavItemInPrjTree(QString groupName, QString favName)
+QTreeWidgetItem* MainWindow::findFavItemInPrjTree(const QString& groupName,
+                                                  const QString& favName)
 {
     QList<QTreeWidgetItem*> tmpList = m_prjTreeWidget->findItems("Favorite",
-                                                                 Qt::MatchCaseSensitive |
-                                                                 Qt::MatchExactly);
+                                                                 Qt::MatchCaseSensitive
+                                                                 | Qt::MatchExactly);
 
     QTreeWidgetItem* favRoot = tmpList[0];
     for (int i = 0; i < favRoot->childCount(); ++i)
@@ -1450,7 +1452,9 @@ void MainWindow::prjExplorerModelChanged(GVSPrjTreeWidgetItem* item_clicked)
     }
 }
 
-void MainWindow::updateObjItemVis(QString modelName, QString objName, bool vis)
+void MainWindow::updateObjItemVis(const QString& modelName,
+                                  const QString& objName,
+                                  bool vis)
 {
     if (m_pDoc->GetObjManager()->getObjVis(modelName, objName) == vis)
     {
@@ -1474,7 +1478,7 @@ void MainWindow::updateObjItemVis(QString modelName, QString objName, bool vis)
     }
 }
 
-bool MainWindow::setActorVisByName( QString actorName, bool vis )
+bool MainWindow::setActorVisByName(const QString& actorName, bool vis)
 {
     ActorRecord* record = m_sceneManager.getActorRecordByName(actorName.toStdString());
     if (record && record->actor)
@@ -1607,7 +1611,7 @@ void MainWindow::initFavItems()
     }
 }
 
-void MainWindow::OnChangingObjColor(QString& modelName, QString& objName)
+void MainWindow::OnChangingObjColor(const QString& modelName, const QString& objName)
 {
     int oldRGB[3];
     if (m_pDoc->GetObjManager()->getObjColor(modelName, objName, oldRGB))
@@ -1924,7 +1928,7 @@ void MainWindow::OnRemoveGroup( GVSPrjTreeWidgetItem& groupRemoved )
             vecOfChildren.push_back(childByIdx);
         }
         vector<GVSPrjTreeWidgetItem*>::iterator childIter = vecOfChildren.begin();
-        for ( ; childIter < vecOfChildren.end(); childIter++)
+        for ( ; childIter != vecOfChildren.end(); childIter++)
         {
             groupRemoved.removeChild(*childIter);
             delete *childIter;
