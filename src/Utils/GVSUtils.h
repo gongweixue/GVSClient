@@ -8,7 +8,7 @@
 template<typename T>
 bool DeleteVTKPointer(T& pointer)
 {
-    if (pointer!=0)
+    if (pointer != 0)
     {
         pointer->Delete();
         pointer = 0;
@@ -17,8 +17,7 @@ bool DeleteVTKPointer(T& pointer)
     return false;
 };
 
-class GVSUtils
-{
+class GVSUtils {
 };
 
 

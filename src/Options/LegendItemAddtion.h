@@ -4,8 +4,7 @@
 #include <QDialog>
 #include "ui_LegendItemAddtion.h"
 
-class LegendItemAddtion : public QDialog
-{
+class LegendItemAddtion : public QDialog {
     Q_OBJECT
 
 public:

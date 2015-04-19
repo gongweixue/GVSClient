@@ -5,8 +5,7 @@
 #include <QWidget>
 #include "ui_LightOption.h"
 
-class LightOption : public QDialog
-{
+class LightOption : public QDialog {
     Q_OBJECT
 
 public:

@@ -5,8 +5,7 @@ class MainWindow;
 class GVSApplicationCore;
 class QSplashScreen;
 
-class GVSInitializer
-{
+class GVSInitializer {
 public:
     GVSInitializer(void);
     ~GVSInitializer(void);

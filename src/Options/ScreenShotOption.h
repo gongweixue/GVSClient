@@ -4,12 +4,11 @@
 #include <QDialog>
 #include "ui_ScreenShotOption.h"
 
-class ScreenShotOption : public QDialog
-{
+class ScreenShotOption : public QDialog {
     Q_OBJECT
 
 public:
-    ScreenShotOption(QWidget *parent = 0);
+    ScreenShotOption(QWidget* parent = 0);
     ~ScreenShotOption();
 
 private:

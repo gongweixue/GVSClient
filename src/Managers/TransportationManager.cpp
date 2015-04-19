@@ -7,20 +7,17 @@
 #include "TransportationManager.h"
 
 TransportationManager::TransportationManager(MainWindow* window, QObject* parent)
-    : QObject(parent), mainWindow(window), ftp(NULL)
-{
+    : QObject(parent), mainWindow(window), ftp(NULL) {
     connList.clear();
     connectSignalSlots();
     initServerList();
 }
 
-TransportationManager::~TransportationManager()
-{
+TransportationManager::~TransportationManager() {
     delete ftp;
 }
 
-void TransportationManager::connectSignalSlots()
-{
+void TransportationManager::connectSignalSlots() {
     connect(mainWindow->ui.actionConnectServer, SIGNAL(triggered()),
             this, SLOT(OnConnectServer()));
     connect(mainWindow->ui.actionDisconnectServer, SIGNAL(triggered()),
@@ -31,10 +28,8 @@ void TransportationManager::connectSignalSlots()
             this, SLOT(OnDownloadProject()));
 }
 
-void TransportationManager::OnConnectServer()
-{
-    if (NULL != ftp)
-    {
+void TransportationManager::OnConnectServer() {
+    if (NULL != ftp) {
         ftp->abort();
         ftp->deleteLater();
         ftp = 0;
@@ -47,23 +42,18 @@ void TransportationManager::OnConnectServer()
     connSvrDlg.exec();
 }
 
-void TransportationManager::OnDisonnectServer()
-{
-    if (NULL==ftp || (ftp->state() != QFtp::Connected && ftp->state() != QFtp::LoggedIn))
-    {
+void TransportationManager::OnDisonnectServer() {
+    if (NULL == ftp || (ftp->state() != QFtp::Connected 
+        && ftp->state() != QFtp::LoggedIn)) {
         QMessageBox::information(0, tr("提示"), tr("未登录到服务器。"));
         return;
-    }
-    else
-    {
+    } else {
         ftp->close();
     }
 }
 
-void TransportationManager::OnUploadProject()
-{
-    if (NULL == ftp || ftp->state() != QFtp::LoggedIn)
-    {
+void TransportationManager::OnUploadProject() {
+    if (NULL == ftp || ftp->state() != QFtp::LoggedIn) {
         QMessageBox::information(0, tr("提示"), tr("请先登录服务器。"));
         return;
     }
@@ -71,10 +61,8 @@ void TransportationManager::OnUploadProject()
     uploadDlg.exec();
 }
 
-void TransportationManager::OnDownloadProject()
-{
-    if (NULL == ftp || ftp->state() != QFtp::LoggedIn)
-    {
+void TransportationManager::OnDownloadProject() {
+    if (NULL == ftp || ftp->state() != QFtp::LoggedIn) {
         QMessageBox::information(0, tr("提示"), tr("请先登录服务器。"));
         return;
     }
@@ -82,8 +70,7 @@ void TransportationManager::OnDownloadProject()
     downloadDlg.exec();
 }
 
-void TransportationManager::initServerList()
-{
+void TransportationManager::initServerList() {
     this->connList.clear();
 
     //Todo: here should be parse the server config file to fill up the connList.
@@ -97,49 +84,38 @@ void TransportationManager::initServerList()
     connList.push_back(record1);
 }
 
-void TransportationManager::ftpCmdFinished(int id, bool error)
-{
+void TransportationManager::ftpCmdFinished(int id, bool error) {
     //when connect to host finished
-    if (ftp->currentCommand() == QFtp::ConnectToHost)
-    {
-        if (error)
-        {
+    if (ftp->currentCommand() == QFtp::ConnectToHost) {
+        if (error) {
             this->mainWindow->statusBar()->showMessage(tr("服务器错误"), 500);
             QMessageBox::information(0, tr("错误！"), tr("无法连接服务器，请检查ip和端口"));
             ftp->abort();
             return;
-        }
-        else
-        {
+        } else {
             this->mainWindow->statusBar()->showMessage(tr("找到服务器"), 500);
             return;
         }
     }
     //when login to server finished.
-    if (ftp->currentCommand() == QFtp::Login)
-    {
-        if (error)
-        {
+    if (ftp->currentCommand() == QFtp::Login) {
+        if (error) {
             this->mainWindow->statusBar()->showMessage(tr("登录失败"), 2000);
             QMessageBox::information(0, "登录错误", "用户或密码不正确。");
             ftp->abort();
             return;
-        } else
-        {
+        } else {
             this->mainWindow->statusBar()->showMessage(tr("已登录"), 2000);
             return;
         }
     }
     //when dieconnect server finished.
-    if (ftp->currentCommand() == QFtp::Close)
-    {
-        if (error)
-        {
+    if (ftp->currentCommand() == QFtp::Close) {
+        if (error) {
             this->mainWindow->statusBar()->showMessage(tr("断开连接失败"), 2000);
             ftp->abort();
             return;
-        } else
-        {
+        } else {
             this->mainWindow->statusBar()->showMessage(tr("断开连接"), 2000);
             QMessageBox::information(0, "提示", "断开服务器连接。");
         }

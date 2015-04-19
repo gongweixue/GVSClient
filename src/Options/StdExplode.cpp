@@ -1,6 +1,6 @@
 #include "StdExplode.h"
 
-StdExplode::StdExplode(QWidget *parent)
+StdExplode::StdExplode(QWidget* parent)
     : QDialog(parent)
 {
     ui.setupUi(this);

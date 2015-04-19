@@ -37,18 +37,16 @@ public:
 public:
     ActorRecord(vtkActor* paraAct, string dsName = "",
                 int paraStatebelong = SCENE_STATE_ORIGINAL, bool paraVisible = 1)
-        :name(dsName),
-         isVisible(paraVisible),
-         sceneStateBelong(paraStatebelong),
-         actor(paraAct)
+        : name(dsName),
+          isVisible(paraVisible),
+          sceneStateBelong(paraStatebelong),
+          actor(paraAct)
     {};
-    ~ActorRecord()
-    {
+    ~ActorRecord() {
     }
-}ActorRecord;
+} ActorRecord;
 
-class SceneManager
-{
+class SceneManager {
 public:
     SceneManager(void);
     ~SceneManager(void);
@@ -68,9 +66,9 @@ public:
     int  GetSceneState();
 
     void SetSceneBounds(double bounds[6]);
-    void SetSceneBounds(double xmin,double xmax,
-                        double ymin,double ymax,
-                        double zmin,double zmax);
+    void SetSceneBounds(double xmin, double xmax,
+                        double ymin, double ymax,
+                        double zmin, double zmax);
     double* GetSceneBounds();
     void  SetSceneCenter(double center[3]);
     void  SetSceneCenter(double cx, double cy, double cz);

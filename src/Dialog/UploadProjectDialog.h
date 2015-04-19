@@ -9,8 +9,7 @@
 class QDir;
 class QFileInfo;
 
-class UploadProjectDialog : public QDialog
-{
+class UploadProjectDialog : public QDialog {
     Q_OBJECT
 
 public:
@@ -21,7 +20,7 @@ private:
     UploadProjectDialog(QWidget* parent = 0);
     void init();
     bool compressPRJFiles(QString prjName);
-    static void recurseAddDir(QDir d, QStringList & list);
+    static void recurseAddDir(QDir d, QStringList& list);
     static bool compressPrj(const QFileInfo& gvpFI);
 
 public slots:

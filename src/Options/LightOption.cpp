@@ -13,9 +13,9 @@ LightOption::LightOption(int camLightOn,
     isSceneLightOn = sceneLightOn;
     intencityCamLight = IntencityOfCamLight;
     intencitySceneLight = IntencityOfSceneLight;
-    xSceneLight=XYZ[0];
-    ySceneLight=XYZ[1];
-    zSceneLight=XYZ[2];
+    xSceneLight = XYZ[0];
+    ySceneLight = XYZ[1];
+    zSceneLight = XYZ[2];
 
     initDialogCtrls();
     bindingSlots();
@@ -39,15 +39,15 @@ void LightOption::initDialogCtrls()
     ui.IntencityOfSceneLightCtrl->setValue(intencitySceneLight * 10);
     ui.IntencityOfSceneLightCtrl->setEnabled(isSceneLightOn);
 
-    ui.XofSceneLightCtrl->setRange(0,10);
+    ui.XofSceneLightCtrl->setRange(0, 10);
     ui.XofSceneLightCtrl->setValue(xSceneLight * 10);
     ui.XofSceneLightCtrl->setEnabled(isSceneLightOn);
 
-    ui.YofSceneLightCtrl->setRange(0,10);
+    ui.YofSceneLightCtrl->setRange(0, 10);
     ui.YofSceneLightCtrl->setValue(ySceneLight * 10);
     ui.YofSceneLightCtrl->setEnabled(isSceneLightOn);
 
-    ui.ZofSceneLightCtrl->setRange(0,10);
+    ui.ZofSceneLightCtrl->setRange(0, 10);
     ui.ZofSceneLightCtrl->setValue(zSceneLight * 10);
     ui.ZofSceneLightCtrl->setEnabled(isSceneLightOn);
 }
@@ -76,10 +76,10 @@ void LightOption::OnBnClickedOk()
     isSceneLightOn = ui.SceneLightCheckBoxCtrl->isChecked();
     if (isSceneLightOn)
     {
-        intencitySceneLight=(double)(ui.IntencityOfSceneLightCtrl->value()) / 10;
-        xSceneLight=(double)(ui.XofSceneLightCtrl->value()) / 10;
-        ySceneLight=(double)(ui.YofSceneLightCtrl->value()) / 10;
-        zSceneLight=(double)(ui.ZofSceneLightCtrl->value()) / 10;
+        intencitySceneLight = (double)(ui.IntencityOfSceneLightCtrl->value()) / 10;
+        xSceneLight = (double)(ui.XofSceneLightCtrl->value()) / 10;
+        ySceneLight = (double)(ui.YofSceneLightCtrl->value()) / 10;
+        zSceneLight = (double)(ui.ZofSceneLightCtrl->value()) / 10;
     }
     this->close();
 }

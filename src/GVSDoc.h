@@ -8,14 +8,13 @@
 
 class MainWindow;
 
-class GVSDoc : public QObject
-{
+class GVSDoc : public QObject {
     Q_OBJECT
 
 public:
-    GVSDoc(MainWindow* mainWindow, QObject *parent = 0);
+    GVSDoc(MainWindow* mainWindow, QObject* parent = 0);
     ~GVSDoc();
-    ObjectManager* GetObjManager(){ return &m_objManager; }
+    ObjectManager* GetObjManager() { return &m_objManager; }
     string getProjectPathName() { return m_gvpFullFileName; }
 
 public slots:

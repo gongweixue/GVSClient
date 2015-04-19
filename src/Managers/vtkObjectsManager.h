@@ -38,20 +38,17 @@ public:
           reader(rder),
           visibility(vis),
           Modified(false),
-          texture(NULL)
-    {
-        if (textureAbsolutePathName.toStdString()!= "")
-        {
-            vtkJPEGReader* picReader=vtkJPEGReader::New();
+          texture(NULL) {
+        if (textureAbsolutePathName.toStdString() != "") {
+            vtkJPEGReader* picReader = vtkJPEGReader::New();
             picReader->SetFileName(textureAbsolutePathName.toStdString().c_str());
             picReader->Update();
-            texture=vtkTexture::New();
+            texture = vtkTexture::New();
             texture->SetInput(picReader->GetOutput());
         }
     }
 
-    ~GeoObject()
-    {
+    ~GeoObject() {
     }
 
     QString getName() const {return fileName;}
@@ -64,8 +61,7 @@ public:
     void getObjColor(int* r, int* g, int* b);
 
 public:
-    GeoObject operator=(GeoObject& geoObj)
-    {
+    GeoObject operator=(GeoObject& geoObj) {
         return GeoObject(geoObj.getName(),
                          geoObj.getType(),
                          geoObj.reader,
@@ -78,8 +74,7 @@ typedef struct Model
 {
 public:
     Model(QString modelName)
-        : name(modelName), hasModified(false)
-    {
+        : name(modelName), hasModified(false) {
     }
 
     QString getModelName() {return name;}
@@ -88,8 +83,7 @@ public:
     bool getModified() {return hasModified;}
 
 public:
-    Model operator=(Model& model)
-    {
+    Model operator=(Model& model) {
         throw std::exception("This function could not be invoked.");
         return Model(model.getModelName());
     }
@@ -103,8 +97,7 @@ typedef struct FavItem
 {
 public:
     FavItem(QString itemName, QString mdlNameVal, QString objNameVal)
-        :name(itemName), modelName(mdlNameVal), objName(objNameVal), hasModified(false)
-    {
+        : name(itemName), modelName(mdlNameVal), objName(objNameVal), hasModified(false) {
     }
 
     void setModified(bool modifiedVal) {this->hasModified = modifiedVal;}
@@ -114,8 +107,7 @@ public:
     QString getName() {return name;}
 
     QString getObjPath() {return modelName + "/" + objName;}
-    void setObjPath(QString newModelName, QString newObjName)
-    {
+    void setObjPath(QString newModelName, QString newObjName) {
         modelName = newModelName;
         objName = newObjName;
     }
@@ -137,8 +129,7 @@ typedef struct FavGroup
 {
 public:
     FavGroup(std::string name)
-        : groupName(name), hasModified(false)
-    {
+        : groupName(name), hasModified(false) {
     }
 
     void setGroupName(std::string name) {this->groupName = name;}
@@ -158,8 +149,7 @@ private:
 } FavGroup;
 
 
-class ObjectManager : public QObject
-{
+class ObjectManager : public QObject {
     Q_OBJECT
 public:
     friend class GVSDoc;
@@ -231,12 +221,11 @@ private:
 #include <QThread>
 #include <QMutex>
 
-class ReaderUpdater : public QThread
-{
+class ReaderUpdater : public QThread {
     Q_OBJECT
 public:
     ReaderUpdater(ObjectManager* sender, vtkDataSetReader* reader)
-        :m_reader(reader), m_sender(sender)
+        : m_reader(reader), m_sender(sender)
     {connect(this, SIGNAL(UpdateFinished()), m_sender, SLOT(OnObjUpdateFinished()));};
 
 signals:

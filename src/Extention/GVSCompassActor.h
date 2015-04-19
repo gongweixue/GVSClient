@@ -14,18 +14,17 @@ class vtkProperty;
 class vtkRenderer;
 class vtkSphereSource;
 
-class GVSCompassActor : public vtkProp3D
-{
+class GVSCompassActor : public vtkProp3D {
 public:
-    static GVSCompassActor *New();
-    // Support the standard render methods.
-    virtual int RenderOpaqueGeometry(vtkViewport *viewport);
-    virtual int RenderTranslucentPolygonalGeometry(vtkViewport *viewport);
-    virtual int RenderOverlay(vtkViewport *viewport);
-    virtual int HasTranslucentPolygonalGeometry();
-    void ReleaseGraphicsResources(vtkWindow *);
-    void GetBounds(double bounds[6]);
-    double *GetBounds();
+  static GVSCompassActor* New();
+  // Support the standard render methods.
+  virtual int RenderOpaqueGeometry(vtkViewport* viewport);
+  virtual int RenderTranslucentPolygonalGeometry(vtkViewport* viewport);
+  virtual int RenderOverlay(vtkViewport* viewport);
+  virtual int HasTranslucentPolygonalGeometry();
+  void ReleaseGraphicsResources(vtkWindow*);
+  void GetBounds(double bounds[6]);
+  double* GetBounds();
 protected:
   GVSCompassActor();
   ~GVSCompassActor();

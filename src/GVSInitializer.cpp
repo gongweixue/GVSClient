@@ -5,16 +5,14 @@
 #include "GVSInitializer.h"
 #include "MainWindow.h"
 
-GVSInitializer::GVSInitializer(void)
-{
+GVSInitializer::GVSInitializer(void) {
     this->mainWindow = 0;
     this->gvsApp = 0;
     this->splash = 0;
 }
 
 
-GVSInitializer::~GVSInitializer(void)
-{
+GVSInitializer::~GVSInitializer(void) {
     delete this->mainWindow;
     this->mainWindow = 0;
 
@@ -25,26 +23,19 @@ GVSInitializer::~GVSInitializer(void)
     this->splash = 0;
 }
 
-bool GVSInitializer::Initialize()
-{
+bool GVSInitializer::Initialize() {
     //create a splash and show before main window created.
     bool show_splash = false;//gvsApp->getSettings()->isShowSplash();
-    if (show_splash)
-    {
+    if (show_splash) {
         QPixmap splashImage(":/Resources/startup.jpg");
         this->splash = new QSplashScreen(splashImage, Qt::WindowStaysOnTopHint);
         this->splash->setMask(
-                splashImage.createMaskFromColor(QColor(Qt::transparent)));
+            splashImage.createMaskFromColor(QColor(Qt::transparent)));
         this->splash->show();
     }
 
     //create the main window.
     this->mainWindow = new MainWindow();
-
-    // Maybe there should be wrote some code to load controls and bars etc.
-    /************************************************************************/
-    /* Todo: load the widgets, actions, menus, tools and status bar etc.    */
-    /************************************************************************/
 
     //load the configuration after all things about mainWindow done.
     QDir dirConfigFiles(":/GVS/Configuration");//this path should be modified.
@@ -62,8 +53,7 @@ bool GVSInitializer::Initialize()
 
     QApplication::instance()->processEvents();
 
-    if (show_splash)
-    {
+    if (show_splash) {
         this->splash->finish(this->mainWindow);
     }
 

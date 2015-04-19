@@ -1,17 +1,14 @@
 #include "GVSSettings.h"
 
 
-GVSSettings::GVSSettings(void)
-{
+GVSSettings::GVSSettings(void) {
     this->showSplash = true;
 }
 
 
-GVSSettings::~GVSSettings(void)
-{
+GVSSettings::~GVSSettings(void) {
 }
 
-bool GVSSettings::isShowSplash()
-{
+bool GVSSettings::isShowSplash() {
     return this->showSplash;
 }

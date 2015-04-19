@@ -4,8 +4,7 @@
 class GVSSettings;
 class QString;
 
-class GVSApplicationCore
-{
+class GVSApplicationCore {
 public:
     GVSApplicationCore(void);
     ~GVSApplicationCore(void);

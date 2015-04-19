@@ -12,8 +12,8 @@ ConnectServerDialog::ConnectServerDialog(QWidget* parent)
 }
 
 ConnectServerDialog::ConnectServerDialog(vector<ConnectionRecord>* connList,
-                                         QFtp* ftpConn,
-                                         QWidget *parent)
+        QFtp* ftpConn,
+        QWidget* parent)
     : QDialog(parent), ftp(ftpConn), pSvrList(connList)
 {
     ui.setupUi(this);
@@ -31,8 +31,8 @@ void ConnectServerDialog::OnClickOk()
     QList<QListWidgetItem*> itemsSelected = ui.serverList->selectedItems();
 
     if (0 == itemsSelected.size()
-        || ui.usrNameEdit->text().isEmpty()
-        || ui.passwdEdit->text().isEmpty())
+            || ui.usrNameEdit->text().isEmpty()
+            || ui.passwdEdit->text().isEmpty())
     {
         QMessageBox::information(this, tr("提示"), tr("连接信息不完整。"));
     }

@@ -19,12 +19,11 @@ class GVSDoc;
 class vtkTexture;
 class TransportationManager;
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
+    MainWindow(QWidget* parent = 0, Qt::WFlags flags = 0);
     ~MainWindow();
     void welcomeYou();
     GVSDoc* getDocument();

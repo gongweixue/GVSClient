@@ -5,13 +5,12 @@
 #include <QWidget>
 #include "ui_CubeAxesOption.h"
 
-class CubeAxesOption : public QDialog
-{
+class CubeAxesOption : public QDialog {
     Q_OBJECT
 
 public:
     CubeAxesOption(QWidget* parent = 0);
-    CubeAxesOption(int cubeAxesOn, int xGridOn, int yGridOn, QWidget *parent = 0);
+    CubeAxesOption(int cubeAxesOn, int xGridOn, int yGridOn, QWidget* parent = 0);
     ~CubeAxesOption();
 
 private:

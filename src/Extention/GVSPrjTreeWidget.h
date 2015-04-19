@@ -5,12 +5,11 @@
 
 class GVSPrjTreeWidgetItem;
 
-class GVSPrjTreeWidget : public QTreeWidget
-{
+class GVSPrjTreeWidget : public QTreeWidget {
     Q_OBJECT
 
 public:
-    GVSPrjTreeWidget(QWidget *parent);
+    GVSPrjTreeWidget(QWidget* parent);
     ~GVSPrjTreeWidget();
 
 signals:

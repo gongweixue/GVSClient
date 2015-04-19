@@ -5,12 +5,11 @@
 #include "ui_AddFavItemDialog.h"
 #include "Managers/vtkObjectsManager.h"
 
-class AddFavItemDialog : public QDialog
-{
+class AddFavItemDialog : public QDialog {
     Q_OBJECT
 
 public:
-    AddFavItemDialog(QWidget *parent = 0);
+    AddFavItemDialog(QWidget* parent = 0);
     AddFavItemDialog(ObjectManager* manager, QWidget* parent = 0);
     ~AddFavItemDialog();
 

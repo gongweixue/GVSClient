@@ -3,24 +3,19 @@
 #include <QMessageBox>
 #include "LegendItemAddtion.h"
 
-LegendItemAddtion::LegendItemAddtion(QWidget* parent)
-    : QDialog(parent)
-{
+LegendItemAddtion::LegendItemAddtion(QWidget* parent) : QDialog(parent) {
     ui.setupUi(this);
     connectSignalSlots();
     isAdd = false;
 }
 
-LegendItemAddtion::~LegendItemAddtion()
-{
+LegendItemAddtion::~LegendItemAddtion() {
 
 }
 
-void LegendItemAddtion::OnClickedOK()
-{
+void LegendItemAddtion::OnClickedOK() {
     //name valaid
-    if (ui.nameLineEdit->text().isEmpty())
-    {
+    if (ui.nameLineEdit->text().isEmpty()) {
         QMessageBox::information(this, tr("´íÎó"), tr("ÇëÌîÈëÃû³Æ"));
         return;
     }
@@ -35,24 +30,20 @@ void LegendItemAddtion::OnClickedOK()
     isAdd = true;
 }
 
-void LegendItemAddtion::OnBtnClickedCancle()
-{
+void LegendItemAddtion::OnBtnClickedCancle() {
     this->hide();
     isAdd = false;
 }
 
-void LegendItemAddtion::connectSignalSlots()
-{
+void LegendItemAddtion::connectSignalSlots() {
     connect(ui.okButton, SIGNAL(clicked()), this, SLOT(OnClickedOK()));
     connect(ui.cancleButton, SIGNAL(clicked()), this, SLOT(OnBtnClickedCancle()));
     connect(ui.paletteButton, SIGNAL(clicked()), this, SLOT(OnPaletteBtnClicked()));
 }
 
-void LegendItemAddtion::OnPaletteBtnClicked()
-{
+void LegendItemAddtion::OnPaletteBtnClicked() {
     QColor color = QColorDialog::getColor(Qt::white, this);
-    if (color.isValid())
-    {
+    if (color.isValid()) {
         ui.redSpinBox->setValue(color.red());
         ui.greenSpinBox->setValue(color.green());
         ui.blueSpinBox->setValue(color.blue());

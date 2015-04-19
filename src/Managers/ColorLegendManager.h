@@ -12,8 +12,7 @@
 
 using namespace std;
 
-class ColorLegendManager : public QObject
-{
+class ColorLegendManager : public QObject {
     Q_OBJECT
 
 public:
@@ -22,7 +21,7 @@ public:
     string getFilePath() {return projectFilePath;}
     bool insertItemToFile(const string& name, const QColor& rgb, const string& description);
     bool editItemInFile(const string& name, const QColor& rgb, const string& description);
-    bool delItemFromFile(const char * name);
+    bool delItemFromFile(const char* name);
 
 public slots:
     //should be called after edit on the legend dock.

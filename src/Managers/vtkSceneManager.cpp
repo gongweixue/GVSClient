@@ -2,8 +2,7 @@
 #include "Utils/GVSUtils.h"
 #include "Utils/vtkTotallyInclude.h"
 
-SceneManager::SceneManager(void)
-{
+SceneManager::SceneManager(void) {
     m_ActorRecordTable.clear();
     m_CurrentSceneState = SCENE_STATE_NULL;
 
@@ -20,26 +19,22 @@ SceneManager::SceneManager(void)
     m_lut = vtkLookupTable::New();
 }
 
-SceneManager::~SceneManager(void)
-{
+SceneManager::~SceneManager(void) {
     DeleteVTKPointer(m_lut);
     DeleteAllActors();
     ClearActorTable();
 }
 
 void SceneManager::InsertActorRcrd(vtkActor* actor, const string& dataSetName,
-                                   int sceneStateBelong, bool visible)
-{
+                                   int sceneStateBelong, bool visible) {
     ActorRecord tempActorRecord(actor, dataSetName, sceneStateBelong, visible);
     m_ActorRecordTable.push_back(tempActorRecord);
 }
 
-void SceneManager::DeleteAllActors()
-{
-     //delete every actor pointer in every record.
+void SceneManager::DeleteAllActors() {
+    //delete every actor pointer in every record.
     vector<ActorRecord>::iterator iter_ActorTable = m_ActorRecordTable.begin();
-    for ( ; iter_ActorTable != m_ActorRecordTable.end(); iter_ActorTable++)
-    {
+    for ( ; iter_ActorTable != m_ActorRecordTable.end(); iter_ActorTable++) {
         DeleteVTKPointer(iter_ActorTable->actor);
     }
     m_SceneBounds[0] = 0;
@@ -54,34 +49,28 @@ void SceneManager::DeleteAllActors()
     m_SceneCenter[2] = 0;
 }
 
-void SceneManager::ClearActorTable()
-{
+void SceneManager::ClearActorTable() {
     DeleteAllActors();
     m_ActorRecordTable.clear();
 }
 
-void SceneManager::SetSceneState(int sceneState)
-{
+void SceneManager::SetSceneState(int sceneState) {
     m_CurrentSceneState = sceneState;
 }
 
-int SceneManager::GetSceneState()
-{
+int SceneManager::GetSceneState() {
     return m_CurrentSceneState;
 }
 
-void SceneManager::SetSceneBounds(double bounds[6])
-{
-    for (int i = 0; i<6; i++)
-    {
+void SceneManager::SetSceneBounds(double bounds[6]) {
+    for (int i = 0; i < 6; i++) {
         m_SceneBounds[i] = bounds[i];
     }
 }
 
-void SceneManager::SetSceneBounds(double xmin,double xmax,
-                                  double ymin,double ymax,
-                                  double zmin,double zmax )
-{
+void SceneManager::SetSceneBounds(double xmin, double xmax,
+                                  double ymin, double ymax,
+                                  double zmin, double zmax ) {
     m_SceneBounds[0] = xmin;
     m_SceneBounds[1] = xmax;
     m_SceneBounds[2] = ymin;
@@ -90,81 +79,67 @@ void SceneManager::SetSceneBounds(double xmin,double xmax,
     m_SceneBounds[5] = zmax;
 }
 
-double* SceneManager::GetSceneBounds()
-{
+double* SceneManager::GetSceneBounds() {
     return m_SceneBounds;
 }
 
-void SceneManager::SetSceneCenter(double center[3])
-{
+void SceneManager::SetSceneCenter(double center[3]) {
     m_SceneCenter[0] = center[0];
     m_SceneCenter[1] = center[1];
     m_SceneCenter[2] = center[2];
 }
 
-void SceneManager::SetSceneCenter(double cx, double cy, double cz)
-{
+void SceneManager::SetSceneCenter(double cx, double cy, double cz) {
     m_SceneCenter[0] = cx;
     m_SceneCenter[1] = cy;
     m_SceneCenter[2] = cz;
 }
 
-double* SceneManager::GetSceneCenter()
-{
+double* SceneManager::GetSceneCenter() {
     return m_SceneCenter;
 }
 
-vtkLookupTable* SceneManager::GetLookupTable()
-{
+vtkLookupTable* SceneManager::GetLookupTable() {
     return m_lut;
 }
 
-vector<ActorRecord>* SceneManager::GetActorRecordTable()
-{
+vector<ActorRecord>* SceneManager::GetActorRecordTable() {
     return &m_ActorRecordTable;
 }
 
-void SceneManager::AddCrrtStatActrToRnder( vtkRenderer* renderer )
-{
+void SceneManager::AddCrrtStatActrToRnder(vtkRenderer* renderer) {
     vector<ActorRecord>::iterator iter_actorRecord = m_ActorRecordTable.begin();
-    for ( ; iter_actorRecord != m_ActorRecordTable.end(); iter_actorRecord++)
-    {
-        if(iter_actorRecord->sceneStateBelong == m_CurrentSceneState){
+    for (; iter_actorRecord != m_ActorRecordTable.end(); iter_actorRecord++) {
+        if (iter_actorRecord->sceneStateBelong == m_CurrentSceneState) {
             iter_actorRecord->actor->SetVisibility(iter_actorRecord->isVisible);
             renderer->AddActor(iter_actorRecord->actor);
         }
     }
 }
 
-void SceneManager::AddActorsByState(vtkRenderer* renderer, int state)
-{
+void SceneManager::AddActorsByState(vtkRenderer* renderer, int state) {
     vector<ActorRecord>::iterator iter_actorRecord = m_ActorRecordTable.begin();
-    for ( ; iter_actorRecord != m_ActorRecordTable.end(); iter_actorRecord++)
-    {
-        if(iter_actorRecord->sceneStateBelong==state && iter_actorRecord->isVisible)
+    for (; iter_actorRecord != m_ActorRecordTable.end(); iter_actorRecord++) {
+        if (iter_actorRecord->sceneStateBelong == state && iter_actorRecord->isVisible)
         {
             renderer->AddActor(iter_actorRecord->actor);
         }
     }
 }
 
-void SceneManager::RemoveActorsFromRendererByState(vtkRenderer* renderer, int state)
-{
+void SceneManager::RemoveActorsFromRendererByState(vtkRenderer* renderer, int state) {
     vector<ActorRecord>::iterator iter_actorRecord = m_ActorRecordTable.begin();
-    for ( ; iter_actorRecord != m_ActorRecordTable.end(); iter_actorRecord++)
-    {
-        if(iter_actorRecord->sceneStateBelong == state)
+    for ( ; iter_actorRecord != m_ActorRecordTable.end(); iter_actorRecord++) {
+        if (iter_actorRecord->sceneStateBelong == state) { 
             renderer->RemoveActor(iter_actorRecord->actor);
+        }
     }
 }
 
-ActorRecord* SceneManager::getActorRecordByName(const std::string& actorName)
-{
+ActorRecord* SceneManager::getActorRecordByName(const std::string& actorName) {
     vector<ActorRecord>::iterator iter = m_ActorRecordTable.begin();
-    for ( ; iter != m_ActorRecordTable.end(); iter++)
-    {
-        if (0 == iter->name.compare(actorName))
-        {
+    for ( ; iter != m_ActorRecordTable.end(); iter++) {
+        if (0 == iter->name.compare(actorName)) {
             return &(*iter);
         }
     }
@@ -172,30 +147,24 @@ ActorRecord* SceneManager::getActorRecordByName(const std::string& actorName)
     return NULL;
 }
 
-bool SceneManager::deleteActorByName(const string& actorName)
-{
+bool SceneManager::deleteActorByName(const string& actorName) {
     ActorRecord* actorRecord = getActorRecordByName(actorName);
-    if (NULL == actorRecord)
-    {
+    if (NULL == actorRecord) {
         return false;
     }
-    if (NULL !=actorRecord->actor)
-    {
+    if (NULL != actorRecord->actor) {
         actorRecord->actor->Delete();
     }
 
     actorRecord->actor = NULL;
 
     vector<ActorRecord>::iterator iter = m_ActorRecordTable.begin();
-    for ( ; iter != m_ActorRecordTable.end(); iter++)
-    {
-        if (0 == iter->name.compare(actorName))
-        {
+    for ( ; iter != m_ActorRecordTable.end(); iter++) {
+        if (0 == iter->name.compare(actorName)) {
             m_ActorRecordTable.erase(iter);
             return true;
         }
     }
-
     return false;
 }
 

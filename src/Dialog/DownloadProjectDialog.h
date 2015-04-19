@@ -8,8 +8,7 @@
 #include <QStringList>
 #include "ui_DownloadProjectDialog.h"
 
-class DownloadProjectDialog : public QDialog
-{
+class DownloadProjectDialog : public QDialog {
     Q_OBJECT
 
 public:
@@ -30,8 +29,7 @@ private slots:
     void fillPrjList(const QUrlInfo& urlInfo);
     void OnClickDownload(bool checked);
     void ftpDone(bool error);
-    void getFinished( int id, bool err ) 
-    {
+    void getFinished( int id, bool err ) {
         throw std::exception("The method or operation is not implemented.");
     }
 

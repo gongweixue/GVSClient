@@ -11,8 +11,7 @@ using namespace std;
 
 class MainWindow;
 
-class TransportationManager : public QObject
-{
+class TransportationManager : public QObject {
     Q_OBJECT
 
 public:

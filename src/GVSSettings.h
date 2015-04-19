@@ -1,8 +1,7 @@
 #ifndef GVS_SETTINGS_H
 #define GVS_SETTINGS_H
 
-class GVSSettings
-{
+class GVSSettings {
 public:
     GVSSettings(void);
     ~GVSSettings(void);

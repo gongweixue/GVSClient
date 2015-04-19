@@ -6,8 +6,7 @@
 #include "ui_ColorLegendEditor.h"
 #include "Managers/ColorLegendManager.h"
 
-class ColorLegendEditor : public QDialog
-{
+class ColorLegendEditor : public QDialog {
     Q_OBJECT
 
 public:

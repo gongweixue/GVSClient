@@ -6,8 +6,7 @@
 
 using namespace std;
 
-class LegendRecord
-{
+class LegendRecord {
 public:
     string name;
     QColor rgb;

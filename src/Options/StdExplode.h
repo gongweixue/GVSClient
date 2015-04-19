@@ -4,12 +4,11 @@
 #include <QDialog>
 #include "ui_StdExplode.h"
 
-class StdExplode : public QDialog
-{
+class StdExplode : public QDialog {
     Q_OBJECT
 
 public:
-    StdExplode(QWidget *parent = 0);
+    StdExplode(QWidget* parent = 0);
     ~StdExplode();
 
 public slots:

@@ -13,8 +13,7 @@
 
 using namespace std;
 
-class ConnectServerDialog : public QDialog
-{
+class ConnectServerDialog : public QDialog {
     Q_OBJECT
 
 public:

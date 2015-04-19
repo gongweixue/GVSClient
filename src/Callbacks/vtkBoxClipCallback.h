@@ -6,8 +6,7 @@
 #include "Utils/GVSUtils.h"
 #include "Utils/vtkTotallyInclude.h"
 
-class vtkBoxClipCallback : public vtkCommand
-{
+class vtkBoxClipCallback : public vtkCommand {
 public:
     static vtkBoxClipCallback* New();
     void Delete();

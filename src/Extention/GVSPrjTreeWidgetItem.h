@@ -12,8 +12,7 @@ typedef enum GVS_TREE_ITEM_TYPE {
     PRJ_TREE_ITEM_TYPE_INVALID
 } GVS_TREE_ITEM_TYPE;
 
-class GVSPrjTreeWidgetItem : public QWidget, public QTreeWidgetItem
-{
+class GVSPrjTreeWidgetItem : public QWidget, public QTreeWidgetItem {
     Q_OBJECT
 
 public:
@@ -21,8 +20,7 @@ public:
     explicit GVSPrjTreeWidgetItem(QTreeWidgetItem* parent, GVS_TREE_ITEM_TYPE ty);
     ~GVSPrjTreeWidgetItem();
 
-    QTreeWidgetItem* parent() const
-    {
+    QTreeWidgetItem* parent() const {
         return QTreeWidgetItem::parent();
     }
 

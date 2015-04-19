@@ -1,6 +1,6 @@
 #include "ScreenShotOption.h"
 
-ScreenShotOption::ScreenShotOption(QWidget *parent)
+ScreenShotOption::ScreenShotOption(QWidget* parent)
     : QDialog(parent)
 {
     ui.setupUi(this);

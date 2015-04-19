@@ -5,14 +5,11 @@
 #include "Utils/GVSUtils.h"
 #include "Utils/vtkTotallyInclude.h"
 
-
-ObjectManager::ObjectManager(void)
-{
+ObjectManager::ObjectManager(void) {
     this->objTreeModified = false;
     this->favTreeModified = false;
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
-    for (; model_iter != treeOfGeoObjs.end(); ++model_iter)
-    {
+    for (; model_iter != treeOfGeoObjs.end(); ++model_iter) {
         model_iter->getVecOfGeoObjs()->clear();
     }
     treeOfGeoObjs.clear();
@@ -20,31 +17,27 @@ ObjectManager::ObjectManager(void)
     this->pProgressDlg = new QProgressDialog();
 }
 
-ObjectManager::~ObjectManager(void)
-{
+ObjectManager::~ObjectManager(void) {
     DelAllRdrsInObjTree();
     vector<Model>::iterator iter = treeOfGeoObjs.begin();
-    for (; iter != treeOfGeoObjs.end(); ++iter)
-    {
+    for (; iter != treeOfGeoObjs.end(); ++iter) {
         iter->getVecOfGeoObjs()->clear();
     }
     treeOfGeoObjs.clear();
 
-    if (pProgressDlg)
-    {
+    if (pProgressDlg) {
         delete pProgressDlg;
     }
 }
 
-void ObjectManager::LoadDataForReadersInTree()
-{
+void ObjectManager::LoadDataForReadersInTree() {
     ////progress to show the process of loading objects.
     pProgressDlg->setWindowModality(Qt::ApplicationModal);
     pProgressDlg->setMinimumDuration(5);
     pProgressDlg->setWindowTitle(tr("请稍候"));
     pProgressDlg->setLabelText(QString());
     pProgressDlg->setCancelButtonText(tr("取消"));
-    pProgressDlg->setRange(0,getNumOfObjsInTree());
+    pProgressDlg->setRange(0, getNumOfObjsInTree());
     pProgressDlg->setCancelButton(0);
     pProgressDlg->setWindowFlags(Qt::FramelessWindowHint);
     pProgressDlg->setMaximumWidth(400);
@@ -52,23 +45,17 @@ void ObjectManager::LoadDataForReadersInTree()
 
     //update every record's reader.
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
-    for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
-    {
+    for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter) {
         vector<GeoObject>::iterator obj_iter = model_iter->getVecOfGeoObjs()->begin();
-        for ( ; obj_iter != model_iter->getVecOfGeoObjs()->end(); obj_iter++)
-        {
+        for ( ; obj_iter != model_iter->getVecOfGeoObjs()->end(); obj_iter++) {
             QString loadingTip("正在加载模型：                \n");
             loadingTip.append(model_iter->getModelName() + "/" + obj_iter->getName());
             pProgressDlg->setLabelText(loadingTip);
 
             obj_iter->reader->Update();
             pProgressDlg->setValue(pProgressDlg->value() + 1);
-            /*ReaderUpdater updater(this, obj_iter->reader);
-            updater.start();
-            updater.wait();*/
         }
     }
-
     pProgressDlg->hide();
     computeObjTreeBound();
 }
@@ -76,11 +63,9 @@ void ObjectManager::LoadDataForReadersInTree()
 void ObjectManager::DelAllRdrsInObjTree()
 {
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
-    for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
-    {
+    for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter) {
         vector<GeoObject>::iterator obj_iter = model_iter->getVecOfGeoObjs()->begin();
-        for ( ; obj_iter != model_iter->getVecOfGeoObjs()->end(); obj_iter++)
-        {
+        for (; obj_iter != model_iter->getVecOfGeoObjs()->end(); obj_iter++) {
             DeleteVTKPointer(obj_iter->reader);
         }
         model_iter->getVecOfGeoObjs()->clear();
@@ -88,77 +73,62 @@ void ObjectManager::DelAllRdrsInObjTree()
     computeObjTreeBound();
 }
 
-void ObjectManager::ClearObjTree()
-{
+void ObjectManager::ClearObjTree() {
     DelAllRdrsInObjTree();
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
-    for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
-    {
+    for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter) {
         model_iter->getVecOfGeoObjs()->clear();
     }
     treeOfGeoObjs.clear();
 }
 
-double* ObjectManager::computeObjTreeBound()
-{
-    for (int i = 0; i < 6; ++i)
-    {
+double* ObjectManager::computeObjTreeBound() {
+    for (int i = 0; i < 6; ++i) {
         m_bounds[i] = .0;
     }
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
-    for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
-    {
+    for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter) {
         vector<GeoObject>::iterator obj_iter = model_iter->getVecOfGeoObjs()->begin();
-        for ( ; obj_iter != model_iter->getVecOfGeoObjs()->end(); obj_iter++)
-        {
+        for (; obj_iter != model_iter->getVecOfGeoObjs()->end(); obj_iter++) {
             double tmpBnds[6];
             obj_iter->reader->GetOutput()->GetBounds(tmpBnds);
 
-            m_bounds[0] = (tmpBnds[0] < m_bounds[0])? tmpBnds[0] : m_bounds[0];
-            m_bounds[1] = (tmpBnds[1] > m_bounds[1])? tmpBnds[1] : m_bounds[1];
-            m_bounds[2] = (tmpBnds[2] < m_bounds[2])? tmpBnds[2] : m_bounds[2];
-            m_bounds[3] = (tmpBnds[3] > m_bounds[3])? tmpBnds[3] : m_bounds[3];
-            m_bounds[4] = (tmpBnds[4] < m_bounds[4])? tmpBnds[4] : m_bounds[4];
-            m_bounds[5] = (tmpBnds[5] > m_bounds[5])? tmpBnds[5] : m_bounds[5];
+            m_bounds[0] = (tmpBnds[0] < m_bounds[0]) ? tmpBnds[0] : m_bounds[0];
+            m_bounds[1] = (tmpBnds[1] > m_bounds[1]) ? tmpBnds[1] : m_bounds[1];
+            m_bounds[2] = (tmpBnds[2] < m_bounds[2]) ? tmpBnds[2] : m_bounds[2];
+            m_bounds[3] = (tmpBnds[3] > m_bounds[3]) ? tmpBnds[3] : m_bounds[3];
+            m_bounds[4] = (tmpBnds[4] < m_bounds[4]) ? tmpBnds[4] : m_bounds[4];
+            m_bounds[5] = (tmpBnds[5] > m_bounds[5]) ? tmpBnds[5] : m_bounds[5];
         }
     }
-
     return m_bounds;
 }
 
-int ObjectManager::getNumOfObjsInTree()
-{
+int ObjectManager::getNumOfObjsInTree() {
     int ret = 0;
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
-    for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter)
-    {
+    for ( ; model_iter != treeOfGeoObjs.end(); ++model_iter) {
         ret += model_iter->getVecOfGeoObjs()->size();
     }
-
     return ret;
 }
 
 QMutex progressValueMutex;
-void ObjectManager::OnObjUpdateFinished()
-{
+void ObjectManager::OnObjUpdateFinished() {
     progressValueMutex.lock();
     this->pProgressDlg->setValue(this->pProgressDlg->value() + 1);
     progressValueMutex.unlock();
 }
 
-GeoObject* ObjectManager::findObj(const QString& modelName, const QString& objName)
-{
+GeoObject* ObjectManager::findObj(const QString& modelName, 
+                                  const QString& objName) {
     //time complexity: m + n
     vector<Model>::iterator modelIter = treeOfGeoObjs.begin();
-    for ( ; modelIter != treeOfGeoObjs.end(); modelIter++)
-    {
-        if (0 == modelName.compare(modelIter->getModelName()))
-        {
+    for ( ; modelIter != treeOfGeoObjs.end(); modelIter++) {
+        if (0 == modelName.compare(modelIter->getModelName())) {
             vector<GeoObject>::iterator objIter = modelIter->getVecOfGeoObjs()->begin();
-            for ( ; objIter != modelIter->getVecOfGeoObjs()->end(); objIter++)
-            {
-                if (0 == objName.compare(objIter->getName()))
-                {
+            for (; objIter != modelIter->getVecOfGeoObjs()->end(); objIter++) {
+                if (0 == objName.compare(objIter->getName())) {
                     return &(*objIter);
                 }
             }
@@ -171,10 +141,8 @@ GeoObject* ObjectManager::findObj(const QString& modelName, const QString& objNa
 bool ObjectManager::setModelModified(const QString& modelName, bool hasModified)
 {
     vector<Model>::iterator modelIter = treeOfGeoObjs.begin();
-    for ( ; modelIter != treeOfGeoObjs.end(); modelIter++)
-    {
-        if (0 == modelName.compare(modelIter->getModelName()))
-        {
+    for (; modelIter != treeOfGeoObjs.end(); modelIter++) {
+        if (0 == modelName.compare(modelIter->getModelName())) {
             modelIter->setModified(hasModified);
             return true;
         }
@@ -183,56 +151,46 @@ bool ObjectManager::setModelModified(const QString& modelName, bool hasModified)
     return false;
 }
 
-bool ObjectManager::setObjVis(const QString& modelName, const QString& objName, bool vis)
-{
+bool ObjectManager::setObjVis(const QString& modelName, 
+                              const QString& objName, 
+                              bool vis) {
     GeoObject* obj = findObj(modelName, objName);
-    if (obj)
-    {
+    if (obj) {
         obj->setVisibility(vis);
         obj->setModified(true);
         setModelModified(modelName, true);
         setObjTreeModified(true);
-
         return true;
     }
     return false;
 }
 
-bool ObjectManager::setObjColor(const QString& modelName, const QString& objName,
-                                int r, int g, int b)
-{
+bool ObjectManager::setObjColor(const QString& modelName, 
+                                const QString& objName,
+                                int r, int g, int b) {
     GeoObject* obj = findObj(modelName, objName);
-    if (obj)
-    {
+    if (obj) {
         //get the color of this obj.
         QColor color(r, g, b);
-
-        if (color.isValid())
-        {
+        if (color.isValid()) {
             obj->setObjColor(color.red(), color.green(), color.blue());
             obj->setModified(true);
             setModelModified(modelName, true);
             setObjTreeModified(true);
         }
-
         return true;
     }
-
     return false;
 }
 
-bool ObjectManager::getObjVis(const QString& modelName, const QString& objName)
-{
+bool ObjectManager::getObjVis(const QString& modelName, 
+                              const QString& objName) {
     vector<Model>::iterator modelIter = this->getObjTree()->begin();
-    for ( ; modelIter != this->getObjTree()->end(); modelIter++)
-    {
-        if (0 == modelName.compare(modelIter->getModelName()))
-        {
+    for ( ; modelIter != this->getObjTree()->end(); modelIter++) {
+        if (0 == modelName.compare(modelIter->getModelName())) {
             vector<GeoObject>::iterator objIter = modelIter->getVecOfGeoObjs()->begin();
-            for ( ; objIter != modelIter->getVecOfGeoObjs()->end(); objIter++)
-            {
-                if (0 == objName.compare(objIter->getName()))
-                {
+            for ( ; objIter != modelIter->getVecOfGeoObjs()->end(); objIter++) {
+                if (0 == objName.compare(objIter->getName())) {
                     return objIter->getVisibility();
                 }
             }
@@ -243,53 +201,39 @@ bool ObjectManager::getObjVis(const QString& modelName, const QString& objName)
 
 bool ObjectManager::getObjColor(const QString& modelName,
                                 const QString& objName,
-                                int rgb[3])
-{
+                                int rgb[3]) {
     GeoObject* obj = findObj(modelName, objName);
-    if (obj)
-    {
-        obj->getObjColor(rgb, rgb+1, rgb+2);
-        if (QColor(rgb[0], rgb[1], rgb[2]).isValid())
-        {
+    if (obj) {
+        obj->getObjColor(rgb, rgb + 1, rgb + 2);
+        if (QColor(rgb[0], rgb[1], rgb[2]).isValid()) {
             findModel(modelName)->setModified(true);
             return true;
         }
-
     }
-
     return false;
 }
 
-void GeoObject::setObjColor(int r, int g, int b)
-{
+void GeoObject::setObjColor(int r, int g, int b) {
     this->reader->Update();
     vtkDataArray* scalars = reader->GetOutput()->GetPointData()->GetScalars();
     int size = scalars->GetSize();
 
-    if ((size%3) != 0 || false == QColor(r, g, b).isValid())
-    {
+    if ((size % 3) != 0 || false == QColor(r, g, b).isValid()) {
         return;
     }
-
-    for (int i = 0; i < (size/3); i++)
-    {
-        scalars->SetTuple3(i, r,g,b);
+    for (int i = 0; i < (size / 3); i++) {
+        scalars->SetTuple3(i, r, g, b);
     }
-
     reader->GetOutput()->GetPointData()->SetScalars(scalars);
-
     this->setModified(true);
 }
 
-void GeoObject::getObjColor( int* r, int* g, int* b )
-{
-    //throw std::exception("The method or operation is not implemented.");
+void GeoObject::getObjColor( int* r, int* g, int* b ) {
     this->reader->Update();
     vtkDataArray* scalars = reader->GetOutput()->GetPointData()->GetScalars();
     int size = scalars->GetSize();
 
-    if ((size%3) != 0)
-    {
+    if ((size % 3) != 0) {
         *r = -1;
         *g = -1;
         *b = -1;
@@ -298,52 +242,41 @@ void GeoObject::getObjColor( int* r, int* g, int* b )
 
     double* tuple3;
     int sumR, sumG, sumB;
-    for (int i = 0; i < (size/3); i++)
-    {
-         tuple3= scalars->GetTuple3(i);
-         sumR = tuple3[0];
-         sumG = tuple3[1];
-         sumB = tuple3[2];
+    for (int i = 0; i < (size / 3); i++) {
+        tuple3 = scalars->GetTuple3(i);
+        sumR = tuple3[0];
+        sumG = tuple3[1];
+        sumB = tuple3[2];
     }
     *r = sumR / 3;
     *b = sumB / 3;
     *g = sumG / 3;
 }
 
-FavGroup* ObjectManager::findFavGroup(const QString& groupName)
-{
+FavGroup* ObjectManager::findFavGroup(const QString& groupName) {
     vector<FavGroup>::iterator group_iter = treeOfFav.begin();
-    for ( ; group_iter != treeOfFav.end(); group_iter++)
-    {
-        if (0 == groupName.compare(group_iter->getGroupName().c_str()))
-        {
+    for ( ; group_iter != treeOfFav.end(); group_iter++) {
+        if (0 == groupName.compare(group_iter->getGroupName().c_str())) {
             return &(*group_iter);
         }
     }
-
     return NULL;
 }
 
-bool ObjectManager::removeGroup(const QString& groupName)
-{
+bool ObjectManager::removeGroup(const QString& groupName) {
     vector<FavGroup>::iterator group_iter = treeOfFav.begin();
-    for ( ; group_iter != treeOfFav.end(); group_iter++)
-    {
-        if (0 == groupName.compare(group_iter->getGroupName().c_str()))
-        {
+    for ( ; group_iter != treeOfFav.end(); group_iter++) {
+        if (0 == groupName.compare(group_iter->getGroupName().c_str())) {
             treeOfFav.erase(group_iter);
             this->setFavTreeModified(true);
             return true;
         }
     }
-
     return false;
 }
 
-bool ObjectManager::addFavGroup(const QString& groupName)
-{
-    if (NULL != this->findFavGroup(groupName))
-    {
+bool ObjectManager::addFavGroup(const QString& groupName) {
+    if (NULL != this->findFavGroup(groupName)) {
         return false;
     }
 
@@ -352,13 +285,10 @@ bool ObjectManager::addFavGroup(const QString& groupName)
     return true;
 }
 
-Model* ObjectManager::findModel(const QString& modelName)
-{
+Model* ObjectManager::findModel(const QString& modelName) {
     vector<Model>::iterator model_iter = treeOfGeoObjs.begin();
-    for ( ; model_iter != treeOfGeoObjs.end(); model_iter++)
-    {
-        if (0 == modelName.compare(model_iter->getModelName()))
-        {
+    for ( ; model_iter != treeOfGeoObjs.end(); model_iter++) {
+        if (0 == modelName.compare(model_iter->getModelName())) {
             return &(*model_iter);
         }
     }
@@ -366,27 +296,23 @@ Model* ObjectManager::findModel(const QString& modelName)
     return NULL;
 }
 
-FavItem* ObjectManager::findFavItem(const QString& groupName, const QString& favItemName)
-{
+FavItem* ObjectManager::findFavItem(const QString& groupName, 
+                                    const QString& favItemName) {
     FavGroup* pGroup = findFavGroup(groupName);
-    if (pGroup)
-    {
+    if (pGroup) {
         return (pGroup->findFavItem(favItemName));
     }
 
     return NULL;
 }
 
-bool ObjectManager::addFavItem(const QString& groupName, FavItem& favItem)
-{
+bool ObjectManager::addFavItem(const QString& groupName, FavItem& favItem) {
     FavGroup* pGroup = findFavGroup(groupName);
-    if (NULL == pGroup)
-    {
+    if (NULL == pGroup) {
         return false;
     }
 
-    if (NULL != pGroup->findFavItem(favItem.getName()))
-    {
+    if (NULL != pGroup->findFavItem(favItem.getName())) {
         return false;
     }
 
@@ -396,25 +322,21 @@ bool ObjectManager::addFavItem(const QString& groupName, FavItem& favItem)
     return true;
 }
 
-bool ObjectManager::removeFavItem(const QString& groupName, const QString& favItemName)
-{
+bool ObjectManager::removeFavItem(const QString& groupName, 
+                                  const QString& favItemName) {
     FavGroup* group = findFavGroup(groupName);
-    if (!group)
-    {
+    if (!group) {
         return false;
     }
     vector<FavItem>::iterator item_Iter = group->getVecOfItems()->begin();
-    for ( ; item_Iter != group->getVecOfItems()->end(); item_Iter++)
-    {
-        if (0 == item_Iter->getName().compare(favItemName))
-        {
+    for ( ; item_Iter != group->getVecOfItems()->end(); item_Iter++) {
+        if (0 == item_Iter->getName().compare(favItemName)) {
             group->getVecOfItems()->erase(item_Iter);
             group->setModified(true);
             this->setFavTreeModified(true);
             return true;
         }
     }
-
     return false;
 }
 
@@ -425,8 +347,7 @@ bool ObjectManager::updateFavItem(const QString& groupName,
                                   const QString& newObjName)
 {
     FavItem* favItem = findFavItem(groupName, oldFavItemName);
-    if (NULL == favItem)
-    {
+    if (NULL == favItem) {
         return false;
     }
     favItem->setName(newFavItemName);
@@ -438,18 +359,14 @@ bool ObjectManager::updateFavItem(const QString& groupName,
     return true;
 }
 
-bool ObjectManager::removeObj(const QString modelName, const QString objName)
-{
+bool ObjectManager::removeObj(const QString modelName, const QString objName) {
     Model* model = findModel(modelName);
-    if (!model)
-    {
+    if (!model) {
         return false;
     }
     vector<GeoObject>::iterator obj_iter = model->getVecOfGeoObjs()->begin();
-    for ( ; obj_iter != model->getVecOfGeoObjs()->end(); obj_iter++)
-    {
-        if (0 == obj_iter->getName().compare(objName))
-        {
+    for ( ; obj_iter != model->getVecOfGeoObjs()->end(); obj_iter++) {
+        if (0 == obj_iter->getName().compare(objName)) {
             DeleteVTKPointer(obj_iter->reader);
             model->getVecOfGeoObjs()->erase(obj_iter);
             model->setModified(true);
@@ -457,27 +374,21 @@ bool ObjectManager::removeObj(const QString modelName, const QString objName)
             return true;
         }
     }
-
     return false;
 }
 
-void ReaderUpdater::run()
-{
+void ReaderUpdater::run() {
     m_reader->Update();
     emit UpdateFinished();
 }
 
 
-FavItem* FavGroup::findFavItem(const QString& itemName)
-{
+FavItem* FavGroup::findFavItem(const QString& itemName) {
     vector<FavItem>::iterator item_Iter = this->vecOfItems.begin();
-    for ( ; item_Iter != vecOfItems.end(); item_Iter++)
-    {
-        if (0 == item_Iter->getName().compare(itemName))
-        {
+    for ( ; item_Iter != vecOfItems.end(); item_Iter++) {
+        if (0 == item_Iter->getName().compare(itemName)) {
             return &(*item_Iter);
         }
     }
-
     return NULL;
 }

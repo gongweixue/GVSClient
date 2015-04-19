@@ -8,9 +8,7 @@
 #include "GVSPrjTreeWidgetItem.h"
 #include "MainWindow.h"
 
-GVSPrjTreeWidget::GVSPrjTreeWidget(QWidget *parent)
-    : QTreeWidget(parent)
-{
+GVSPrjTreeWidget::GVSPrjTreeWidget(QWidget* parent) : QTreeWidget(parent) {
     this->popMenu = new QMenu(this);
 
     this->actionChangeObjColor = new QAction(tr("¸ü¸ÄÑÕÉ«"), this);
@@ -38,8 +36,7 @@ GVSPrjTreeWidget::GVSPrjTreeWidget(QWidget *parent)
     connect(actionRemoveObj, SIGNAL(triggered()), this, SLOT(OnRemoveObj()));
 }
 
-GVSPrjTreeWidget::~GVSPrjTreeWidget()
-{
+GVSPrjTreeWidget::~GVSPrjTreeWidget() {
     delete this->actionChangeObjColor;
     delete this->actionAddFavGroup;
     delete this->actionAddFavItem;
@@ -51,18 +48,15 @@ GVSPrjTreeWidget::~GVSPrjTreeWidget()
     delete this->popMenu;
 }
 
-void GVSPrjTreeWidget::contextMenuEvent(QContextMenuEvent* event)
-{
+void GVSPrjTreeWidget::contextMenuEvent(QContextMenuEvent* event) {
     GVSPrjTreeWidgetItem* item = NULL;
     QPoint pos = event->pos();
-    if (this->itemAt(pos) == NULL)
-    {
+    if (this->itemAt(pos) == NULL) {
         return;
     }
     item = dynamic_cast<GVSPrjTreeWidgetItem*>(this->itemAt(pos));
 
-    switch (item->getType())
-    {
+    switch (item->getType()) {
     case PRJ_TREE_ITEM_TYPE_OBJ:
         this->popMenu->clear();
         /*this->popMenu->addAction(actionChangeObjColor);*/
@@ -96,71 +90,61 @@ void GVSPrjTreeWidget::contextMenuEvent(QContextMenuEvent* event)
         this->popMenu->exec(QCursor::pos());
         event->accept();
         break;
-
     default:
         break;
     }
-
     return;
 }
 
-void GVSPrjTreeWidget::OnChangeObjColor()
-{
+void GVSPrjTreeWidget::OnChangeObjColor() {
     QString objName = this->currentItem()->text(0);
     QString modelName = this->currentItem()->parent()->text(0);
 
     emit sigChangeObjColor(modelName, objName);
 }
 
-void GVSPrjTreeWidget::OnAddFavGroup()
-{
+void GVSPrjTreeWidget::OnAddFavGroup() {
     emit sigAddFavGroup();
 }
 
-void GVSPrjTreeWidget::OnAddFavItem()
-{
+void GVSPrjTreeWidget::OnAddFavItem() {
     GVSPrjTreeWidgetItem* currentItem =
-            dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
+        dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
 
     emit sigAddFavItem(*currentItem);
 }
 
-void GVSPrjTreeWidget::OnRenameGroup()
-{
+void GVSPrjTreeWidget::OnRenameGroup() {
     GVSPrjTreeWidgetItem* currentItem =
-            dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
+        dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
 
     emit sigRenameGroup(*currentItem);
 }
 
-void GVSPrjTreeWidget::OnRemoveGroup()
-{
+void GVSPrjTreeWidget::OnRemoveGroup() {
     GVSPrjTreeWidgetItem* currentItem =
-            dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
+        dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
 
     emit sigRemoveGroup(*currentItem);
 }
 
-void GVSPrjTreeWidget::OnRemoveFavItem()
-{
+void GVSPrjTreeWidget::OnRemoveFavItem() {
     GVSPrjTreeWidgetItem* currentItem =
-            dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
+        dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
 
     emit sigRemoveFavItem(*currentItem);
 }
 
-void GVSPrjTreeWidget::OnEditFavItem()
-{
+void GVSPrjTreeWidget::OnEditFavItem() {
     GVSPrjTreeWidgetItem* currentItem =
-            dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
+        dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
 
     emit sigEditFavItem(*currentItem);
 }
 
-void GVSPrjTreeWidget::OnRemoveObj()
-{
+void GVSPrjTreeWidget::OnRemoveObj() {
     GVSPrjTreeWidgetItem* currentItem =
-            dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
+        dynamic_cast<GVSPrjTreeWidgetItem*> (this->currentItem());
 
     emit sigRemoveObj(*currentItem);
 }

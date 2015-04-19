@@ -24,18 +24,20 @@
 //GVSCompassActor::New()
 vtkStandardNewMacro(GVSCompassActor);
 
-GVSCompassActor::GVSCompassActor()
-{
+GVSCompassActor::GVSCompassActor() {
     //lookup table for setting the north side and others different color.
-    vtkSmartPointer<vtkLookupTable> lut = vtkSmartPointer<vtkLookupTable>::New();
+    vtkSmartPointer<vtkLookupTable> lut = 
+        vtkSmartPointer<vtkLookupTable>::New();
     lut->SetNumberOfTableValues(3);
     lut->Build();
     lut->SetTableValue(0, 0.2, 0.83, 1, 1);//7 side
     lut->SetTableValue(1, 1, 0.32, 0, 1);//north side
     lut->SetTableValue(2, 1, 1, 1, 1);//null
 
-    vtkSmartPointer<vtkConeSource> NN = vtkSmartPointer<vtkConeSource>::New();
-    vtkSmartPointer<vtkFloatArray> NNscalars = vtkSmartPointer<vtkFloatArray>::New();
+    vtkSmartPointer<vtkConeSource> NN = 
+        vtkSmartPointer<vtkConeSource>::New();
+    vtkSmartPointer<vtkFloatArray> NNscalars = 
+        vtkSmartPointer<vtkFloatArray>::New();
     for (int i = 0; i < 5; i++)
     {
         //just NORTH is different(rgb is {0.2, 0.83, 1} in lut).
@@ -58,7 +60,8 @@ GVSCompassActor::GVSCompassActor()
     vtkSmartPointer<vtkConeSource> SE = vtkSmartPointer<vtkConeSource>::New();
     vtkSmartPointer<vtkConeSource> SW = vtkSmartPointer<vtkConeSource>::New();
     //scalars of other 7 axes
-    vtkSmartPointer<vtkFloatArray> otherScalars = vtkSmartPointer<vtkFloatArray>::New();
+    vtkSmartPointer<vtkFloatArray> otherScalars = 
+        vtkSmartPointer<vtkFloatArray>::New();
     for (int i = 0; i < 5; i++)
     {
         otherScalars->InsertNextValue(1);
@@ -121,7 +124,8 @@ GVSCompassActor::GVSCompassActor()
     SE->GetOutput()->GetCellData()->SetScalars(otherScalars);
 
     //get all 8 sides together
-    vtkSmartPointer<vtkAppendPolyData> append = vtkSmartPointer<vtkAppendPolyData>::New();
+    vtkSmartPointer<vtkAppendPolyData> append = 
+        vtkSmartPointer<vtkAppendPolyData>::New();
     append->AddInput(SS->GetOutput());
     append->AddInput(EE->GetOutput());
     append->AddInput(WW->GetOutput());
@@ -132,7 +136,8 @@ GVSCompassActor::GVSCompassActor()
     append->AddInput(NN->GetOutput());
 
     //set lut for mapper.
-    vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+    vtkSmartPointer<vtkPolyDataMapper> mapper = 
+        vtkSmartPointer<vtkPolyDataMapper>::New();
     mapper->SetInput(append->GetOutput());
     mapper->SetScalarRange(0, 2);
     mapper->SetLookupTable(lut);
@@ -176,8 +181,7 @@ GVSCompassActor::GVSCompassActor()
     this->UpdateProps();
 }
 
-GVSCompassActor::~GVSCompassActor()
-{
+GVSCompassActor::~GVSCompassActor() {
     this->northLabel->Delete();
     this->southLabel->Delete();
     this->westLabel->Delete();
@@ -186,8 +190,7 @@ GVSCompassActor::~GVSCompassActor()
     this->compassActor->Delete();
 }
 
-int GVSCompassActor::RenderOpaqueGeometry(vtkViewport *vp)
-{
+int GVSCompassActor::RenderOpaqueGeometry(vtkViewport* vp) {
     int renderedSomething = 0;
     this->UpdateProps();
 
@@ -198,11 +201,10 @@ int GVSCompassActor::RenderOpaqueGeometry(vtkViewport *vp)
     renderedSomething += this->westLabel->RenderOpaqueGeometry(vp);
     renderedSomething += this->eastLabel->RenderOpaqueGeometry(vp);
 
-    return ((renderedSomething > 0)?(1):(0));
+    return ((renderedSomething > 0) ? (1) : (0));
 }
 
-int GVSCompassActor::RenderTranslucentPolygonalGeometry(vtkViewport *vp)
-{
+int GVSCompassActor::RenderTranslucentPolygonalGeometry(vtkViewport* vp) {
     int renderedSomething = 0;
     this->UpdateProps();
 
@@ -213,11 +215,10 @@ int GVSCompassActor::RenderTranslucentPolygonalGeometry(vtkViewport *vp)
     renderedSomething += this->westLabel->RenderOpaqueGeometry(vp);
     renderedSomething += this->eastLabel->RenderOpaqueGeometry(vp);
 
-    return ((renderedSomething > 0)?(1):(0));
+    return ((renderedSomething > 0) ? (1) : (0));
 }
 
-int GVSCompassActor::HasTranslucentPolygonalGeometry()
-{
+int GVSCompassActor::HasTranslucentPolygonalGeometry() {
     int result = 0;
     this->UpdateProps();
 
@@ -231,8 +232,7 @@ int GVSCompassActor::HasTranslucentPolygonalGeometry()
     return result;
 }
 
-int GVSCompassActor::RenderOverlay(vtkViewport *vp)
-{
+int GVSCompassActor::RenderOverlay(vtkViewport* vp) {
     int renderedSomething = 0;
     this->UpdateProps();
 
@@ -241,11 +241,10 @@ int GVSCompassActor::RenderOverlay(vtkViewport *vp)
     renderedSomething += this->westLabel->RenderOverlay(vp);
     renderedSomething += this->eastLabel->RenderOverlay(vp);
 
-    return ((renderedSomething > 0)?(1):(0));
+    return ((renderedSomething > 0) ? (1) : (0));
 }
 
-void GVSCompassActor::ReleaseGraphicsResources(vtkWindow *win)
-{
+void GVSCompassActor::ReleaseGraphicsResources(vtkWindow* win) {
     this->compassActor->ReleaseGraphicsResources(win);
 
     this->northLabel->ReleaseGraphicsResources(win);
@@ -254,9 +253,8 @@ void GVSCompassActor::ReleaseGraphicsResources(vtkWindow *win)
     this->eastLabel->ReleaseGraphicsResources(win);
 }
 
-void GVSCompassActor::GetBounds(double bounds[6])
-{
-    double *bds = this->GetBounds();
+void GVSCompassActor::GetBounds(double bounds[6]) {
+    double* bds = this->GetBounds();
     bounds[0] = bds[0];
     bounds[1] = bds[1];
     bounds[2] = bds[2];
@@ -265,16 +263,14 @@ void GVSCompassActor::GetBounds(double bounds[6])
     bounds[5] = bds[5];
 }
 
-double *GVSCompassActor::GetBounds()
-{
+double* GVSCompassActor::GetBounds(){
     return compassActor->GetBounds();
 }
 
-void GVSCompassActor::UpdateProps()
-{
+void GVSCompassActor::UpdateProps() {
     this->northLabel->SetCaption("N");
     this->northLabel->SetAttachmentPoint(0, 10, 0);
-    
+
     this->southLabel->SetCaption("S");
     this->southLabel->SetAttachmentPoint(0, -6, 0);
 
@@ -285,8 +281,7 @@ void GVSCompassActor::UpdateProps()
     this->eastLabel->SetAttachmentPoint(6, 0, 0);
 
     vtkLinearTransform* transform = this->GetUserTransform();
-    if (transform)
-    {
+    if (transform) {
         this->compassActor->SetUserTransform(transform);
         double newPos[3];
 

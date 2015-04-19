@@ -15,8 +15,8 @@ DownloadProjectDialog::DownloadProjectDialog(QWidget* parent)
     throw std::exception("The method or operation is not implemented.");
 }
 
-DownloadProjectDialog::DownloadProjectDialog(QFtp* pFtp, QWidget *parent)
-    :QDialog(parent), ftp(pFtp)
+DownloadProjectDialog::DownloadProjectDialog(QFtp* pFtp, QWidget* parent)
+    : QDialog(parent), ftp(pFtp)
 {
     ui.setupUi(this);
     init();
@@ -89,10 +89,10 @@ void DownloadProjectDialog::OnClickDownload(bool checked)
 
         //get the path to store
         QString localToStore = QFileDialog::getExistingDirectory(this,
-            tr("选择存放位置"),
-            tr("d:/"),
-            QFileDialog::ShowDirsOnly
-            | QFileDialog::HideNameFilterDetails);
+                               tr("选择存放位置"),
+                               tr("d:/"),
+                               QFileDialog::ShowDirsOnly
+                               | QFileDialog::HideNameFilterDetails);
         if (localToStore.isEmpty())
         {
             goto bail;
@@ -110,11 +110,11 @@ bail:
 }
 
 void DownloadProjectDialog::downloadCompressPrjToLocal(const QString& projectName,
-                                                       const QString& localToStore)
+        const QString& localToStore)
 {
     //down project file
     compressFile.setFileName(localToStore + projectName + ".zip");
-    
+
     if (!compressFile.open(QIODevice::ReadWrite))
     {
         QMessageBox::information(this, tr("错误"), tr("无法创建项目文件") + projectName);
@@ -163,13 +163,13 @@ bool DownloadProjectDialog::uncompressPrj()
 
     QString path = localToStore;
     if (!path.endsWith("/") && !localToStore.endsWith("\\"))
-        path += "/";
+    { path += "/"; }
 
     QDir dir(localToStore);
     if (!dir.exists())
-        dir.mkpath(localToStore);
+    { dir.mkpath(localToStore); }
 
-    for(bool f = archive.goToFirstFile(); f; f = archive.goToNextFile())
+    for (bool f = archive.goToFirstFile(); f; f = archive.goToNextFile())
     {
         QString filePath = archive.getCurrentFileName();
         QuaZipFile zFile(archive.getZipName(), filePath);
