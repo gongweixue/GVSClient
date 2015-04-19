@@ -29,6 +29,7 @@
 #include "vtkSmartPointer.h"
 #include "vtkSphereSource.h"
 #include "vtkTableBasedClipDataSet.h"
+#include "vtkJPEGReader.h"
 #include "vtkTransform.h"
 #include "vtkTransformFilter.h"
 #include "vtkUnstructuredGrid.h"

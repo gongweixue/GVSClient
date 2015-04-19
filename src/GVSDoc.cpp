@@ -122,6 +122,12 @@ bool GVSDoc::parseAndLoadModel(const std::string& gvmFullPath)
         else
             continue;
 
+        QString textureFileName = childElement.attribute("texture");
+        if ("" != textureFileName.toStdString())
+        {
+            textureFileName = modelDataDir + textureFileName;
+        }
+
         //reader
         vtkDataSetReader* reader = vtkDataSetReader::New();
         reader->SetFileName((modelDataDir + objFileName).toStdString().c_str());
@@ -141,7 +147,7 @@ bool GVSDoc::parseAndLoadModel(const std::string& gvmFullPath)
             objFileTy = GEO_OBJECT_TYPE_SURFACE;
         }
 
-        GeoObject geoObj(objFileName, objFileTy, reader, vis);
+        GeoObject geoObj(objFileName, objFileTy, reader, vis, textureFileName);
         //insert GeoObject into tree
         iter_model->getVecOfGeoObjs()->push_back(geoObj);
 

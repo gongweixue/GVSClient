@@ -20,15 +20,34 @@ typedef struct GeoObject
 {
 public:
     vtkDataSetReader* reader;
+    vtkTexture* texture;
 private:
     const QString fileName;
+    const int type;
     bool visibility;
     bool Modified;
-    const int type;
+
 public:
-    GeoObject(QString fname, int ty, vtkDataSetReader* rder, bool vis)
-        : fileName(fname), type(ty), reader(rder), visibility(vis), Modified(false)
+    GeoObject(QString fname, int ty,
+              vtkDataSetReader* rder,
+              bool vis,
+              QString textureAbsolutePathName = "",
+              bool Modified = false)
+        : fileName(fname),
+          type(ty),
+          reader(rder),
+          visibility(vis),
+          Modified(false),
+          texture(NULL)
     {
+        if (textureAbsolutePathName.toStdString()!= "")
+        {
+            vtkJPEGReader* picReader=vtkJPEGReader::New();
+            picReader->SetFileName(textureAbsolutePathName.toStdString().c_str());
+            picReader->Update();
+            texture=vtkTexture::New();
+            texture->SetInput(picReader->GetOutput());
+        }
     }
 
     ~GeoObject()

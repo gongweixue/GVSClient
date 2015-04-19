@@ -31,7 +31,7 @@ GVSPrjTreeWidget::GVSPrjTreeWidget(QWidget *parent)
     this->actionRemoveFavItem = new QAction(tr("删除收藏项"), this);
     connect(actionRemoveFavItem, SIGNAL(triggered()), this, SLOT(OnRemoveFavItem()));
 
-    this->actionEditFavItem = new QAction(tr("编译收藏项"), this);
+    this->actionEditFavItem = new QAction(tr("编辑收藏项"), this);
     connect(actionEditFavItem, SIGNAL(triggered()), this, SLOT(OnEditFavItem()));
 
     this->actionRemoveObj = new QAction(tr("移除地层对象"), this);
@@ -65,7 +65,7 @@ void GVSPrjTreeWidget::contextMenuEvent(QContextMenuEvent* event)
     {
     case PRJ_TREE_ITEM_TYPE_OBJ:
         this->popMenu->clear();
-        this->popMenu->addAction(actionChangeObjColor);
+        /*this->popMenu->addAction(actionChangeObjColor);*/
         this->popMenu->addAction(actionRemoveObj);
         this->popMenu->exec(QCursor::pos());
         event->accept();

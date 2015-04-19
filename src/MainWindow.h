@@ -16,6 +16,7 @@
 #include "Managers/vtkSceneManager.h"
 
 class GVSDoc;
+class vtkTexture;
 class TransportationManager;
 
 class MainWindow : public QMainWindow
@@ -74,7 +75,7 @@ private:
     void RenderStdExplode();
     void RenderBoxClip();
     void RenderPrismClip();
-    vtkActor* MapToActor(vtkDataSet* ds);
+    vtkActor* MapToActor(vtkDataSet* ds, vtkTexture* texture = NULL);
     void TurnCubeAxesOnOff(int isOn, int xGridOn, int yGridOn);
 
     MainWindow(const MainWindow&); // Not implemented.

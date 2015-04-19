@@ -16,6 +16,7 @@
 #include <vtkRenderer.h>
 #include <vtkSmartPointer.h>
 #include <vtkTextProperty.h>
+#include "vtkTextureMapToPlane.h"
 #include <QColorDialog>
 #include <QFileInfo>
 #include <QIcon>
@@ -363,7 +364,7 @@ void MainWindow::RenderOriginal()
             //in case of the name including more than 1 '.', like "abc.def.vtk".
             string objName = obj_iter->getName().toStdString();
             string actorName = modelName + "/" + objName;
-            m_sceneManager.InsertActorRcrd(MapToActor(obj_iter->reader->GetOutput()),
+            m_sceneManager.InsertActorRcrd(MapToActor(obj_iter->reader->GetOutput(), obj_iter->texture),
                                           actorName,
                                           SCENE_STATE_ORIGINAL,
                                           obj_iter->getVisibility());
@@ -822,13 +823,34 @@ void MainWindow::RenderBoxClip()
     m_boxClipWidget->EnabledOn();
 }
 
-vtkActor* MainWindow::MapToActor(vtkDataSet* ds)
+vtkActor* MainWindow::MapToActor(vtkDataSet* ds, vtkTexture* texture)
 {
-    vtkSmartPointer<vtkDataSetMapper> mapper = vtkSmartPointer<vtkDataSetMapper>::New();
-    mapper->SetInput(ds);
-    mapper->Update();
     vtkActor* actor = vtkActor::New();
-    actor->SetMapper(mapper);
+
+    if (NULL != texture)
+    {
+        vtkSmartPointer<vtkTextureMapToPlane> textureMap =
+            vtkSmartPointer<vtkTextureMapToPlane>::New();
+        textureMap->SetInput(ds);
+        textureMap->Update();
+
+        vtkSmartPointer<vtkDataSetMapper> mapper = 
+            vtkSmartPointer<vtkDataSetMapper>::New();
+        mapper->SetInput(textureMap->GetOutput());
+        mapper->Update();
+        
+        actor->SetMapper(mapper);
+        actor->SetTexture(texture);
+    } else {
+        vtkSmartPointer<vtkDataSetMapper> mapper = 
+            vtkSmartPointer<vtkDataSetMapper>::New();
+        mapper->SetInput(ds);
+        mapper->Update();
+
+        actor->SetMapper(mapper);
+    }
+    
+
     return actor;
 }
 
