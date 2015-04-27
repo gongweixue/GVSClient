@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Favs name="LY9">
+    <Group name="Bound">
+    </Group>
+    <Group name="Group with obj not existed">
+    </Group>
+    <Group name="Empty Group">
+    </Group>
+    <Group name="F series">
+        <FavItem name="F1" model="cw08" obj="F1.vtk"></FavItem>
+        <FavItem name="F3" model="cw08" obj="F3.vtk"></FavItem>
+        <FavItem name="F2" model="cw08" obj="F2.vtk"></FavItem>
+        <FavItem name="F4" model="cw08" obj="F4.vtk"></FavItem>
+        <FavItem name="F5" model="cw06" obj="F5.vtk"></FavItem>
+    </Group>
+</Favs>
