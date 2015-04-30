@@ -299,7 +299,7 @@
 <Surface visible="1">LYK58707Qnq.vtk</Surface>
 <Surface visible="1">disiji.vtk</Surface>
 <Surface visible="1">LYKsaltdem.vtk</Surface>
-<Surface visible="1" texture="lena.jpg">ddd2.vtk</Surface>
+<Surface visible="1" texture="texture_big_xyExchange.jpg">ddd2.vtk</Surface>
 <Surface visible="1">BJ5.vtk</Surface>
 <Surface visible="1">F0.vtk</Surface>
 <Surface visible="1">F70.vtk</Surface>
